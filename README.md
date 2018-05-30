@@ -1,2 +1,2 @@
 # sng-batmon
-Battery monitoring with sound alerm
+Battery monitoring with sound alert
