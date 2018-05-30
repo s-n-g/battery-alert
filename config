@@ -1,0 +1,39 @@
+# THRESHHOLDS DEFINITION
+# Thresholds meaning:
+#  - THRESHOLD_HIGH
+#    If battery percentage is lower than this, a notification
+#    will be displayed and a sound will be played once
+#  - THRESHOLD_LOW
+#    If battery percentage is lower than this, both the
+#    notification and the sund will be on indefinatelly
+#  - THRESHOLD_HALT
+#    If a HALT_COMMAND is defined, the PC will be halted /
+#    powered off, when battery status is bellow this
+#    threshold
+THRESHOLD_HIGH=15
+THRESHOLD_LOW=10
+THRESHOLD_HALT=5
+
+# if KEEP_RUNNING is set to any value, batmon will
+# keep running and check battery status every 1 min
+KEEP_RUNNING=yes
+
+# Time to display notification (in milliseconds)
+# If sound is on (default), it should be the same as the
+# duration of the sound file (default = 7000)
+NOTIFY_TIME=7000
+
+# This is the command what will play the warning message
+# default is mpg123, since it's very light on resources
+# If empty, no sound will be played
+PLAYER_COMMAND="mpg123 -q"
+
+# HALT COMMAND DEFINITION
+# Define here the command to be used to power off your PC
+# It's up to you to make sure the command can be executed
+# (has the right permission etc.)
+#
+# Commands examples
+# 
+HALT_COMMAND="systemctl poweroff"
+

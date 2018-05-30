@@ -1,0 +1,80 @@
+#!/usr/bin/env bash
+#
+# Based on:
+# https://agorf.gr/2016/06/29/low-battery-notification-in-i3wm/
+#
+# Some things to note:
+# 
+#  - Line 23:  the threshold percentage is configurable
+#  - Line 27:  the script will exit if it’s already running to avoid multiple
+#              notifications e.g. when run by Cron
+#  - Line 34:  for greater accuracy, the percentage is calculated based on the
+#              last full charge of the battery instead of its nominal capacity (the
+#              difference between the two grows as the battery gets old)
+#  - Line 40:  a notification is shown using notify-send
+#              (ships with libnotify-bin on Debian)
+# 
+# I run the script once every minute with Cron:
+# 
+# * * * * * bash /home/agorf/work/dotfiles/scripts/sng-batmon.sh
+# 
+# 
+
+function control_c {
+    #lockfile-remove --lock-name $lock_path
+    rm $lock_path 2>/dev/null
+    exit
+}
+
+trap control_c SIGINT
+trap control_c SIGTERM
+
+lock_path='/tmp/sng-batmon.lock'
+
+#lockfile-check --lock-name $lock_path && exit
+#lockfile-create --lock-name $lock_path
+[ -e $lock_path ] && exit
+echo > $lock_path
+
+KEEP_IT_UP=1
+while [ "$KEEP_IT_UP" = "1" ];do
+    ALARM_REPEAT=1
+    [ -e /etc/sng-batmon.conf ] && . /etc/sng-batmon
+    [ -e ~/.config/sng-batmon/config ] && . ~/.config/sng-batmon/config
+    while [ "$ALARM_REPEAT" = "1" ];do
+        acpi_path=$(find /sys/class/power_supply/ -name 'BAT*' | head -1)
+        charge_now=$(cat "$acpi_path/charge_now")
+        charge_full=$(cat "$acpi_path/charge_full")
+        charge_status=$(cat "$acpi_path/status")
+        charge_percent=$(echo "$charge_now / $charge_full * 100" | bc -l)
+        # remove everything after dot
+        charge_percent=${charge_percent%.*}
+        message="Battery running critically low at $charge_percent%!"
+
+        if [[ $charge_status == 'Discharging' ]];then
+            if [[ $charge_percent -le $THRESHOLD_HALT ]]; then
+                [ -z "$HALT_COMMAND" ] || {
+                    #lockfile-remove --lock-name $lock_path
+                    $HALT_COMMAND
+                }
+            fi
+            ICON=high.png
+            if [[ $charge_percent -le $THRESHOLD_LOW ]]; then
+                ICON=low.png
+            fi
+            if [[ $charge_percent -le $THRESHOLD_HIGH ]]; then
+                notify-send -t $NOTIFY_TIME -i /usr/local/share/sng-batmon/$ICON "Low battery" "$message"
+                #DISPLAY=:0.0 /usr/bin/notify-send -u critical "Low battery" "$message"
+                [ -z "$PLAYER_COMMAND" ] || $PLAYER_COMMAND /usr/share/sng-batmon/warning-battery-low.mp3
+            fi
+            if [[ $charge_percent -ge $THRESHOLD_LOW ]]; then
+                ALARM_REPEAT=0
+            fi
+        fi
+    done
+    [ -z "$KEEP_RUNNING" ] && KEEP_IT_UP=0 || sleep 60
+done
+
+#lockfile-remove --lock-name $lock_path
+rm $lock_path 2>/dev/null
+
