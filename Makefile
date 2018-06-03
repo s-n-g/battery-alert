@@ -17,7 +17,8 @@ check_programs:
 #	@pandoc -s -t man sng-batmon.1.md | gzip -9 > sng-batmon.1.gz
 #	@echo done 
 
-.PHONY: install uninstall clean
+.PHONY: install uninstall
+#.PHONY: install uninstall clean
 
 install:
 	install -m 755 sng-batmon $(INSTALL_PREFIX)/sng-batmon
@@ -29,8 +30,8 @@ uninstall:
 	rm $(INSTALL_PREFIX)/sng-batmon
 	rm /etc/sng-batmon.conf
 	rm -rf /usr/share/sng-batmon
-	
-clean:
-	@echo -n "Cleaning up ... "
-	@rm sng-batmon.1.gz
-	@echo done
+
+#clean:
+#	@echo -n "Cleaning up ... "
+#	@rm sng-batmon.1.gz
+#	@echo done
