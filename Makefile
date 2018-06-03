@@ -11,9 +11,9 @@ check_programs:
 	@echo -n "** Checking for mpg123 ... "
 	@type mpg123 1>/dev/null 2>&1 && echo found || ( echo "not found"; echo "  *** You must install mpg123 (package mpg123)"; exit 1 )
 
-sng-batmon.1.gz: sng-batmon.1
+sng-batmon.1.gz:
 	@echo -n "Creating man page ... "
-	@gzip -9 -k sng-batmon.1
+	@pandoc -s -t man sng-batmon.1.md | gzip -9 > sng-batmon.1.gz
 	@echo done 
 
 .PHONY: install uninstall clean

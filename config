@@ -14,10 +14,6 @@ THRESHOLD_HIGH=15
 THRESHOLD_LOW=10
 THRESHOLD_HALT=5
 
-# if KEEP_RUNNING is set to any value, batmon will
-# keep running and check battery status every 1 min
-KEEP_RUNNING=yes
-
 # Time to display notification (in milliseconds)
 # If sound is on (default), it should be the same as the
 # duration of the sound file (default = 7000)
