@@ -25,11 +25,19 @@ install:
 	install -m 644 config /etc/sng-batmon.conf
 	install -m 755 -d /usr/share/sng-batmon
 	install -m 644 icons/* sounds/*.mp3 /usr/share/sng-batmon
+	MAN=$$(man -w | sed 's/:.*//')/man1; \
+	if [ ! -d "$$MAN" ]; \
+	then mkdir "$$MAN" ; fi ; \
+	install -m 644 man/sng-batmon.1.gz "$$MAN"/sng-batmon.1.gz
+	mandb -q
 
 uninstall:
 	rm $(INSTALL_PREFIX)/sng-batmon
 	rm /etc/sng-batmon.conf
 	rm -rf /usr/share/sng-batmon
+	MAN=$$(man -w | sed 's/:.*//')/man1 ; \
+	rm "$$MAN"/sng-batmon.1.gz
+	mandb -q
 
 #clean:
 #	@echo -n "Cleaning up ... "
