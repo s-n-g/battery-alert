@@ -1,14 +1,15 @@
 # sng-batmon
 Battery monitoring with sound alert
 
-[Description](README.md#Description)
+## Table of Content
 
-  Notification levels
-  Alert levels
-  Halt level
-Installation
-Configuration
-Sources (and resoureces)
+[Description](#description)
+  
+[Installation](#installation)
+
+[Configuration](#configuration)
+
+[Sources](#sources)
 
 ## Description
 
@@ -78,6 +79,22 @@ To customize it, one has to create a user writable config file and edit it.
 
     mkdir ~/.config/sng-batmon
     cp /etc/sng-batmon.conf ~/.config/sng-batmon/config
+
+After editin this file, one should source it in order to check its validity.
+
+On a **bash** terminal:
+
+  . ~/.config/sng-batmon/config
+  
+If no error is occurs, you are good to go.
+
+**Note:**
+
+Any changes made to the configuration file will take effect within the next minute.
+
+If an error occurs, *sng-batmon* will terminate, so be aware.
+
+### Default configuration
 
 The default configuration is the following:
 
@@ -166,7 +183,9 @@ PLAYER_COMMAND="mpg123 -q"
 HALT_COMMAND="systemctl poweroff"
 ```
 
-## Source (and resources)
+## Sources
+
+### (and resources)
 
 - The script is based on the [batmon](https://agorf.gr/2016/06/29/low-battery-notification-in-i3wm/) script by **Angelos Orfanakos**, published under the [Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License](http://creativecommons.org/licenses/by-nc-sa/4.0/).
 
