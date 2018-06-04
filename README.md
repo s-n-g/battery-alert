@@ -3,13 +3,10 @@ Battery monitoring with sound alert
 
 ## Table of Content
 
-[Description](#description)
-  
-[Installation](#installation)
-
-[Configuration](#configuration)
-
-[Sources](#sources)
+1. [Description](#description)
+2. [Installation](#installation)
+3. [Configuration](#configuration)
+4. [Sources](#sources)
 
 ## Description
 
@@ -84,7 +81,7 @@ After editin this file, one should source it in order to check its validity.
 
 On a **bash** terminal:
 
-  . ~/.config/sng-batmon/config
+    . ~/.config/sng-batmon/config
   
 If no error is occurs, you are good to go.
 
