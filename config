@@ -1,25 +1,67 @@
-# THRESHHOLDS DEFINITION
-# Thresholds meaning:
+# ALERT THRESHOLDS DEFINITION
+# Thresholds are defined in arrays
+# Items are:
+#  0  battery limit
+#  1  message title to display
+#  2  message to display
+#  3  icon to display
+#  4  sound to play
+#  5  time to display notification (in milliseconds)
+#     it should be the same as the duration
+#     of the sound file
+
 #  - THRESHOLD_HIGH
 #    If battery percentage is lower than this, a notification
 #    will be displayed and a sound will be played once
+THRESHOLD_HIGH[0]=20
+THRESHOLD_HIGH[1]="Low battery"
+THRESHOLD_HIGH[2]="Battery running critically low at $charge_percent%!"
+THRESHOLD_HIGH[3]=warning-high.png
+THRESHOLD_HIGH[4]=warning-low-battery.mp3
+THRESHOLD_HIGH[5]=7000
+
 #  - THRESHOLD_LOW
 #    If battery percentage is lower than this, both the
 #    notification and the sund will be on indefinatelly
+THRESHOLD_LOW[0]=15
+THRESHOLD_LOW[1]="Low battery"
+THRESHOLD_LOW[2]="Battery running critically low at $charge_percent%!"
+THRESHOLD_LOW[3]=warning-low.png
+THRESHOLD_LOW[4]=warning-low-battery.mp3
+THRESHOLD_LOW[5]=7000
+
 #  - THRESHOLD_HALT
 #    If a HALT_COMMAND is defined, the PC will be halted /
 #    powered off, when battery status is bellow this
 #    threshold
-THRESHOLD_HIGH=15
-THRESHOLD_LOW=10
-THRESHOLD_HALT=5
+THRESHOLD_HALT[0]=7
+THRESHOLD_HALT[1]=""
+THRESHOLD_HALT[2]=""
+THRESHOLD_HALT[3]=""
+THRESHOLD_HALT[4]=""
+THRESHOLD_HALT[5]=0
 
-# Time to display notification (in milliseconds)
-# If sound is on (default), it should be the same as the
-# duration of the sound file (default = 7000)
-NOTIFY_TIME=7000
+#  - THRESHOLD_NOTIFY_HIGH
+#    Notify that user can now disconnect the power supply
+THRESHOLD_NOTIFY_HIGH[0]=80
+THRESHOLD_NOTIFY_HIGH[1]="Battery notification"
+THRESHOLD_NOTIFY_HIGH[2]="You can now disconnect the power supply"
+THRESHOLD_NOTIFY_HIGH[3]=notify-high.png
+THRESHOLD_NOTIFY_HIGH[4]=notify-high.mp3
+THRESHOLD_NOTIFY_HIGH[5]=5000
 
-# This is the command what will play the warning message
+#  - THRESHOLD_NOTIFY_LOW
+#    Notify that user should now connect the power supply
+THRESHOLD_NOTIFY_LOW[0]=40
+THRESHOLD_NOTIFY_LOW[1]="Battery notification"
+THRESHOLD_NOTIFY_LOW[2]="You should now connect the power supply"
+THRESHOLD_NOTIFY_LOW[3]=notify-low.png
+THRESHOLD_NOTIFY_LOW[4]=notify-low.mp3
+THRESHOLD_NOTIFY_LOW[5]=5000
+
+# END OF THRESHOLDS DEFINITION
+
+# This is the command what will play the warning message.
 # default is mpg123, since it's very light on resources
 # If empty, no sound will be played
 PLAYER_COMMAND="mpg123 -q"
@@ -31,5 +73,11 @@ PLAYER_COMMAND="mpg123 -q"
 #
 # Commands examples
 # 
+#HALT_COMMAND="xfce4-session-logout -h"
+#HALT_COMMAND="xfce4-session-logout -s"
+#HALT_COMMAND="xfce4-session-logout --hibernate"
+#HALT_COMMAND="systemctl suspend"
+#HALT_COMMAND="systemctl hibernate"
+#HALT_COMMAND="systemctl hybrid-sleep"
 HALT_COMMAND="systemctl poweroff"
 

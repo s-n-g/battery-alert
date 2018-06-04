@@ -35,11 +35,16 @@ my_fifo=/tmp/sng-batmon
 #lockfile-create --lock-name $my_fifo
 [ -p $my_fifo ] && exit
 mkfifo $my_fifo
-set -x
 
+#set -x
 while true;do
-    [ -e /etc/sng-batmon.conf ] && . /etc/sng-batmon
-    [ -e ~/.config/sng-batmon/config ] && . ~/.config/sng-batmon/config
+    if [ -e /etc/sng-batmon.conf ]; then
+        . /etc/sng-batmon.conf || control_c
+    fi
+    if [ -e ~/.config/sng-batmon/config ]; then
+        . ~/.config/sng-batmon/config || control_c
+    fi
+
     if read -t 60 line <$my_fifo;then
         if [ ! -z "$line" ];then
             if [ "$line" == "stop" ];then
@@ -51,6 +56,15 @@ while true;do
             fi
         fi
     fi
+
+    for i in 3 4
+    do
+        [[ "${THRESHOLD_HIGH[$i]}" == /* ]] || THRESHOLD_HIGH[$i]=/usr/share/sng-batmon/"${THRESHOLD_HIGH[$i]}"
+        [[ "${THRESHOLD_LOW[$i]}" == /* ]] || THRESHOLD_LOW[$i]=/usr/share/sng-batmon/"${THRESHOLD_LOW[$i]}"
+        [[ "${THRESHOLD_NOTIFY_HIGH[$i]}" == /* ]] || THRESHOLD_NOTIFY_HIGH[$i]=/usr/share/sng-batmon/"${THRESHOLD_NOTIFY_HIGH[$i]}"
+        [[ "${THRESHOLD_NOTIFY_LOW[$i]}" == /* ]] || THRESHOLD_NOTIFY_LOW[$i]=/usr/share/sng-batmon/"${THRESHOLD_NOTIFY_LOW[$i]}"
+    done
+
     [ -z "$STOP_ALARM" ] || {
         ALARM_REPEAT=1
         while [ "$ALARM_REPEAT" = "1" ];do
@@ -61,25 +75,39 @@ while true;do
             charge_percent=$(echo "$charge_now / $charge_full * 100" | bc -l)
             # remove everything after dot
             charge_percent=${charge_percent%.*}
-            message="Battery running critically low at $charge_percent%!"
 
             if [[ $charge_status == 'Discharging' ]];then
-                if [[ $charge_percent -le $THRESHOLD_HALT ]]; then
-                    [ -z "$HALT_COMMAND" ] || {
-                        #lockfile-remove --lock-name $my_fifo
+
+
+                if [[ $charge_percent -le ${THRESHOLD_HALT[0]} ]]; then
+                    if [ ! -z "$HALT_COMMAND" ] ;then
                         $HALT_COMMAND
-                    }
+                        control_c
+                    fi
+                elif [[ $charge_percent -le ${THRESHOLD_LOW[0]} ]]; then
+                    notify-send -t ${THRESHOLD_LOW[5]} -i "${THRESHOLD_LOW[3]}" "${THRESHOLD_LOW[1]}" "${THRESHOLD_LOW[2]}"
+                    if [ ! -z "$PLAYER_COMMAND" ] && [ -e "${THRESHOLD_LOW[4]}" ]; then
+                        $PLAYER_COMMAND "${THRESHOLD_LOW[4]}"
+                    fi
+                elif [[ $charge_percent -le ${THRESHOLD_NOTIFY_LOW[0]} ]]; then
+                    notify-send -t ${THRESHOLD_NOTIFY_LOW[5]} -i "${THRESHOLD_NOTIFY_LOW[3]}" "${THRESHOLD_NOTIFY_LOW[1]}" "${THRESHOLD_NOTIFY_LOW[2]}"
+                    if [ ! -z "$PLAYER_COMMAND" ] && [ -e "${THRESHOLD_NOTIFY_LOW[4]}" ]; then
+                        $PLAYER_COMMAND "${THRESHOLD_NOTIFY_LOW[4]}"
+                    fi
+                elif [[ $charge_percent -le ${THRESHOLD_HIGH[0]} ]]; then
+                    notify-send -t ${THRESHOLD_HIGH[5]} -i "${THRESHOLD_HIGH[3]}" "${THRESHOLD_HIGH[1]}" "${THRESHOLD_HIGH[2]}"
+                    if [ ! -z "$PLAYER_COMMAND" ] && [ -e "${THRESHOLD_HIGH[4]}" ]; then
+                        $PLAYER_COMMAND "${THRESHOLD_HIGH[4]}"
+                    fi
+                elif [[ $charge_percent -ge ${THRESHOLD_NOTIFY_HIGH[0]} ]]; then
+                    notify-send -t ${THRESHOLD_NOTIFY_HIGH[5]} -i "${THRESHOLD_NOTIFY_HIGH[3]}" "${THRESHOLD_NOTIFY_HIGH[1]}" "${THRESHOLD_NOTIFY_HIGH[2]}"
+                    if [ ! -z "$PLAYER_COMMAND" ] && [ -e "${THRESHOLD_NOTIFY_HIGH[4]}" ]; then
+                        $PLAYER_COMMAND "${THRESHOLD_NOTIFY_HIGH[4]}"
+                    fi
                 fi
-                ICON=high.png
-                if [[ $charge_percent -le $THRESHOLD_LOW ]]; then
-                    ICON=low.png
-                fi
-                if [[ $charge_percent -le $THRESHOLD_HIGH ]]; then
-                    notify-send -t $NOTIFY_TIME -i /usr/local/share/sng-batmon/$ICON "Low battery" "$message"
-                    #DISPLAY=:0.0 /usr/bin/notify-send -u critical "Low battery" "$message"
-                    [ -z "$PLAYER_COMMAND" ] || $PLAYER_COMMAND /usr/share/sng-batmon/warning-battery-low.mp3
-                fi
-                if [[ $charge_percent -ge $THRESHOLD_LOW ]]; then
+
+
+                if [[ $charge_percent -ge ${THRESHOLD_LOW[0]} ]]; then
                     ALARM_REPEAT=0
                 fi
             fi
@@ -87,6 +115,5 @@ while true;do
     }
 done
 
-#lockfile-remove --lock-name $my_fifo
 rm $my_fifo 2>/dev/null
 
