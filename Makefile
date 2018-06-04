@@ -3,7 +3,7 @@ INSTALL_PREFIX=$(PREFIX)/bin
 
 default: check_programs
 #default: check_programs sng-batmon.1.gz
-	
+
 check_programs:
 	@echo -n "** Checking for head ... "
 	@type head 1>/dev/null 2>&1 && echo found || ( echo "not found"; echo "  *** You must install head (probably package coreutils)"; exit 1 )

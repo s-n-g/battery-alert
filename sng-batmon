@@ -34,9 +34,14 @@ my_fifo=/tmp/sng-batmon
 #lockfile-check --lock-name $my_fifo && exit
 #lockfile-create --lock-name $my_fifo
 [ -p $my_fifo ] && exit
+acpi_path=$(find /sys/class/power_supply/ -name 'BAT*' | head -1)
+[ -z "$acpi_path" ] && exit 
+
 mkfifo $my_fifo
 
 #set -x
+STOP_ALARM=1
+TIME_OUT=60
 while true;do
     if [ -e /etc/sng-batmon.conf ]; then
         . /etc/sng-batmon.conf || control_c
@@ -45,7 +50,10 @@ while true;do
         . ~/.config/sng-batmon/config || control_c
     fi
 
-    if read -t 60 line <$my_fifo;then
+    # wait for input from FIFO
+    # for TIME_OUT sec (default=60)
+    exec 3<>$my_fifo
+    if read -t $TIME_OUT -u 3 line; then
         if [ ! -z "$line" ];then
             if [ "$line" == "stop" ];then
                 STOP_ALARM=1
@@ -69,6 +77,9 @@ while true;do
         ALARM_REPEAT=1
         while [ "$ALARM_REPEAT" = "1" ];do
             acpi_path=$(find /sys/class/power_supply/ -name 'BAT*' | head -1)
+            if [ -z "$acpi_path" ]; then 
+                control_c
+            fi
             charge_now=$(cat "$acpi_path/charge_now")
             charge_full=$(cat "$acpi_path/charge_full")
             charge_status=$(cat "$acpi_path/status")
