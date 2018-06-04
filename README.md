@@ -82,7 +82,7 @@ Run make
 
 if *make* fails because of *mpg123* not being installed, and one does nott want to install it, one can use the *no-mpg123* make argument.
 
-```python
+```ruby
 $ make
 ** Checking for head ... found
 ** Checking for notify-send ... found
@@ -95,9 +95,10 @@ $ make no-mpg123
 ** Checking for head ... found
 ** Checking for notify-send ... found
 ** Checking for bc ... found
+$
 ```
 
-In this case, a valid **PLAYER_COMMAND** has to be provided for audio notification to work (see [Configuration](#configuration).
+In this case, a valid **PLAYER_COMMAND** has to be provided for audio notification to work (see [Configuration](#configuration)).
 
 Finally, go on and install it
 
