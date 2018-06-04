@@ -25,7 +25,7 @@ The need for this script emmerged after having my laptop (running i3 window mana
 
 In this respect, the script uses 5 levels (2 notification, 2 low level alert and a halt level).
 
-All level data (messages, icons, sounds) are configurable (see Configuration).
+All level data (messages, icons, sounds) are configurable (see [Configuration](#configuration)).
 
 ### Notification levels
 
@@ -49,7 +49,7 @@ These levels will produce a visible warning and an "annoying" audible notificati
 
 2. **THRESHOLD_LOW**
 
-   Low alert level. Notification will be continues. Default value: **15%**.
+   Low alert level. Notification will be displayed repeatedly. Default value: **15%**.
 
 ### Halt level
 
@@ -57,7 +57,9 @@ These levels will produce a visible warning and an "annoying" audible notificati
 
    System halt level. Ths is actuall not a notification level, since when reached, the system will be halted. Default value: **7%**.
    
-   The command to halt the system is configurable. Default command: **systemctl poweroff**.
+   The command to halt the system is configurable (see [Configuration](#configuration)).
+   
+   Default command: **systemctl poweroff**.
 
 ## Installation
 
@@ -90,11 +92,11 @@ On a **bash** terminal:
   
 If no error is occurs, you are good to go.
 
-**Note:**
-
-Any changes made to the configuration file will take effect within the next minute.
-
-If an error occurs, *sng-batmon* will terminate, so be aware.
+<dl>
+  <dt>Note</dt>
+  <dd>Any changes made to the configuration file will take effect within the next minute.</dd>
+   <dd>If an error occurs, <i>sng-batmon</i> will terminate, so be aware.</dd>
+</dl>
 
 ### Default configuration
 
