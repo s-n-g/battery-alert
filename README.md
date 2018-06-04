@@ -21,7 +21,7 @@ Its difference from other similar scripts is that it provides visible **and audi
 
 The mentality behind this behavior is not to keep the system running as long as possible; it's rather to keep the user notified about the situation and eventaully halt the system before data loss occurs (due to an unexpected shutdown).
 
-The need for this script emmerged after having my laptop (running i3 window manager) powering off on me, while listening to music and dealing with other staff...
+The need for this script emerged after having my laptop (running i3 window manager) powering off on me, while listening to music and dealing with other staff...
 
 In this respect, the script uses 5 levels (2 notification, 2 low level alert and a halt level).
 
@@ -77,14 +77,14 @@ If successful, install it
 
 ## Configuration
 
-A system wide configuration file (**/etc/sng-batmon.conf**) is installed uppon package installation.
+The pacakge's system wide configuration is located in **/etc/sng-batmon.conf**.
 
 To customize it, one has to create a user writable config file and edit it.
 
     mkdir ~/.config/sng-batmon
     cp /etc/sng-batmon.conf ~/.config/sng-batmon/config
 
-After editin this file, one should source it in order to check its validity.
+After editing this file, one should source it in order to check its validity.
 
 On a **bash** terminal:
 
