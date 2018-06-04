@@ -36,7 +36,7 @@ The purpose of these notification levels is to try and keep the battery between 
 
 ### Alert levels
 
-These levels will produce warning (alert) notification and if no action is taken (i.e. battery charging) will lead to halting the system.
+These levels will produce a visible warning and an "annoying" audible notification.
 
 1. **THRESHOLD_HIGH**
 
