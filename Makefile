@@ -39,7 +39,7 @@ install:
 	@ echo done
 	@ echo -n "Installing data files ... "
 	@ install -m 755 -d /usr/share/sng-batmon
-	@ install -m 644 icons/* sounds/*.mp3 /usr/share/sng-batmon
+	@ install -m 644 icons/* sounds/*.mp3 man/*.html /usr/share/sng-batmon
 	@ echo done
 	@ echo -n "Installing man page ... "
 	@ MAN=$$(man -w | sed 's/:.*//')/man1; \

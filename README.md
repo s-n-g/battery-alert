@@ -74,11 +74,15 @@ If for any reason one prefers not to install it, or not to use it, one should fo
 
 Download *sng-batmon*
 
-    git clone https://github.com/s-n-g/sng-batmon.git
+```ruby
+git clone https://github.com/s-n-g/sng-batmon.git
+```
 
 Run make
 
-    make
+```ruby
+make
+```
 
 if *make* fails because of *mpg123* not being installed, and one does nott want to install it, one can use the *no-mpg123* make argument.
 
@@ -102,7 +106,9 @@ In this case, a valid **PLAYER_COMMAND** has to be provided for audio notificati
 
 Finally, go on and install it
 
-    sudo make install
+```ruby
+sudo make install
+```
 
 ## Configuration
 
@@ -110,14 +116,18 @@ The pacakge's system wide configuration is located in **/etc/sng-batmon.conf**.
 
 To customize it, one has to create a user writable config file and edit it.
 
-    mkdir ~/.config/sng-batmon
-    cp /etc/sng-batmon.conf ~/.config/sng-batmon/config
+```ruby
+mkdir ~/.config/sng-batmon
+cp /etc/sng-batmon.conf ~/.config/sng-batmon/config
+```
 
 After editing this file, one should source it in order to check its validity.
 
 On a **bash** terminal:
 
-    . ~/.config/sng-batmon/config
+```ruby
+. ~/.config/sng-batmon/config
+```
   
 If no error is occurs, you are good to go.
 
