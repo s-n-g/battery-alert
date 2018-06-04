@@ -4,9 +4,13 @@ Battery monitoring with sound alert
 ## Table of Content
 
 1. [Description](#description)
+   - [Notification levels](#notification-levels)
+   - [Alert levels](#alert-levels)
+   - [Halt level](#halt-level)
 2. [Installation](#installation)
 3. [Configuration](#configuration)
 4. [Sources](#sources)
+4. [Changelog]()
 
 ## Description
 
@@ -189,3 +193,9 @@ HALT_COMMAND="systemctl poweroff"
 - The icons are derived from [maateen/battery-monitor](https://github.com/maateen/battery-monitor).
 
 - The sounds come from the Public Domain and [www.fromtexttospeech.com](http://www.fromtexttospeech.com).
+
+## Changelog
+
+- 4/6/18
+
+  First public release
