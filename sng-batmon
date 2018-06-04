@@ -34,6 +34,7 @@ my_fifo=/tmp/sng-batmon
 #lockfile-check --lock-name $my_fifo && exit
 #lockfile-create --lock-name $my_fifo
 [ -p $my_fifo ] && exit
+# make sure a battery is present
 acpi_path=$(find /sys/class/power_supply/ -name 'BAT*' | head -1)
 [ -z "$acpi_path" ] && exit 
 
@@ -77,9 +78,8 @@ while true;do
         ALARM_REPEAT=1
         while [ "$ALARM_REPEAT" = "1" ];do
             acpi_path=$(find /sys/class/power_supply/ -name 'BAT*' | head -1)
-            if [ -z "$acpi_path" ]; then 
-                control_c
-            fi
+            # make sure a battery is present
+            [ -z "$acpi_path" ] && control_c
             charge_now=$(cat "$acpi_path/charge_now")
             charge_full=$(cat "$acpi_path/charge_full")
             charge_status=$(cat "$acpi_path/status")
