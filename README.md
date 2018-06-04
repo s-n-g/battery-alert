@@ -84,7 +84,7 @@ Run make
 make
 ```
 
-if *make* fails because of *mpg123* not being installed, and one does not want to install it, one can use the *no-mpg123* make argument.
+If *make* fails because of *mpg123* not being installed, and one does not want to install it, one can use the *no-mpg123* make argument.
 
 ```ruby
 $ make
@@ -206,7 +206,7 @@ THRESHOLD_NOTIFY_LOW[5]=5000
 # END OF THRESHOLDS DEFINITION
 
 # This is the command what will play the warning message.
-# default is mpg123, since it's very light on resources
+# Default is mpg123, since it's very light on resources.
 # If empty, no sound will be played
 #
 # Examples:

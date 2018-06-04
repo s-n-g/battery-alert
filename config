@@ -62,7 +62,7 @@ THRESHOLD_NOTIFY_LOW[5]=5000
 # END OF THRESHOLDS DEFINITION
 
 # This is the command what will play the warning message.
-# default is mpg123, since it's very light on resources
+# Default is mpg123, since it's very light on resources.
 # If empty, no sound will be played
 #
 # Examples:
