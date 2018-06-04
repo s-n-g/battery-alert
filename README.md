@@ -9,8 +9,9 @@ Battery monitoring with sound alert
    - [Halt level](#halt-level)
 2. [Installation](#installation)
 3. [Configuration](#configuration)
+   - [Default configuration](#default-configuration)
 4. [Sources](#sources)
-4. [Changelog]()
+4. [Changelog](#changelog)
 
 ## Description
 
