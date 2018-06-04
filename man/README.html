@@ -141,7 +141,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div class="sourceCode" id="cb1"><pre class="sourceCode ruby"><code class="sourceCode ruby"><a class="sourceLine" id="cb1-1" data-line-number="1">git clone https:<span class="ot">//</span>github.com/s-n-g/sng-batmon.git</a></code></pre></div>
 <p>Run make</p>
 <div class="sourceCode" id="cb2"><pre class="sourceCode ruby"><code class="sourceCode ruby"><a class="sourceLine" id="cb2-1" data-line-number="1">make</a></code></pre></div>
-<p>if <em>make</em> fails because of <em>mpg123</em> not being installed, and one does nott want to install it, one can use the <em>no-mpg123</em> make argument.</p>
+<p>if <em>make</em> fails because of <em>mpg123</em> not being installed, and one does not want to install it, one can use the <em>no-mpg123</em> make argument.</p>
 <div class="sourceCode" id="cb3"><pre class="sourceCode ruby"><code class="sourceCode ruby"><a class="sourceLine" id="cb3-1" data-line-number="1">$ make</a>
 <a class="sourceLine" id="cb3-2" data-line-number="2">** <span class="dt">Checking</span> <span class="kw">for</span> head ... found</a>
 <a class="sourceLine" id="cb3-3" data-line-number="3">** <span class="dt">Checking</span> <span class="kw">for</span> notify-send ... found</a>
@@ -247,7 +247,7 @@ If an error occurs, <i>sng-batmon</i> will terminate, so be aware.
 <a class="sourceLine" id="cb7-65" data-line-number="65"><span class="co"># default is mpg123, since it&#39;s very light on resources</span></a>
 <a class="sourceLine" id="cb7-66" data-line-number="66"><span class="co"># If empty, no sound will be played</span></a>
 <a class="sourceLine" id="cb7-67" data-line-number="67"><span class="co">#</span></a>
-<a class="sourceLine" id="cb7-68" data-line-number="68"><span class="co"># Examples</span></a>
+<a class="sourceLine" id="cb7-68" data-line-number="68"><span class="co"># Examples:</span></a>
 <a class="sourceLine" id="cb7-69" data-line-number="69"><span class="co">#PLAYER_COMMAND=&quot;cvlc -q&quot;</span></a>
 <a class="sourceLine" id="cb7-70" data-line-number="70"><span class="co">#PLAYER_COMMAND=&quot;ffplay -volume 100 --autoexit -nodisp -v 0 -i&quot;</span></a>
 <a class="sourceLine" id="cb7-71" data-line-number="71"><span class="co">#PLAYER_COMMAND=&quot;mplayer -msglevel all=-1&quot;</span></a>
@@ -259,15 +259,14 @@ If an error occurs, <i>sng-batmon</i> will terminate, so be aware.
 <a class="sourceLine" id="cb7-77" data-line-number="77"><span class="co"># It&#39;s up to you to make sure the command can be executed</span></a>
 <a class="sourceLine" id="cb7-78" data-line-number="78"><span class="co"># (has the right permission etc.)</span></a>
 <a class="sourceLine" id="cb7-79" data-line-number="79"><span class="co">#</span></a>
-<a class="sourceLine" id="cb7-80" data-line-number="80"><span class="co"># Commands examples</span></a>
-<a class="sourceLine" id="cb7-81" data-line-number="81"><span class="co"># </span></a>
-<a class="sourceLine" id="cb7-82" data-line-number="82"><span class="co">#HALT_COMMAND=&quot;xfce4-session-logout -h&quot;</span></a>
-<a class="sourceLine" id="cb7-83" data-line-number="83"><span class="co">#HALT_COMMAND=&quot;xfce4-session-logout -s&quot;</span></a>
-<a class="sourceLine" id="cb7-84" data-line-number="84"><span class="co">#HALT_COMMAND=&quot;xfce4-session-logout --hibernate&quot;</span></a>
-<a class="sourceLine" id="cb7-85" data-line-number="85"><span class="co">#HALT_COMMAND=&quot;systemctl suspend&quot;</span></a>
-<a class="sourceLine" id="cb7-86" data-line-number="86"><span class="co">#HALT_COMMAND=&quot;systemctl hibernate&quot;</span></a>
-<a class="sourceLine" id="cb7-87" data-line-number="87"><span class="co">#HALT_COMMAND=&quot;systemctl hybrid-sleep&quot;</span></a>
-<a class="sourceLine" id="cb7-88" data-line-number="88"><span class="dt">HALT_COMMAND</span>=<span class="st">&quot;systemctl poweroff&quot;</span></a></code></pre></div>
+<a class="sourceLine" id="cb7-80" data-line-number="80"><span class="co"># Examples:</span></a>
+<a class="sourceLine" id="cb7-81" data-line-number="81"><span class="co">#HALT_COMMAND=&quot;xfce4-session-logout -h&quot;</span></a>
+<a class="sourceLine" id="cb7-82" data-line-number="82"><span class="co">#HALT_COMMAND=&quot;xfce4-session-logout -s&quot;</span></a>
+<a class="sourceLine" id="cb7-83" data-line-number="83"><span class="co">#HALT_COMMAND=&quot;xfce4-session-logout --hibernate&quot;</span></a>
+<a class="sourceLine" id="cb7-84" data-line-number="84"><span class="co">#HALT_COMMAND=&quot;systemctl suspend&quot;</span></a>
+<a class="sourceLine" id="cb7-85" data-line-number="85"><span class="co">#HALT_COMMAND=&quot;systemctl hibernate&quot;</span></a>
+<a class="sourceLine" id="cb7-86" data-line-number="86"><span class="co">#HALT_COMMAND=&quot;systemctl hybrid-sleep&quot;</span></a>
+<a class="sourceLine" id="cb7-87" data-line-number="87"><span class="dt">HALT_COMMAND</span>=<span class="st">&quot;systemctl poweroff&quot;</span></a></code></pre></div>
 <h2 id="sources">Sources</h2>
 <h3 id="and-resources">(and resources)</h3>
 <ul>

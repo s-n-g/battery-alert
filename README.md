@@ -84,7 +84,7 @@ Run make
 make
 ```
 
-if *make* fails because of *mpg123* not being installed, and one does nott want to install it, one can use the *no-mpg123* make argument.
+if *make* fails because of *mpg123* not being installed, and one does not want to install it, one can use the *no-mpg123* make argument.
 
 ```ruby
 $ make
@@ -209,7 +209,7 @@ THRESHOLD_NOTIFY_LOW[5]=5000
 # default is mpg123, since it's very light on resources
 # If empty, no sound will be played
 #
-# Examples
+# Examples:
 #PLAYER_COMMAND="cvlc -q"
 #PLAYER_COMMAND="ffplay -volume 100 --autoexit -nodisp -v 0 -i"
 #PLAYER_COMMAND="mplayer -msglevel all=-1"
@@ -221,8 +221,7 @@ PLAYER_COMMAND="mpg123 -q"
 # It's up to you to make sure the command can be executed
 # (has the right permission etc.)
 #
-# Commands examples
-# 
+# Examples:
 #HALT_COMMAND="xfce4-session-logout -h"
 #HALT_COMMAND="xfce4-session-logout -s"
 #HALT_COMMAND="xfce4-session-logout --hibernate"
