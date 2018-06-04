@@ -7,6 +7,7 @@ Battery monitoring with sound alert
    - [Notification levels](#notification-levels)
    - [Alert levels](#alert-levels)
    - [Halt level](#halt-level)
+   - [Audio notification](#audio-notification)
 2. [Installation](#installation)
 3. [Configuration](#configuration)
    - [Default configuration](#default-configuration)
@@ -61,6 +62,14 @@ These levels will produce a visible warning and an "annoying" audible notificati
    
    Default command: **systemctl poweroff**.
 
+### Audio notification
+
+Audio playback will occur in the background (i.e. no program window of any kind will be visible). Playback volume will be the one set at the system mixer, so some precaution should take place on this respect. That means, what is the point in using audio notification if audio volume is low enough to make them inaudible?
+
+*sng-batmon* by default uses **mpg123** as an audio player, because it is light-weight enough and gets installed by default on most systems.
+
+If for any reason one prefers not to install it, or not to use it, one should follow the [relevant installation instructions](#installation).
+
 ## Installation
 
 Download *sng-batmon*
@@ -71,7 +80,26 @@ Run make
 
     make
 
-If successful, install it
+if *make* fails because of *mpg123* not being installed, and one does nott want to install it, one can use the *no-mpg123* make argument.
+
+```python
+$ make
+** Checking for head ... found
+** Checking for notify-send ... found
+** Checking for bc ... found
+** Checking for mpg123 ... not found
+  *** You must install mpg123 (package mpg123)
+make: *** [Makefile:15: check_dependencies] Error 1
+$
+$ make no-mpg123
+** Checking for head ... found
+** Checking for notify-send ... found
+** Checking for bc ... found
+```
+
+In this case, a valid **PLAYER_COMMAND** has to be provided for audio notification to work (see [Configuration](#configuration).
+
+Finally, go on and install it
 
     sudo make install
 
@@ -169,6 +197,12 @@ THRESHOLD_NOTIFY_LOW[5]=5000
 # This is the command what will play the warning message.
 # default is mpg123, since it's very light on resources
 # If empty, no sound will be played
+#
+# Examples
+#PLAYER_COMMAND="cvlc -q"
+#PLAYER_COMMAND="ffplay -volume 100 --autoexit -nodisp -v 0 -i"
+#PLAYER_COMMAND="mplayer -msglevel all=-1"
+#PLAYER_COMMAND="play -q"
 PLAYER_COMMAND="mpg123 -q"
 
 # HALT COMMAND DEFINITION

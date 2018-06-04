@@ -64,6 +64,12 @@ THRESHOLD_NOTIFY_LOW[5]=5000
 # This is the command what will play the warning message.
 # default is mpg123, since it's very light on resources
 # If empty, no sound will be played
+#
+# Examples
+#PLAYER_COMMAND="cvlc -q"
+#PLAYER_COMMAND="ffplay -volume 100 --autoexit -nodisp -v 0 -i"
+#PLAYER_COMMAND="mplayer -msglevel all=-1"
+#PLAYER_COMMAND="play -q"
 PLAYER_COMMAND="mpg123 -q"
 
 # HALT COMMAND DEFINITION
