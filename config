@@ -9,6 +9,10 @@
 #  5  time to display notification (in milliseconds)
 #     it should be the same as the duration
 #     of the sound file
+#  6  check interval (in seconds)
+#     time to wait between battery status check
+#     if it is 0, do not wait
+#     effectively displaying notification repeatedly
 
 #  - THRESHOLD_HIGH
 #    If battery percentage is lower than this, a notification
@@ -19,6 +23,7 @@ THRESHOLD_HIGH[2]="Battery running critically low at $charge_percent%!"
 THRESHOLD_HIGH[3]=warning-high.png
 THRESHOLD_HIGH[4]=warning-low-battery.mp3
 THRESHOLD_HIGH[5]=7000
+THRESHOLD_HIGH[6]=30
 
 #  - THRESHOLD_LOW
 #    If battery percentage is lower than this, both the
@@ -28,18 +33,15 @@ THRESHOLD_LOW[1]="Low battery"
 THRESHOLD_LOW[2]="Battery running critically low at $charge_percent%!"
 THRESHOLD_LOW[3]=warning-low.png
 THRESHOLD_LOW[4]=warning-low-battery.mp3
-THRESHOLD_LOW[5]=7000
+THRESHOLD_LOW[6]=0
 
 #  - THRESHOLD_HALT
 #    If a HALT_COMMAND is defined, the PC will be halted /
 #    powered off, when battery status is bellow this
 #    threshold
+#
+#    only item 0 has any meaning here
 THRESHOLD_HALT[0]=7
-THRESHOLD_HALT[1]=""
-THRESHOLD_HALT[2]=""
-THRESHOLD_HALT[3]=""
-THRESHOLD_HALT[4]=""
-THRESHOLD_HALT[5]=0
 
 #  - THRESHOLD_NOTIFY_HIGH
 #    Notify that user can now disconnect the power supply
@@ -49,6 +51,7 @@ THRESHOLD_NOTIFY_HIGH[2]="You can now disconnect the power supply"
 THRESHOLD_NOTIFY_HIGH[3]=notify-high.png
 THRESHOLD_NOTIFY_HIGH[4]=notify-high.mp3
 THRESHOLD_NOTIFY_HIGH[5]=5000
+THRESHOLD_NOTIFY_HIGH[6]=60
 
 #  - THRESHOLD_NOTIFY_LOW
 #    Notify that user should now connect the power supply
@@ -58,6 +61,7 @@ THRESHOLD_NOTIFY_LOW[2]="You should now connect the power supply"
 THRESHOLD_NOTIFY_LOW[3]=notify-low.png
 THRESHOLD_NOTIFY_LOW[4]=notify-low.mp3
 THRESHOLD_NOTIFY_LOW[5]=5000
+THRESHOLD_NOTIFY_LOW[6]=60
 
 # END OF THRESHOLDS DEFINITION
 

@@ -11,8 +11,9 @@ Battery monitoring with sound alert
 2. [Installation](#installation)
 3. [Configuration](#configuration)
    - [Default configuration](#default-configuration)
-4. [Sources](#sources)
-4. [Changelog](#changelog)
+4. [Controlling sng-batmon](#controlling-sng-batmon)
+5. [Sources](#sources)
+6. [Changelog](#changelog)
 
 ## Description
 
@@ -46,7 +47,7 @@ These levels will produce a visible warning and an "annoying" audible notificati
 
 1. **THRESHOLD_HIGH**
 
-   High alert level. Notification will be active once every 60 seconds. Default value: **20%**.
+   High alert level. Notification will be active once every 60 seconds (default value). Default value: **20%**.
 
 2. **THRESHOLD_LOW**
 
@@ -106,7 +107,7 @@ In this case, a valid **PLAYER_COMMAND** has to be provided for audio notificati
 
 <dl>
   <dt>Note</dt>
-  <dd>If **PLAYER_COMMAND** is empty or invalid, audio notification will be inhibited.</dd>
+  <dd>If <b>PLAYER_COMMAND</b> is empty or invalid, audio notification will be inhibited.</dd>
 </dl>
 
 
@@ -128,6 +129,12 @@ mkdir ~/.config/sng-batmon
 cp /etc/sng-batmon.conf ~/.config/sng-batmon/config
 ```
 
+Before editing the file, one should suspend *sng-batmon*, if it is running
+
+```ruby
+echo suspend>/tmp/sng-batmon
+```
+
 After editing this file, one should source it in order to check its validity.
 
 On a **bash** terminal:
@@ -138,11 +145,17 @@ On a **bash** terminal:
   
 If no error occurs, you are good to go.
 
+if *sng-batmon* has been suspended, resume its execution
+
+```ruby
+echo resume>/tmp/sng-batmon
+```
+
 <dl>
   <dt>Note</dt>
-  <dd>Any changes made to the configuration file will take effect within the next 60 seconds.</dd>
    <dd>If an error occurs, <i>sng-batmon</i> will terminate, so be aware.</dd>
 </dl>
+
 
 ### Default configuration
 
@@ -160,6 +173,10 @@ The default configuration is the following:
 #  5  time to display notification (in milliseconds)
 #     it should be the same as the duration
 #     of the sound file
+#  6  check interval (in seconds)
+#     time to wait between battery status check
+#     if it is 0, do not wait
+#     effectively displaying notification repeatedly
 
 #  - THRESHOLD_HIGH
 #    If battery percentage is lower than this, a notification
@@ -170,6 +187,7 @@ THRESHOLD_HIGH[2]="Battery running critically low at $charge_percent%!"
 THRESHOLD_HIGH[3]=warning-high.png
 THRESHOLD_HIGH[4]=warning-low-battery.mp3
 THRESHOLD_HIGH[5]=7000
+THRESHOLD_HIGH[6]=30
 
 #  - THRESHOLD_LOW
 #    If battery percentage is lower than this, both the
@@ -179,18 +197,15 @@ THRESHOLD_LOW[1]="Low battery"
 THRESHOLD_LOW[2]="Battery running critically low at $charge_percent%!"
 THRESHOLD_LOW[3]=warning-low.png
 THRESHOLD_LOW[4]=warning-low-battery.mp3
-THRESHOLD_LOW[5]=7000
+THRESHOLD_LOW[6]=0
 
 #  - THRESHOLD_HALT
 #    If a HALT_COMMAND is defined, the PC will be halted /
 #    powered off, when battery status is bellow this
 #    threshold
+#
+#    only item 0 has any meaning here
 THRESHOLD_HALT[0]=7
-THRESHOLD_HALT[1]=""
-THRESHOLD_HALT[2]=""
-THRESHOLD_HALT[3]=""
-THRESHOLD_HALT[4]=""
-THRESHOLD_HALT[5]=0
 
 #  - THRESHOLD_NOTIFY_HIGH
 #    Notify that user can now disconnect the power supply
@@ -200,6 +215,7 @@ THRESHOLD_NOTIFY_HIGH[2]="You can now disconnect the power supply"
 THRESHOLD_NOTIFY_HIGH[3]=notify-high.png
 THRESHOLD_NOTIFY_HIGH[4]=notify-high.mp3
 THRESHOLD_NOTIFY_HIGH[5]=5000
+THRESHOLD_NOTIFY_HIGH[6]=60
 
 #  - THRESHOLD_NOTIFY_LOW
 #    Notify that user should now connect the power supply
@@ -209,6 +225,7 @@ THRESHOLD_NOTIFY_LOW[2]="You should now connect the power supply"
 THRESHOLD_NOTIFY_LOW[3]=notify-low.png
 THRESHOLD_NOTIFY_LOW[4]=notify-low.mp3
 THRESHOLD_NOTIFY_LOW[5]=5000
+THRESHOLD_NOTIFY_LOW[6]=60
 
 # END OF THRESHOLDS DEFINITION
 
@@ -236,6 +253,28 @@ PLAYER_COMMAND="mpg123 -q"
 #HALT_COMMAND="systemctl hibernate"
 #HALT_COMMAND="systemctl hybrid-sleep"
 HALT_COMMAND="systemctl poweroff"
+
+```
+
+## Controlling sng-batmon
+
+*sng-batmon* listens for input on a named pipe (FIFO), **/tmp/sng-batmon**.
+
+Available commands:
+
+<dl>
+<dt>suspend</dt>
+<dd>suspend execution - the script stops checking and reporting battery status</dd>
+<dt>resume</dt>
+<dd>resume execution - the script resumes checking and reporting battery status</dd>
+<dt>exit</dt>
+<dd>terminate execution</dd>
+</dl>
+
+The commands can be issued on command line:
+
+```ruby
+echo suspend>/tmp/sng-batmon
 ```
 
 ## Sources
