@@ -1,7 +1,7 @@
 # sng-batmon
 Battery monitoring with sound alert
 
-## Table of Content
+## Table of Contents
 
 1. [Description](#description)
    - [Notification levels](#notification-levels)
@@ -20,9 +20,9 @@ Battery monitoring with sound alert
 
 Its difference from other similar scripts is that it provides visible **and audible** notification depending on battery charging level.
 
-The mentality behind this behavior is not to keep the system running as long as possible; it's rather to keep the user notified about the situation and eventaully halt the system before data loss occurs (due to an unexpected shutdown).
+The mentality behind this behavior is not to keep the system running as long as possible; it's rather to keep the user notified about the situation and eventually halt the system before data loss occurs (due to an unexpected shutdown).
 
-The need for this script emerged after having my laptop (running i3 window manager) powering off on me, while listening to music and dealing with other staff...
+The need for this script emerged after having my laptop (running i3 window manager) powering off on me on various occasions, like while listening to music and dealing with other staff, etc.
 
 In this respect, the script uses 5 levels (2 notification, 2 low level alert and a halt level).
 
@@ -46,7 +46,7 @@ These levels will produce a visible warning and an "annoying" audible notificati
 
 1. **THRESHOLD_HIGH**
 
-   High alert level. Notification will be active once every minute. Default value: **20%**.
+   High alert level. Notification will be active once every 60 seconds. Default value: **20%**.
 
 2. **THRESHOLD_LOW**
 
@@ -56,7 +56,7 @@ These levels will produce a visible warning and an "annoying" audible notificati
 
 1. **THRESHOLD_HALT**
 
-   System halt level. Ths is actuall not a notification level, since when reached, the system will be halted. Default value: **7%**.
+   System halt level. This is actually not a notification level, since when reached, the system will be halted. Default value: **7%**.
    
    The command to halt the system is configurable (see [Configuration](#configuration)).
    
@@ -64,11 +64,11 @@ These levels will produce a visible warning and an "annoying" audible notificati
 
 ### Audio notification
 
-Audio playback will occur in the background (i.e. no program window of any kind will be visible). Playback volume will be the one set at the system mixer, so some precaution should take place on this respect. That means, what is the point in using audio notification if audio volume is low enough to make them inaudible?
+Audio playback will occur in the background (i.e. no program window of any kind will be visible). Playback volume will be the one set at the system mixer, so some precaution should take place on this respect. After all, what is the point in using audio notification if audio volume is low enough to make it inaudible?
 
-*sng-batmon* by default uses **mpg123** as an audio player, because it is light-weight enough and gets installed by default on most systems.
+*sng-batmon* by default uses **mpg123** as an audio player, because it is light-weight enough and gets installed by default on most systems, but any mp3 player can be used, provided that it is a terminal application (or it can hide its window) and will print no diagnostic or other messages in *stdout* (or it can suppress them).
 
-If for any reason one prefers not to install it, or not to use it, one should follow the [relevant installation instructions](#installation).
+If for any reason one prefers not to install it, or use a different player, or even not to use one at all, one should follow the [relevant installation instructions](#installation).
 
 ## Installation
 
@@ -104,6 +104,13 @@ $
 
 In this case, a valid **PLAYER_COMMAND** has to be provided for audio notification to work (see [Configuration](#configuration)).
 
+<dl>
+  <dt>Note</dt>
+  <dd>If **PLAYER_COMMAND** is empty or invalid, audio notification will be inhibited.</dd>
+</dl>
+
+
+
 Finally, go on and install it
 
 ```ruby
@@ -112,9 +119,9 @@ sudo make install
 
 ## Configuration
 
-The pacakge's system wide configuration is located in **/etc/sng-batmon.conf**.
+The package's system wide configuration is located in **/etc/sng-batmon.conf**.
 
-To customize it, one has to create a user writable config file and edit it.
+To customize it, one has to create a user writable configuration file and edit it.
 
 ```ruby
 mkdir ~/.config/sng-batmon
@@ -129,11 +136,11 @@ On a **bash** terminal:
 . ~/.config/sng-batmon/config
 ```
   
-If no error is occurs, you are good to go.
+If no error occurs, you are good to go.
 
 <dl>
   <dt>Note</dt>
-  <dd>Any changes made to the configuration file will take effect within the next minute.</dd>
+  <dd>Any changes made to the configuration file will take effect within the next 60 seconds.</dd>
    <dd>If an error occurs, <i>sng-batmon</i> will terminate, so be aware.</dd>
 </dl>
 
@@ -142,7 +149,7 @@ If no error is occurs, you are good to go.
 The default configuration is the following:
 
 ```ruby
-# ALERT THRESHOLDS DEFINITION
+# THRESHOLDS DEFINITION
 # Thresholds are defined in arrays
 # Items are:
 #  0  battery limit
@@ -241,8 +248,11 @@ HALT_COMMAND="systemctl poweroff"
 
 - The sounds come from the Public Domain and [www.fromtexttospeech.com](http://www.fromtexttospeech.com).
 
+- Numerous web pages on **bash** scripting and github markup.
+
 ## Changelog
 
 - 4/6/18
 
   First public release
+

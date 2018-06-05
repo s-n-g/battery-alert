@@ -12,7 +12,7 @@ check_dependencies:
 	@ echo -n "** Checking for bc ... "
 	@ type bc 1>/dev/null 2>&1 && echo found || ( echo "not found"; echo "  *** You must install bc (package bc)"; exit 1 )
 	@ echo -n "** Checking for mpg123 ... "
-	@ type umpg123 1>/dev/null 2>&1 && echo found || ( echo "not found"; echo "  *** You must install mpg123 (package mpg123)"; exit 1 )
+	@ type mpg123 1>/dev/null 2>&1 && echo found || ( echo "not found"; echo "  *** You must install mpg123 (package mpg123)"; exit 1 )
 
 #sng-batmon.1.gz:
 #	@echo -n "Creating man page ... "

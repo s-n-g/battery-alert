@@ -6,12 +6,22 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
   <title>sng-batmon</title>
   <style type="text/css">
+    html {margin: 2em;} 
+    h2 {margin-top: 2.5em; border-bottom:1px solid #D6D6D6;} 
+    h3 {margin-top: 2em;} 
+    dl {margin: 2em;} 
+    dt {font-weight: bold;}
       code{white-space: pre-wrap;}
       span.smallcaps{font-variant: small-caps;}
       span.underline{text-decoration: underline;}
       div.column{display: inline-block; vertical-align: top; width: 50%;}
   </style>
   <style type="text/css">
+    html {margin: 2em;} 
+    h2 {margin-top: 2.5em; border-bottom:1px solid #D6D6D6;} 
+    h3 {margin-top: 2em;} 
+    dl {margin: 2em;} 
+    dt {font-weight: bold;}
 a.sourceLine { display: inline-block; line-height: 1.25; }
 a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
 a.sourceLine:empty { height: 1.2em; position: absolute; }
@@ -85,7 +95,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </header>
 <h1 id="sng-batmon">sng-batmon</h1>
 <p>Battery monitoring with sound alert</p>
-<h2 id="table-of-content">Table of Content</h2>
+<h2 id="table-of-contents">Table of Contents</h2>
 <ol type="1">
 <li><a href="#description">Description</a>
 <ul>
@@ -105,8 +115,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <h2 id="description">Description</h2>
 <p><em>sng-batmon</em> is yet another battery monitoring script, written in <strong>bash</strong> scripting language.</p>
 <p>Its difference from other similar scripts is that it provides visible <strong>and audible</strong> notification depending on battery charging level.</p>
-<p>The mentality behind this behavior is not to keep the system running as long as possible; it’s rather to keep the user notified about the situation and eventaully halt the system before data loss occurs (due to an unexpected shutdown).</p>
-<p>The need for this script emerged after having my laptop (running i3 window manager) powering off on me, while listening to music and dealing with other staff…</p>
+<p>The mentality behind this behavior is not to keep the system running as long as possible; it’s rather to keep the user notified about the situation and eventually halt the system before data loss occurs (due to an unexpected shutdown).</p>
+<p>The need for this script emerged after having my laptop (running i3 window manager) powering off on me on various occasions, like while listening to music and dealing with other staff, etc.</p>
 <p>In this respect, the script uses 5 levels (2 notification, 2 low level alert and a halt level).</p>
 <p>All level data (messages, icons, sounds) are configurable (see <a href="#configuration">Configuration</a>).</p>
 <h3 id="notification-levels">Notification levels</h3>
@@ -121,21 +131,21 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <p>These levels will produce a visible warning and an “annoying” audible notification.</p>
 <ol type="1">
 <li><p><strong>THRESHOLD_HIGH</strong></p>
-<p>High alert level. Notification will be active once every minute. Default value: <strong>20%</strong>.</p></li>
+<p>High alert level. Notification will be active once every 60 seconds. Default value: <strong>20%</strong>.</p></li>
 <li><p><strong>THRESHOLD_LOW</strong></p>
 <p>Low alert level. Notification will be displayed repeatedly. Default value: <strong>15%</strong>.</p></li>
 </ol>
 <h3 id="halt-level">Halt level</h3>
 <ol type="1">
 <li><p><strong>THRESHOLD_HALT</strong></p>
-<p>System halt level. Ths is actuall not a notification level, since when reached, the system will be halted. Default value: <strong>7%</strong>.</p>
+<p>System halt level. This is actually not a notification level, since when reached, the system will be halted. Default value: <strong>7%</strong>.</p>
 <p>The command to halt the system is configurable (see <a href="#configuration">Configuration</a>).</p>
 <p>Default command: <strong>systemctl poweroff</strong>.</p></li>
 </ol>
 <h3 id="audio-notification">Audio notification</h3>
-<p>Audio playback will occur in the background (i.e. no program window of any kind will be visible). Playback volume will be the one set at the system mixer, so some precaution should take place on this respect. That means, what is the point in using audio notification if audio volume is low enough to make them inaudible?</p>
-<p><em>sng-batmon</em> by default uses <strong>mpg123</strong> as an audio player, because it is light-weight enough and gets installed by default on most systems.</p>
-<p>If for any reason one prefers not to install it, or not to use it, one should follow the <a href="#installation">relevant installation instructions</a>.</p>
+<p>Audio playback will occur in the background (i.e. no program window of any kind will be visible). Playback volume will be the one set at the system mixer, so some precaution should take place on this respect. After all, what is the point in using audio notification if audio volume is low enough to make it inaudible?</p>
+<p><em>sng-batmon</em> by default uses <strong>mpg123</strong> as an audio player, because it is light-weight enough and gets installed by default on most systems, but any mp3 player can be used, provided that it is a terminal application (or it can hide its window) and will print no diagnostic or other messages in <em>stdout</em> (or it can suppress them).</p>
+<p>If for any reason one prefers not to install it, or use a different player, or even not to use one at all, one should follow the <a href="#installation">relevant installation instructions</a>.</p>
 <h2 id="installation">Installation</h2>
 <p>Download <em>sng-batmon</em></p>
 <div class="sourceCode" id="cb1"><pre class="sourceCode ruby"><code class="sourceCode ruby"><a class="sourceLine" id="cb1-1" data-line-number="1">git clone https:<span class="ot">//</span>github.com/s-n-g/sng-batmon.git</a></code></pre></div>
@@ -156,23 +166,31 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <a class="sourceLine" id="cb3-12" data-line-number="12">** <span class="dt">Checking</span> <span class="kw">for</span> bc ... found</a>
 <a class="sourceLine" id="cb3-13" data-line-number="13">$</a></code></pre></div>
 <p>In this case, a valid <strong>PLAYER_COMMAND</strong> has to be provided for audio notification to work (see <a href="#configuration">Configuration</a>).</p>
-<p>Finally, go on and install it</p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode ruby"><code class="sourceCode ruby"><a class="sourceLine" id="cb4-1" data-line-number="1">sudo make install</a></code></pre></div>
-<h2 id="configuration">Configuration</h2>
-<p>The pacakge’s system wide configuration is located in <strong>/etc/sng-batmon.conf</strong>.</p>
-<p>To customize it, one has to create a user writable config file and edit it.</p>
-<div class="sourceCode" id="cb5"><pre class="sourceCode ruby"><code class="sourceCode ruby"><a class="sourceLine" id="cb5-1" data-line-number="1">mkdir ~<span class="ot">/.config/</span>sng-batmon</a>
-<a class="sourceLine" id="cb5-2" data-line-number="2">cp <span class="ot">/etc/</span>sng-batmon.conf ~<span class="ot">/.config/</span>sng-batmon/config</a></code></pre></div>
-<p>After editing this file, one should source it in order to check its validity.</p>
-<p>On a <strong>bash</strong> terminal:</p>
-<div class="sourceCode" id="cb6"><pre class="sourceCode ruby"><code class="sourceCode ruby"><a class="sourceLine" id="cb6-1" data-line-number="1">. ~<span class="ot">/.config/</span>sng-batmon/config</a></code></pre></div>
-<p>If no error is occurs, you are good to go.</p>
 <dl>
 <dt>
 Note
 </dt>
 <dd>
-Any changes made to the configuration file will take effect within the next minute.
+If <strong>PLAYER_COMMAND</strong> is empty or invalid, audio notification will be inhibited.
+</dd>
+</dl>
+<p>Finally, go on and install it</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode ruby"><code class="sourceCode ruby"><a class="sourceLine" id="cb4-1" data-line-number="1">sudo make install</a></code></pre></div>
+<h2 id="configuration">Configuration</h2>
+<p>The package’s system wide configuration is located in <strong>/etc/sng-batmon.conf</strong>.</p>
+<p>To customize it, one has to create a user writable configuration file and edit it.</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode ruby"><code class="sourceCode ruby"><a class="sourceLine" id="cb5-1" data-line-number="1">mkdir ~<span class="ot">/.config/</span>sng-batmon</a>
+<a class="sourceLine" id="cb5-2" data-line-number="2">cp <span class="ot">/etc/</span>sng-batmon.conf ~<span class="ot">/.config/</span>sng-batmon/config</a></code></pre></div>
+<p>After editing this file, one should source it in order to check its validity.</p>
+<p>On a <strong>bash</strong> terminal:</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode ruby"><code class="sourceCode ruby"><a class="sourceLine" id="cb6-1" data-line-number="1">. ~<span class="ot">/.config/</span>sng-batmon/config</a></code></pre></div>
+<p>If no error occurs, you are good to go.</p>
+<dl>
+<dt>
+Note
+</dt>
+<dd>
+Any changes made to the configuration file will take effect within the next 60 seconds.
 </dd>
 <dd>
 If an error occurs, <i>sng-batmon</i> will terminate, so be aware.
@@ -180,7 +198,7 @@ If an error occurs, <i>sng-batmon</i> will terminate, so be aware.
 </dl>
 <h3 id="default-configuration">Default configuration</h3>
 <p>The default configuration is the following:</p>
-<div class="sourceCode" id="cb7"><pre class="sourceCode ruby"><code class="sourceCode ruby"><a class="sourceLine" id="cb7-1" data-line-number="1"><span class="co"># </span><span class="al">ALERT</span><span class="co"> THRESHOLDS DEFINITION</span></a>
+<div class="sourceCode" id="cb7"><pre class="sourceCode ruby"><code class="sourceCode ruby"><a class="sourceLine" id="cb7-1" data-line-number="1"><span class="co"># THRESHOLDS DEFINITION</span></a>
 <a class="sourceLine" id="cb7-2" data-line-number="2"><span class="co"># Thresholds are defined in arrays</span></a>
 <a class="sourceLine" id="cb7-3" data-line-number="3"><span class="co"># Items are:</span></a>
 <a class="sourceLine" id="cb7-4" data-line-number="4"><span class="co">#  0  battery limit</span></a>
@@ -273,6 +291,7 @@ If an error occurs, <i>sng-batmon</i> will terminate, so be aware.
 <li><p>The script is based on the <a href="https://agorf.gr/2016/06/29/low-battery-notification-in-i3wm/">batmon</a> script by <strong>Angelos Orfanakos</strong>, published under the <a href="http://creativecommons.org/licenses/by-nc-sa/4.0/">Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License</a>.</p></li>
 <li><p>The icons are derived from <a href="https://github.com/maateen/battery-monitor">maateen/battery-monitor</a>.</p></li>
 <li><p>The sounds come from the Public Domain and <a href="http://www.fromtexttospeech.com">www.fromtexttospeech.com</a>.</p></li>
+<li><p>Numerous web pages on <strong>bash</strong> scripting and github markup.</p></li>
 </ul>
 <h2 id="changelog">Changelog</h2>
 <ul>
