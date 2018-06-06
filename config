@@ -33,6 +33,7 @@ THRESHOLD_LOW[1]="Low battery"
 THRESHOLD_LOW[2]="Battery running critically low at $charge_percent%!"
 THRESHOLD_LOW[3]=warning-low.png
 THRESHOLD_LOW[4]=warning-low-battery.mp3
+THRESHOLD_LOW[5]=7000
 THRESHOLD_LOW[6]=0
 
 #  - THRESHOLD_HALT

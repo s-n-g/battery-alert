@@ -16,6 +16,7 @@ function control_c {
 function send_command {
     # $1 : fifo file
     # $2 : sommand
+    unset REPLY
     if [ -p $1 ];then
         echo $2>$my_fifo
         read <$my_fifo
@@ -28,7 +29,68 @@ function send_command {
     fi
 }
 
+function alert_threshold_low {
+    LOOP_TIME_OUT=${THRESHOLD_LOW[6]}
+    notify-send -t ${THRESHOLD_LOW[5]} -i "${THRESHOLD_LOW[3]}" "${THRESHOLD_LOW[1]}" "${THRESHOLD_LOW[2]}"
+    if [ ! -z "$PLAYER_COMMAND" ] && [ -e "${THRESHOLD_LOW[4]}" ]; then
+        $PLAYER_COMMAND "${THRESHOLD_LOW[4]}"
+    fi
+}
 
+function alert_threshold_high {
+    LOOP_TIME_OUT=${THRESHOLD_HIGH[6]}
+    notify-send -t ${THRESHOLD_HIGH[5]} -i "${THRESHOLD_HIGH[3]}" "${THRESHOLD_HIGH[1]}" "${THRESHOLD_HIGH[2]}"
+    if [ ! -z "$PLAYER_COMMAND" ] && [ -e "${THRESHOLD_HIGH[4]}" ]; then
+        $PLAYER_COMMAND "${THRESHOLD_HIGH[4]}"
+    fi
+}
+
+function notify_low {
+    LOOP_TIME_OUT=${THRESHOLD_NOTIFY_LOW[6]}
+    notify-send -t ${THRESHOLD_NOTIFY_LOW[5]} -i "${THRESHOLD_NOTIFY_LOW[3]}" "${THRESHOLD_NOTIFY_LOW[1]}" "${THRESHOLD_NOTIFY_LOW[2]}"
+    if [ ! -z "$PLAYER_COMMAND" ] && [ -e "${THRESHOLD_NOTIFY_LOW[4]}" ]; then
+        $PLAYER_COMMAND "${THRESHOLD_NOTIFY_LOW[4]}"
+    fi
+}
+
+function notify_high {
+    LOOP_TIME_OUT=${THRESHOLD_NOTIFY_HIGH[6]}
+    notify-send -t ${THRESHOLD_NOTIFY_HIGH[5]} -i "${THRESHOLD_NOTIFY_HIGH[3]}" "${THRESHOLD_NOTIFY_HIGH[1]}" "${THRESHOLD_NOTIFY_HIGH[2]}"
+    if [ ! -z "$PLAYER_COMMAND" ] && [ -e "${THRESHOLD_NOTIFY_HIGH[4]}" ]; then
+        $PLAYER_COMMAND "${THRESHOLD_NOTIFY_HIGH[4]}"
+    fi
+}
+
+function test {
+    if [ -e /etc/sng-batmon.conf ]; then
+        . /etc/sng-batmon.conf
+    fi
+    if [ -e ~/.config/sng-batmon/config ]; then
+        . ~/.config/sng-batmon/config
+    fi
+    for i in 3 4
+    do
+        [[ "${THRESHOLD_HIGH[$i]}" == /* ]] || THRESHOLD_HIGH[$i]=/usr/share/sng-batmon/"${THRESHOLD_HIGH[$i]}"
+        [[ "${THRESHOLD_LOW[$i]}" == /* ]] || THRESHOLD_LOW[$i]=/usr/share/sng-batmon/"${THRESHOLD_LOW[$i]}"
+        [[ "${THRESHOLD_NOTIFY_HIGH[$i]}" == /* ]] || THRESHOLD_NOTIFY_HIGH[$i]=/usr/share/sng-batmon/"${THRESHOLD_NOTIFY_HIGH[$i]}"
+        [[ "${THRESHOLD_NOTIFY_LOW[$i]}" == /* ]] || THRESHOLD_NOTIFY_LOW[$i]=/usr/share/sng-batmon/"${THRESHOLD_NOTIFY_LOW[$i]}"
+    done
+
+    
+    charge_percent=20
+    read -p 'Press ENTER for low alert'
+    charge_percent=15
+    alert_threshold_low
+    read -p 'Press ENTER for high alert'
+    alert_threshold_high
+    read -p 'Press ENTER for low notification'
+    notify_low
+    read -p 'Press ENTER for high notification'
+    notify_high
+    exit
+}
+
+#set -x
 ##############################################################################
 #                                                                            #
 #                              Commands Section                              #
@@ -57,9 +119,12 @@ elif [ "$1" = "suspend" ];then
 elif [[ "$1" =~ ^resume$|^exit$|^quit$ ]];then
     send_command $my_fifo $1
     echo "$REPLY"
+    if [ "$REPLY" = "suspended" ];then ret=2;fi
     exit $ret
+elif [ "$1" = "test" ];then
+    test
 else
-    exit 126
+    [ -z "$1" ] || exit 126
 fi
 
 ##############################################################################
@@ -144,7 +209,7 @@ while true;do
         fi
     fi
 
-    if [ ! -z "$INHIBIT_BY_COMMAND" ];then
+    if [ -z "$INHIBIT_BY_COMMAND" ];then
         unset INHIBIT_BY_COMMAND
 
         for i in 3 4
@@ -179,35 +244,21 @@ while true;do
                             control_c
                         fi
                     elif [[ $charge_percent -le ${THRESHOLD_LOW[0]} ]]; then
-                        LOOP_TIME_OUT=${THRESHOLD_LOW[6]}
-                        notify-send -t ${THRESHOLD_LOW[5]} -i "${THRESHOLD_LOW[3]}" "${THRESHOLD_LOW[1]}" "${THRESHOLD_LOW[2]}"
-                        if [ ! -z "$PLAYER_COMMAND" ] && [ -e "${THRESHOLD_LOW[4]}" ]; then
-                            $PLAYER_COMMAND "${THRESHOLD_LOW[4]}"
-                        fi
+                        alert_threshold_low
                     elif [[ $charge_percent -le ${THRESHOLD_HIGH[0]} ]]; then
-                        LOOP_TIME_OUT=${THRESHOLD_HIGH[6]}
-                        notify-send -t ${THRESHOLD_HIGH[5]} -i "${THRESHOLD_HIGH[3]}" "${THRESHOLD_HIGH[1]}" "${THRESHOLD_HIGH[2]}"
-                        if [ ! -z "$PLAYER_COMMAND" ] && [ -e "${THRESHOLD_HIGH[4]}" ]; then
-                            $PLAYER_COMMAND "${THRESHOLD_HIGH[4]}"
-                        fi
+                        alert_threshold_high
                     elif [[ $charge_percent -le ${THRESHOLD_NOTIFY_LOW[0]} ]]; then
-                        LOOP_TIME_OUT=${THRESHOLD_NOTIFY_LOW[6]}
-                        notify-send -t ${THRESHOLD_NOTIFY_LOW[5]} -i "${THRESHOLD_NOTIFY_LOW[3]}" "${THRESHOLD_NOTIFY_LOW[1]}" "${THRESHOLD_NOTIFY_LOW[2]}"
-                        if [ ! -z "$PLAYER_COMMAND" ] && [ -e "${THRESHOLD_NOTIFY_LOW[4]}" ]; then
-                            $PLAYER_COMMAND "${THRESHOLD_NOTIFY_LOW[4]}"
-                        fi
-                    elif [[ $charge_percent -ge ${THRESHOLD_NOTIFY_HIGH[0]} ]]; then
-                        LOOP_TIME_OUT=${THRESHOLD_NOTIFY_HIGH[6]}
-                        notify-send -t ${THRESHOLD_NOTIFY_HIGH[5]} -i "${THRESHOLD_NOTIFY_HIGH[3]}" "${THRESHOLD_NOTIFY_HIGH[1]}" "${THRESHOLD_NOTIFY_HIGH[2]}"
-                        if [ ! -z "$PLAYER_COMMAND" ] && [ -e "${THRESHOLD_NOTIFY_HIGH[4]}" ]; then
-                            $PLAYER_COMMAND "${THRESHOLD_NOTIFY_HIGH[4]}"
-                        fi
+                        notify_low
                     fi
 
                     ## do i have to stop notification?
                     #if [[ $charge_percent -ge ${THRESHOLD_LOW[0]} ]]; then
                     #    unset THRESHOLD_LOW_REACHED
                     #fi
+                else
+                    if [[ $charge_percent -ge ${THRESHOLD_NOTIFY_HIGH[0]} ]]; then
+                        notify_high
+                    fi
                 fi
             #done
         fi
