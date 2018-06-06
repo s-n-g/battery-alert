@@ -308,14 +308,24 @@ resume
 resume execution - the script resumes checking and reporting battery status
 </dd>
 <dt>
+status
+</dt>
+<dd>
+report status - returns a string, either “<b>running</b>” or “<b>suspended</b>”
+</dd>
+<dt>
 exit
 </dt>
 <dd>
 terminate execution
 </dd>
 </dl>
-<p>The commands can be issued on command line:</p>
-<div class="sourceCode" id="cb10"><pre class="sourceCode ruby"><code class="sourceCode ruby"><a class="sourceLine" id="cb10-1" data-line-number="1">echo suspend&gt;<span class="ot">/tmp/</span>sng-batmon</a></code></pre></div>
+<p>The commands can be issued from the command line:</p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode ruby"><code class="sourceCode ruby"><a class="sourceLine" id="cb10-1" data-line-number="1">echo status&gt;<span class="ot">/tmp/</span>sng-batmon</a></code></pre></div>
+<p>It should be noted that normally, when <em>sng-batmon</em> is not running, <strong>/tmp/sng-batmon</strong> does not exist.</p>
+<p>In this case, executing the command above will return nothing; it will just create a plain text file. So, this is an indication that <em>sng-batmon</em> is actually not running.</p>
+<p>Havin said that, the correct way to communicate with <em>sng-batmon</em> would be:</p>
+<div class="sourceCode" id="cb11"><pre class="sourceCode ruby"><code class="sourceCode ruby"><a class="sourceLine" id="cb11-1" data-line-number="1">[ -p <span class="ot">/tmp/</span>sng-batmon ] &amp;&amp; echo resume&gt;<span class="ot">/tmp/</span>sng-batmon || echo terminated</a></code></pre></div>
 <h2 id="sources">Sources</h2>
 <h3 id="and-resources">(and resources)</h3>
 <ul>

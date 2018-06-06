@@ -267,14 +267,26 @@ Available commands:
 <dd>suspend execution - the script stops checking and reporting battery status</dd>
 <dt>resume</dt>
 <dd>resume execution - the script resumes checking and reporting battery status</dd>
+<dt>status</dt>
+<dd>report status - returns a string, either "<b>running</b>" or "<b>suspended</b>"</dd>
 <dt>exit</dt>
 <dd>terminate execution</dd>
 </dl>
 
-The commands can be issued on command line:
+The commands can be issued from the command line:
 
 ```ruby
-echo suspend>/tmp/sng-batmon
+echo status>/tmp/sng-batmon
+```
+
+It should be noted that normally, when *sng-batmon* is not running, **/tmp/sng-batmon** does not exist.
+
+In this case, executing the command above will return nothing; it will just create a plain text file. So, this is an indication that *sng-batmon* is actually not running.
+
+Havin said that, the correct way to communicate with  *sng-batmon* would be:
+
+```ruby
+[ -p /tmp/sng-batmon ] && echo resume>/tmp/sng-batmon || echo terminated
 ```
 
 ## Sources

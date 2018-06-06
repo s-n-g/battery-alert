@@ -1,29 +1,113 @@
 #!/usr/bin/env bash
 function error_occured {
     
-    notify-send -t 10000 -u critical sng-batmon "An error occured at execution time!!
-    
-Exiting..."
-    control_c
+    notify-send -t 10000 -u critical sng-batmon "
+An error occured at execution time!!!
+Terminating..." -i /usr/share/sng-batmon/notify-high.png
+    rm $my_fifo 2>/dev/null
+    exit 70
 }
 
 function control_c {
     rm $my_fifo 2>/dev/null
-    exit
+    exit 1
 }
 
+function send_command {
+    # $1 : fifo file
+    # $2 : sommand
+    if [ -p $1 ];then
+        echo $2>$my_fifo
+        read <$my_fifo
+    fi
+    if [ -z "$REPLY" ];then
+        REPLY='not running'
+        return 1
+    else
+        return 0
+    fi
+}
+
+
+##############################################################################
+#                                                                            #
+#                              Commands Section                              #
+#                                                                            #
+##############################################################################
+my_fifo=/tmp/sng-batmon
+
+if [[ "$1" =~ ^status|^vstatus ]];then
+    send_command $my_fifo status
+    ret=$?
+    if [ "$1" = "status" ];then
+        echo "$REPLY"
+    else
+        notify-send -t 5000 -u normal \
+        -i /usr/share/sng-batmon/notify-high.png sng-batmon \
+"
+Status: sng-batmon is <b>$REPLY</b>"
+    fi
+    exit $ret
+elif [ "$1" = "suspend" ];then
+    send_command $my_fifo $1
+    ret=$?
+    if [[ "$ret" -eq 0 ]];then ret=2;fi
+    echo "$REPLY"
+    exit $ret
+elif [[ "$1" =~ ^resume$|^exit$|^quit$ ]];then
+    send_command $my_fifo $1
+    echo "$REPLY"
+    exit $ret
+else
+    exit 126
+fi
+
+##############################################################################
+#                                                                            #
+#                             Background Section                             #
+#                                                                            #
+##############################################################################
+#1: Catchall for general errors
+#2: Misuse of shell builtins (according to Bash documentation)
+#126: Command invoked cannot execute
+#127: "command not found"
+#128: Invalid argument to exit
+#128+n: Fatal error signal "n"
+#255: Exit status out of range (exit takes only integer args in the range 0 - 255)X_OK           0       /* successful termination */
+#define EX__BASE        64      /* base value for error messages */
+#define EX_USAGE        64      /* command line usage error */
+#define EX_DATAERR      65      /* data format error */
+#define EX_NOINPUT      66      /* cannot open input */    
+#define EX_NOUSER       67      /* addressee unknown */    
+#define EX_NOHOST       68      /* host name unknown */
+#define EX_UNAVAILABLE  69      /* service unavailable */
+#define EX_SOFTWARE     70      /* internal software error */
+#define EX_OSERR        71      /* system error (e.g., can't fork) */
+#define EX_OSFILE       72      /* critical OS file missing */
+#define EX_CANTCREAT    73      /* can't create (user) output file */
+#define EX_IOERR        74      /* input/output error */
+#define EX_TEMPFAIL     75      /* temp failure; user is invited to retry */
+#define EX_PROTOCOL     76      /* remote error in protocol */
+#define EX_NOPERM       77      /* permission denied */
+#define EX_CONFIG       78      /* configuration error */
 trap control_c SIGINT
 trap control_c SIGTERM
 trap error_occured ERR
-
-my_fifo=/tmp/sng-batmon
-
-[ -p $my_fifo ] && exit
+[ -p $my_fifo ] && exit 126
 # make sure a battery is present
 acpi_path=$(find /sys/class/power_supply/ -name 'BAT*' | head -1)
 [ -z "$acpi_path" ] && exit 
 
-mkfifo $my_fifo
+mkfifo $my_fifo 2>/dev/null || {
+    rm -rf $my_fifo 2>/dev/null
+    mkfifo $my_fifo 2>/dev/null || {
+        notify-send -t 10000 -u critical sng-batmon "
+Cannot create \"/tmp/sng-batmon\"
+Please make sure it does not exist before executing this script
+Terminating..." -i /usr/share/sng-batmon/notify-high.png
+        exit 74
+    }
+}
 
 #set -x
 LOOP_TIME_OUT=60
@@ -42,79 +126,92 @@ while true;do
         if [ ! -z "$line" ];then
             if [ "$line" == "suspend" ];then
                 SUSPEND=yes
+                echo suspended>$my_fifo
             elif [ "$line" == "resume" ];then
                 unset SUSPEND
+                echo running>$my_fifo
+            elif [ "$line" == "status" ];then
+                INHIBIT_BY_COMMAND=yes
+                if [ -z "$SUSPEND" ];then
+                    echo running>$my_fifo
+                else
+                    echo suspended>$my_fifo
+                fi
             elif [ "$line" == "exit" ];then
+                echo 'not running'>$my_fifo
                 control_c
             fi
         fi
     fi
 
-    for i in 3 4
-    do
-        [[ "${THRESHOLD_HIGH[$i]}" == /* ]] || THRESHOLD_HIGH[$i]=/usr/share/sng-batmon/"${THRESHOLD_HIGH[$i]}"
-        [[ "${THRESHOLD_LOW[$i]}" == /* ]] || THRESHOLD_LOW[$i]=/usr/share/sng-batmon/"${THRESHOLD_LOW[$i]}"
-        [[ "${THRESHOLD_NOTIFY_HIGH[$i]}" == /* ]] || THRESHOLD_NOTIFY_HIGH[$i]=/usr/share/sng-batmon/"${THRESHOLD_NOTIFY_HIGH[$i]}"
-        [[ "${THRESHOLD_NOTIFY_LOW[$i]}" == /* ]] || THRESHOLD_NOTIFY_LOW[$i]=/usr/share/sng-batmon/"${THRESHOLD_NOTIFY_LOW[$i]}"
-    done
+    if [ ! -z "$INHIBIT_BY_COMMAND" ];then
+        unset INHIBIT_BY_COMMAND
 
-    if [ -z "$SUSPEND" ]; then
-        # keep dispalying notification
-        #THRESHOLD_LOW_REACHED=yes
-        #while [ ! -z "$THRESHOLD_LOW_REACHED" ];do
-            acpi_path=$(find /sys/class/power_supply/ -name 'BAT*' | head -1)
-            # make sure a battery is present
-            [ -z "$acpi_path" ] && control_c
-            charge_now=$(cat "$acpi_path/charge_now")
-            charge_full=$(cat "$acpi_path/charge_full")
-            charge_status=$(cat "$acpi_path/status")
-            charge_percent=$(echo "$charge_now / $charge_full * 100" | bc -l)
-            # remove everything after dot
-            charge_percent=${charge_percent%.*}
+        for i in 3 4
+        do
+            [[ "${THRESHOLD_HIGH[$i]}" == /* ]] || THRESHOLD_HIGH[$i]=/usr/share/sng-batmon/"${THRESHOLD_HIGH[$i]}"
+            [[ "${THRESHOLD_LOW[$i]}" == /* ]] || THRESHOLD_LOW[$i]=/usr/share/sng-batmon/"${THRESHOLD_LOW[$i]}"
+            [[ "${THRESHOLD_NOTIFY_HIGH[$i]}" == /* ]] || THRESHOLD_NOTIFY_HIGH[$i]=/usr/share/sng-batmon/"${THRESHOLD_NOTIFY_HIGH[$i]}"
+            [[ "${THRESHOLD_NOTIFY_LOW[$i]}" == /* ]] || THRESHOLD_NOTIFY_LOW[$i]=/usr/share/sng-batmon/"${THRESHOLD_NOTIFY_LOW[$i]}"
+        done
 
-            if [ $charge_status == 'Discharging' ];then
+        if [ -z "$SUSPEND" ]; then
+            # keep dispalying notification
+            #THRESHOLD_LOW_REACHED=yes
+            #while [ ! -z "$THRESHOLD_LOW_REACHED" ];do
+                acpi_path=$(find /sys/class/power_supply/ -name 'BAT*' | head -1)
+                # make sure a battery is present
+                [ -z "$acpi_path" ] && control_c
+                charge_now=$(cat "$acpi_path/charge_now")
+                charge_full=$(cat "$acpi_path/charge_full")
+                charge_status=$(cat "$acpi_path/status")
+                charge_percent=$(echo "$charge_now / $charge_full * 100" | bc -l)
+                # remove everything after dot
+                charge_percent=${charge_percent%.*}
 
-                LOOP_TIME_OUT=60
-                if [[ $charge_percent -le ${THRESHOLD_HALT[0]} ]]; then
-                    if [ ! -z "$HALT_COMMAND" ] ;then
-                        rm $my_fifo
-                        $HALT_COMMAND
-                        control_c
+                if [ $charge_status == 'Discharging' ];then
+
+                    LOOP_TIME_OUT=60
+                    if [[ $charge_percent -le ${THRESHOLD_HALT[0]} ]]; then
+                        if [ ! -z "$HALT_COMMAND" ] ;then
+                            rm $my_fifo
+                            $HALT_COMMAND
+                            control_c
+                        fi
+                    elif [[ $charge_percent -le ${THRESHOLD_LOW[0]} ]]; then
+                        LOOP_TIME_OUT=${THRESHOLD_LOW[6]}
+                        notify-send -t ${THRESHOLD_LOW[5]} -i "${THRESHOLD_LOW[3]}" "${THRESHOLD_LOW[1]}" "${THRESHOLD_LOW[2]}"
+                        if [ ! -z "$PLAYER_COMMAND" ] && [ -e "${THRESHOLD_LOW[4]}" ]; then
+                            $PLAYER_COMMAND "${THRESHOLD_LOW[4]}"
+                        fi
+                    elif [[ $charge_percent -le ${THRESHOLD_HIGH[0]} ]]; then
+                        LOOP_TIME_OUT=${THRESHOLD_HIGH[6]}
+                        notify-send -t ${THRESHOLD_HIGH[5]} -i "${THRESHOLD_HIGH[3]}" "${THRESHOLD_HIGH[1]}" "${THRESHOLD_HIGH[2]}"
+                        if [ ! -z "$PLAYER_COMMAND" ] && [ -e "${THRESHOLD_HIGH[4]}" ]; then
+                            $PLAYER_COMMAND "${THRESHOLD_HIGH[4]}"
+                        fi
+                    elif [[ $charge_percent -le ${THRESHOLD_NOTIFY_LOW[0]} ]]; then
+                        LOOP_TIME_OUT=${THRESHOLD_NOTIFY_LOW[6]}
+                        notify-send -t ${THRESHOLD_NOTIFY_LOW[5]} -i "${THRESHOLD_NOTIFY_LOW[3]}" "${THRESHOLD_NOTIFY_LOW[1]}" "${THRESHOLD_NOTIFY_LOW[2]}"
+                        if [ ! -z "$PLAYER_COMMAND" ] && [ -e "${THRESHOLD_NOTIFY_LOW[4]}" ]; then
+                            $PLAYER_COMMAND "${THRESHOLD_NOTIFY_LOW[4]}"
+                        fi
+                    elif [[ $charge_percent -ge ${THRESHOLD_NOTIFY_HIGH[0]} ]]; then
+                        LOOP_TIME_OUT=${THRESHOLD_NOTIFY_HIGH[6]}
+                        notify-send -t ${THRESHOLD_NOTIFY_HIGH[5]} -i "${THRESHOLD_NOTIFY_HIGH[3]}" "${THRESHOLD_NOTIFY_HIGH[1]}" "${THRESHOLD_NOTIFY_HIGH[2]}"
+                        if [ ! -z "$PLAYER_COMMAND" ] && [ -e "${THRESHOLD_NOTIFY_HIGH[4]}" ]; then
+                            $PLAYER_COMMAND "${THRESHOLD_NOTIFY_HIGH[4]}"
+                        fi
                     fi
-                elif [[ $charge_percent -le ${THRESHOLD_LOW[0]} ]]; then
-                    LOOP_TIME_OUT=${THRESHOLD_LOW[6]}
-                    notify-send -t ${THRESHOLD_LOW[5]} -i "${THRESHOLD_LOW[3]}" "${THRESHOLD_LOW[1]}" "${THRESHOLD_LOW[2]}"
-                    if [ ! -z "$PLAYER_COMMAND" ] && [ -e "${THRESHOLD_LOW[4]}" ]; then
-                        $PLAYER_COMMAND "${THRESHOLD_LOW[4]}"
-                    fi
-                elif [[ $charge_percent -le ${THRESHOLD_HIGH[0]} ]]; then
-                    LOOP_TIME_OUT=${THRESHOLD_HIGH[6]}
-                    notify-send -t ${THRESHOLD_HIGH[5]} -i "${THRESHOLD_HIGH[3]}" "${THRESHOLD_HIGH[1]}" "${THRESHOLD_HIGH[2]}"
-                    if [ ! -z "$PLAYER_COMMAND" ] && [ -e "${THRESHOLD_HIGH[4]}" ]; then
-                        $PLAYER_COMMAND "${THRESHOLD_HIGH[4]}"
-                    fi
-                elif [[ $charge_percent -le ${THRESHOLD_NOTIFY_LOW[0]} ]]; then
-                    LOOP_TIME_OUT=${THRESHOLD_NOTIFY_LOW[6]}
-                    notify-send -t ${THRESHOLD_NOTIFY_LOW[5]} -i "${THRESHOLD_NOTIFY_LOW[3]}" "${THRESHOLD_NOTIFY_LOW[1]}" "${THRESHOLD_NOTIFY_LOW[2]}"
-                    if [ ! -z "$PLAYER_COMMAND" ] && [ -e "${THRESHOLD_NOTIFY_LOW[4]}" ]; then
-                        $PLAYER_COMMAND "${THRESHOLD_NOTIFY_LOW[4]}"
-                    fi
-                elif [[ $charge_percent -ge ${THRESHOLD_NOTIFY_HIGH[0]} ]]; then
-                    LOOP_TIME_OUT=${THRESHOLD_NOTIFY_HIGH[6]}
-                    notify-send -t ${THRESHOLD_NOTIFY_HIGH[5]} -i "${THRESHOLD_NOTIFY_HIGH[3]}" "${THRESHOLD_NOTIFY_HIGH[1]}" "${THRESHOLD_NOTIFY_HIGH[2]}"
-                    if [ ! -z "$PLAYER_COMMAND" ] && [ -e "${THRESHOLD_NOTIFY_HIGH[4]}" ]; then
-                        $PLAYER_COMMAND "${THRESHOLD_NOTIFY_HIGH[4]}"
-                    fi
+
+                    ## do i have to stop notification?
+                    #if [[ $charge_percent -ge ${THRESHOLD_LOW[0]} ]]; then
+                    #    unset THRESHOLD_LOW_REACHED
+                    #fi
                 fi
-
-                ## do i have to stop notification?
-                #if [[ $charge_percent -ge ${THRESHOLD_LOW[0]} ]]; then
-                #    unset THRESHOLD_LOW_REACHED
-                #fi
-            fi
-        #done
+            #done
+        fi
     fi
 done
-
 rm $my_fifo 2>/dev/null
 
