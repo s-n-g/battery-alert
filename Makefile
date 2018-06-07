@@ -1,22 +1,55 @@
 PREFIX=/usr/local
 INSTALL_PREFIX=$(PREFIX)/bin
+service_substitution="s\#{{INSTALL_PREFIX}}\#$(INSTALL_PREFIX)\#g"
+normal_substitution="s\#DEBUG=yes\#unset DEBUG\#\
+	;s\#CONSOLE_ONLY=yes\#unset CONSOLE_ONLY\#"
+normal_service_substitution="s\#WantedBy=multi-user.target\#WantedBy=graphical.target\#"
+debug_substitution="s\#unset DEBUG\#DEBUG=yes\#"
+console_substitution="s\#unset CONSOLE_ONLY\#CONSOLE_ONLY=yes\#"
+console_service_substitution="s\#WantedBy=graphical.target\#WantedBy=multi-user.target\#"
 
-default: deps with_mpg123
+.PHONY: install uninstall clean auto_clean console normal debug
+
+default: auto_clean deps notify with_mpg123 normal sng-batmon.service
+
+no-mpg123: auto_clean deps notify normal sng-batmon.service
+
+console: auto_clean deps with_mpg123 console-only sng-batmon.service
+
+console-no-mpg123: auto_clean deps console-only sng-batmon.service
 
 deps:
 	@ echo -n "** Checking for head ... "
 	@ type head 1>/dev/null 2>&1 && echo found || ( echo "not found"; echo "  *** You must install head (probably package coreutils)"; exit 1 )
-	@ echo -n "** Checking for notify-send ... "
-	@ type notify-send 1>/dev/null 2>&1 && echo found || ( echo "not found"; echo "  *** You must install notify-send (probably package libnotify)"; exit 1 )
 	@ echo -n "** Checking for bc ... "
 	@ type bc 1>/dev/null 2>&1 && echo found || ( echo "not found"; echo "  *** You must install bc (package bc)"; exit 1 )
+
+notify:
+	@ echo -n "** Checking for notify-send ... "
+	@ type notify-send 1>/dev/null 2>&1 && echo found || ( echo "not found"; echo "  *** You must install notify-send (probably package libnotify)"; exit 1 )
 
 with_mpg123:
 	@ echo -n "** Checking for mpg123 ... "
 	@ type mpg123 1>/dev/null 2>&1 && echo found || ( echo "not found"; echo "  *** You must install mpg123 (package mpg123)"; exit 1 )
 
-.PHONY: install uninstall
-#.PHONY: install uninstall clean
+
+sng-batmon.service: sng-batmon.service.template
+	@ echo -n "Creating systemd service ... "
+	@ sed $(service_substitution) $< > $@
+	@ echo done
+
+normal:
+	@ sed -i $(normal_substitution) sng-batmon
+	@ sed -i $(normal_service_substitution) sng-batmon.service.template
+	@ if [ -e sng-batmon.service ];then sed -i $(normal_service_substitution) sng-batmon.service; fi
+
+debug:
+	@ sed -i $(debug_substitution) sng-batmon
+
+console-only:
+	@ sed -i $(console_substitution) sng-batmon
+	@ sed -i $(console_service_substitution) sng-batmon.service.template
+	@ if [ -e sng-batmon.service ];then sed -i $(console_service_substitution) sng-batmon.service; fi
 
 install:
 	@ echo -n "Installing script ... "
@@ -57,7 +90,10 @@ uninstall:
 	@ mandb -q
 	@ echo done
 
-#clean:
-#	@echo -n "Cleaning up ... "
-#	@rm sng-batmon.1.gz
-#	@echo done
+clean:
+	@echo -n "Cleaning up ... "
+	@if [ -e sng-batmon.service ]; then rm *.service;fi
+	@echo done
+
+auto_clean:
+	@if [ -e sng-batmon.service ]; then rm *.service;fi

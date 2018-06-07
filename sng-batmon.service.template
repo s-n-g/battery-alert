@@ -1,12 +1,13 @@
 [Unit]
 Description=Battery monitoring with sound alert
-After=network.target
+After=alsa-restore.target
 StartLimitIntervalSec=0
 [Service]
 Type=simple
 Restart=always
 RestartSec=1
-ExecStart=/usr/bin/env bash /usr/local/bin/sng-batmon
+ExecStart=/usr/bin/env bash {{INSTALL_PREFIX}}/sng-batmon
+Documentation=man:sng-batmon(1)
 
 [Install]
 WantedBy=graphical.target
