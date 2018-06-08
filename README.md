@@ -128,11 +128,15 @@ sudo make install
 The **Makefile** that comes with the package provides a couple of variables which control the installation process:
 
 PREFIX
+
 : Script installation prefix. The script will actually be installed in **$PREFIX/bin**.
+
 : Default value: **/usr/local**
 
 SYSTEMD_SERVICES_DIRECTORY
+
 : Systemd installation directory.
+
 : Default value: **/lib/systemd/system**
 
 If necessary, the **Makefile** should be edited so that these two variables match the system at hand.
