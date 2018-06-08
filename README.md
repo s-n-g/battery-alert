@@ -120,16 +120,30 @@ sudo make install
 
 ### make options
 
-<dl>
+The **Makefile** that comes with the package provides the follwoing targets (command line aguments to **make**):
+
+<dl style="margin-bottom: 0;">
     <dt>default</dt>
-    <dd>Contains the default options for *sng-batmon*, i.e. systemd service installation and mpg123 used as audio player</dd>
-    <dd>These are the options used when **make** is executed without any arguments</dd>
+    <dd>Contains the default options for *sng-batmon*.</dd>
+    <dd>These are the options used when **make** is executed without any arguments.</dd>
+    <dd><br /></dd>
+    <dd>These options are:</dd>
+</dl>
+
+<ol style="margin-top: 0; margin-left: 4em;">
+<li>make sure essential required packages are already installed</li>
+<li>make sure *notify-send* executable is already installed</li>
+<li>make sure *mpg123* executable is already installed</li>
+<li>make sure *systemd service* is up to date</li>
+</ol>
+
+<dl>
     <dt>no-mpg123</dt>
-    <dd>Do not require **mpg123** to be installed</dd>
+    <dd>Do not require **mpg123** to be installed.</dd>
     <dt>console</dt>
     <dd>This option will disable visual notification. In other words, one would use this option to have *sng-batmon* running on a non-graphical environment.</dd>
     <dt>console-no-mpg123</dt>
-    <dd>Same as above, but **mpg123** would not be required</dd>
+    <dd>Same as above, but **mpg123** would not be required.</dd>
 </dl>
 
 ## Configuration

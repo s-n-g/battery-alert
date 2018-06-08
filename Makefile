@@ -1,18 +1,18 @@
 PREFIX=/usr/local
 INSTALL_PREFIX=$(PREFIX)/bin
 service_substitution="s\#{{INSTALL_PREFIX}}\#$(INSTALL_PREFIX)\#g"
-normal_substitution="s\#DEBUG=yes\#unset DEBUG\#\
+visual_substitution="s\#DEBUG=yes\#unset DEBUG\#\
 	;s\#CONSOLE_ONLY=yes\#unset CONSOLE_ONLY\#"
-normal_service_substitution="s\#WantedBy=multi-user.target\#WantedBy=graphical.target\#"
+visual_service_substitution="s\#WantedBy=multi-user.target\#WantedBy=graphical.target\#"
 debug_substitution="s\#unset DEBUG\#DEBUG=yes\#"
 console_substitution="s\#unset CONSOLE_ONLY\#CONSOLE_ONLY=yes\#"
 console_service_substitution="s\#WantedBy=graphical.target\#WantedBy=multi-user.target\#"
 
-.PHONY: install uninstall clean auto_clean console normal debug
+.PHONY: install uninstall clean auto_clean console visual debug
 
-default: auto_clean deps notify with_mpg123 normal sng-batmon.service
+default: auto_clean deps notify with_mpg123 visual sng-batmon.service
 
-no-mpg123: auto_clean deps notify normal sng-batmon.service
+no-mpg123: auto_clean deps notify visual sng-batmon.service
 
 console: auto_clean deps with_mpg123 console-only sng-batmon.service
 
@@ -38,10 +38,10 @@ sng-batmon.service: sng-batmon.service.template
 	@ sed $(service_substitution) $< > $@
 	@ echo done
 
-normal:
-	@ sed -i $(normal_substitution) sng-batmon
-	@ sed -i $(normal_service_substitution) sng-batmon.service.template
-	@ if [ -e sng-batmon.service ];then sed -i $(normal_service_substitution) sng-batmon.service; fi
+visual:
+	@ sed -i $(visual_substitution) sng-batmon
+	@ sed -i $(visual_service_substitution) sng-batmon.service.template
+	@ if [ -e sng-batmon.service ];then sed -i $(visual_service_substitution) sng-batmon.service; fi
 
 debug:
 	@ sed -i $(debug_substitution) sng-batmon
