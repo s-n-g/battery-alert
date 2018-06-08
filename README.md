@@ -14,6 +14,7 @@ Battery monitoring with sound alert
       * [Using git](#using-git)
       * [Zip file](#zip-file)
    - [make options](#make-options)
+3. [Execution](#execution)
 3. [Configuration](#configuration)
    - [Default configuration](#default-configuration)
 4. [Controlling sng-batmon](#controlling-sng-batmon)
@@ -172,6 +173,20 @@ $
     <dd>In this case, a valid <b>PLAYER_COMMAND</b> has to be provided for audio notification to work (see <a href="#configuration">Configuration</a>).
   <dd>If <b>PLAYER_COMMAND</b> is empty or invalid, audio notification will be inhibited.</dd>
 </dl>
+
+## Execution
+
+To execute *sng-batmon*, run the command:
+
+```ruby
+systemctl start sng-batmon
+```
+
+To have *sng-batmon* run on system start up, run the command:
+
+```ruby
+systemctl enable sng-batmon
+```
 
 ## Configuration
 
