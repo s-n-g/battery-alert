@@ -9,6 +9,11 @@ Battery monitoring with sound alert
    - [Halt level](#halt-level)
    - [Audio notification](#audio-notification)
 2. [Installation](#installation)
+   - [Requirements](#requirements)
+   - [Procedure](#procedure)
+      a. [Using git](#using-git)
+      b. [Zip file](#zip-file)
+   - [make options](#make-options)
 3. [Configuration](#configuration)
    - [Default configuration](#default-configuration)
 4. [Controlling sng-batmon](#controlling-sng-batmon)
@@ -73,10 +78,31 @@ If for any reason one prefers not to install it, or use a different player, or e
 
 ## Installation
 
-Download *sng-batmon*
+### Requirements
+
+1. **coreutils** - The basic file, shell and text manipulation
+2. **sed** - GNU stream editor
+3. **bc** - An arbitrary precision calculator language
+4. **libnotify** - Library for sending desktop notifications
+5. **mpg123** - A console based real time MPEG Audio Player for Layer 1, 2 and 3 (optional)
+
+### Procedure
+
+Download *sng-batmon* either using **git** or by a **zip file**.
+
+#### Using git
 
 ```ruby
 git clone https://github.com/s-n-g/sng-batmon.git
+cd sng-batmon
+```
+
+#### Zip file
+
+```ruby
+wget https://github.com/s-n-g/sng-batmon/archive/master.zip
+unzip master.zip
+cd sng-batmon-master
 ```
 
 Run make
@@ -158,10 +184,10 @@ mkdir ~/.config/sng-batmon
 cp /etc/sng-batmon.conf ~/.config/sng-batmon/config
 ```
 
-Before editing the file, one should suspend *sng-batmon*, if it is running
+Before editing the file, one should suspend *sng-batmon*, if it is running.
 
 ```ruby
-echo suspend>/tmp/sng-batmon
+sng-batmon suspend
 ```
 
 After editing this file, one should source it in order to check its validity.
@@ -174,10 +200,10 @@ On a **bash** terminal:
   
 If no error occurs, you are good to go.
 
-if *sng-batmon* has been suspended, resume its execution
+If *sng-batmon* has been suspended, resume its execution.
 
 ```ruby
-echo resume>/tmp/sng-batmon
+sng-batmon resume
 ```
 
 <dl>
