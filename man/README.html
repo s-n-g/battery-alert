@@ -114,13 +114,17 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li><a href="#using-git">Using git</a></li>
 <li><a href="#zip-file">Zip file</a></li>
 </ul></li>
-<li><a href="#make-options">make options</a></li>
+<li><a href="#make-options">make options</a>
+<ul>
+<li><a href="#variables">Variables</a></li>
+<li><a href="#command-line-parameters">Command line parameters</a></li>
 </ul></li>
-<li><a href="#execution">Execution</a></li>
+</ul></li>
 <li><a href="#configuration">Configuration</a>
 <ul>
 <li><a href="#default-configuration">Default configuration</a></li>
 </ul></li>
+<li><a href="#execution">Execution</a></li>
 <li><a href="#controlling-sng-batmon">Controlling sng-batmon</a></li>
 <li><a href="#sources">Sources</a></li>
 <li><a href="#changelog">Changelog</a></li>
@@ -158,7 +162,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <h3 id="audio-notification">Audio notification</h3>
 <p>Audio playback will occur in the background (i.e. no program window of any kind will be visible). Playback volume will be the one set at the system mixer, so some precaution should take place on this respect. After all, what is the point in using audio notification if audio volume is low enough to make it inaudible?</p>
 <p><em>sng-batmon</em> by default uses <strong>mpg123</strong> as an audio player, because it is light-weight enough and gets installed by default on most systems, but any mp3 player can be used, provided that it is a terminal application (or it can hide its window) and will print no diagnostic or other messages in <em>stdout</em> (or it can suppress them).</p>
-<p>If for any reason one prefers not to install it, or use a different player, or even not to use one at all, one should follow the <a href="#installation">relevant installation instructions</a>.</p>
+<p>If for any reason one prefers not to install it, or use a different player, or even not to use one at all, one should follow the <a href="#make-options">relevant installation instructions</a>.</p>
 <h2 id="installation">Installation</h2>
 <h3 id="requirements">Requirements</h3>
 <ol type="1">
@@ -177,12 +181,33 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div class="sourceCode" id="cb2"><pre class="sourceCode ruby"><code class="sourceCode ruby"><a class="sourceLine" id="cb2-1" data-line-number="1">wget https:<span class="ot">//</span>github.com/s-n-g/sng-batmon/archive/master.zip</a>
 <a class="sourceLine" id="cb2-2" data-line-number="2">unzip master.zip</a>
 <a class="sourceLine" id="cb2-3" data-line-number="3">cd sng-batmon-master</a></code></pre></div>
-<p>Run make</p>
+<p>Run make (refer to <a href="#make-options">make options</a> for installation customization)</p>
 <div class="sourceCode" id="cb3"><pre class="sourceCode ruby"><code class="sourceCode ruby"><a class="sourceLine" id="cb3-1" data-line-number="1">make</a></code></pre></div>
 <p>Finally, go on and install it</p>
 <div class="sourceCode" id="cb4"><pre class="sourceCode ruby"><code class="sourceCode ruby"><a class="sourceLine" id="cb4-1" data-line-number="1">sudo make install</a></code></pre></div>
 <h3 id="make-options">make options</h3>
-<p>The <strong>Makefile</strong> that comes with the package provides the follwoing targets (command line aguments to <strong>make</strong>):</p>
+<h4 id="variables">Variables</h4>
+<p>The <strong>Makefile</strong> that comes with the package provides a couple of variables which control the installation process:</p>
+<dl>
+<dt>PREFIX</dt>
+<dd>Script installation prefix. The script will actually be installed in <strong>$PREFIX/bin</strong>.
+</dd>
+<dd>Default value: <strong>/usr/local</strong>
+</dd>
+<dt>SYSTEMD_SERVICES_DIRECTORY</dt>
+<dd>Systemd installation directory.
+</dd>
+<dd>Default value: <strong>/lib/systemd/system</strong>
+</dd>
+</dl>
+<p>If necessary, the <strong>Makefile</strong> should be edited so that these two variables match the system at hand.</p>
+<dl>
+<dt>Note</dt>
+<dd>If the system is a <strong>non-systemd</strong> one, no file editing is needed; <strong>make</strong> will detect the situation and will not install a systemd service.
+</dd>
+</dl>
+<h4 id="command-line-parameters">Command line parameters</h4>
+<p>In addition to those, the following targets (command line augments to <strong>make</strong>):</p>
 <dl>
 <dt>
 default
@@ -242,16 +267,18 @@ print help screen and exit
 <a class="sourceLine" id="cb5-2" data-line-number="2">** <span class="dt">Checking</span> <span class="kw">for</span> head ... found</a>
 <a class="sourceLine" id="cb5-3" data-line-number="3">** <span class="dt">Checking</span> <span class="kw">for</span> notify-send ... found</a>
 <a class="sourceLine" id="cb5-4" data-line-number="4">** <span class="dt">Checking</span> <span class="kw">for</span> bc ... found</a>
-<a class="sourceLine" id="cb5-5" data-line-number="5">** <span class="dt">Checking</span> <span class="kw">for</span> mpg123 ... <span class="kw">not</span> found</a>
-<a class="sourceLine" id="cb5-6" data-line-number="6">  *** <span class="dt">You</span> must install mpg123 (package mpg123)</a>
-<a class="sourceLine" id="cb5-7" data-line-number="7"><span class="st">make: </span>*** [<span class="dt">Makefile</span>:<span class="dv">15</span>: check_dependencies] <span class="dt">Error</span> <span class="dv">1</span></a>
-<a class="sourceLine" id="cb5-8" data-line-number="8">$</a>
-<a class="sourceLine" id="cb5-9" data-line-number="9">$ make no-mpg123</a>
-<a class="sourceLine" id="cb5-10" data-line-number="10">** <span class="dt">Checking</span> <span class="kw">for</span> head ... found</a>
-<a class="sourceLine" id="cb5-11" data-line-number="11">** <span class="dt">Checking</span> <span class="kw">for</span> notify-send ... found</a>
-<a class="sourceLine" id="cb5-12" data-line-number="12">** <span class="dt">Checking</span> <span class="kw">for</span> bc ... found</a>
-<a class="sourceLine" id="cb5-13" data-line-number="13"><span class="dt">Creating</span> systemd service ... done</a>
-<a class="sourceLine" id="cb5-14" data-line-number="14">$</a></code></pre></div>
+<a class="sourceLine" id="cb5-5" data-line-number="5">** <span class="dt">Checking</span> <span class="kw">for</span> sed ... found</a>
+<a class="sourceLine" id="cb5-6" data-line-number="6">** <span class="dt">Checking</span> <span class="kw">for</span> mpg123 ... <span class="kw">not</span> found</a>
+<a class="sourceLine" id="cb5-7" data-line-number="7">  *** <span class="dt">You</span> must install mpg123 (package mpg123)</a>
+<a class="sourceLine" id="cb5-8" data-line-number="8"><span class="st">make: </span>*** [<span class="dt">Makefile</span>:<span class="dv">15</span>: check_dependencies] <span class="dt">Error</span> <span class="dv">1</span></a>
+<a class="sourceLine" id="cb5-9" data-line-number="9">$</a>
+<a class="sourceLine" id="cb5-10" data-line-number="10">$ make no-mpg123</a>
+<a class="sourceLine" id="cb5-11" data-line-number="11">** <span class="dt">Checking</span> <span class="kw">for</span> head ... found</a>
+<a class="sourceLine" id="cb5-12" data-line-number="12">** <span class="dt">Checking</span> <span class="kw">for</span> notify-send ... found</a>
+<a class="sourceLine" id="cb5-13" data-line-number="13">** <span class="dt">Checking</span> <span class="kw">for</span> bc ... found</a>
+<a class="sourceLine" id="cb5-14" data-line-number="14">** <span class="dt">Checking</span> <span class="kw">for</span> sed ... found</a>
+<a class="sourceLine" id="cb5-15" data-line-number="15"><span class="dt">Creating</span> systemd service ... done</a>
+<a class="sourceLine" id="cb5-16" data-line-number="16">$</a></code></pre></div>
 <dl>
 <dt>
 Note
@@ -262,24 +289,19 @@ In this case, a valid <b>PLAYER_COMMAND</b> has to be provided for audio notific
 If <b>PLAYER_COMMAND</b> is empty or invalid, audio notification will be inhibited.
 </dd>
 </dl>
-<h2 id="execution">Execution</h2>
-<p>To execute <em>sng-batmon</em>, run the command:</p>
-<div class="sourceCode" id="cb6"><pre class="sourceCode ruby"><code class="sourceCode ruby"><a class="sourceLine" id="cb6-1" data-line-number="1">systemctl start sng-batmon</a></code></pre></div>
-<p>To have <em>sng-batmon</em> run on system start up, run the command:</p>
-<div class="sourceCode" id="cb7"><pre class="sourceCode ruby"><code class="sourceCode ruby"><a class="sourceLine" id="cb7-1" data-line-number="1">systemctl enable sng-batmon</a></code></pre></div>
 <h2 id="configuration">Configuration</h2>
 <p>The package’s system wide configuration is located in <strong>/etc/sng-batmon.conf</strong>.</p>
 <p>To customize it, one has to create a user writable configuration file and edit it.</p>
-<div class="sourceCode" id="cb8"><pre class="sourceCode ruby"><code class="sourceCode ruby"><a class="sourceLine" id="cb8-1" data-line-number="1">mkdir ~<span class="ot">/.config/</span>sng-batmon</a>
-<a class="sourceLine" id="cb8-2" data-line-number="2">cp <span class="ot">/etc/</span>sng-batmon.conf ~<span class="ot">/.config/</span>sng-batmon/config</a></code></pre></div>
+<div class="sourceCode" id="cb6"><pre class="sourceCode ruby"><code class="sourceCode ruby"><a class="sourceLine" id="cb6-1" data-line-number="1">mkdir ~<span class="ot">/.config/</span>sng-batmon</a>
+<a class="sourceLine" id="cb6-2" data-line-number="2">cp <span class="ot">/etc/</span>sng-batmon.conf ~<span class="ot">/.config/</span>sng-batmon/config</a></code></pre></div>
 <p>Before editing the file, one should suspend <em>sng-batmon</em>, if it is running.</p>
-<div class="sourceCode" id="cb9"><pre class="sourceCode ruby"><code class="sourceCode ruby"><a class="sourceLine" id="cb9-1" data-line-number="1">sng-batmon suspend</a></code></pre></div>
+<div class="sourceCode" id="cb7"><pre class="sourceCode ruby"><code class="sourceCode ruby"><a class="sourceLine" id="cb7-1" data-line-number="1">sng-batmon suspend</a></code></pre></div>
 <p>After editing this file, one should source it in order to check its validity.</p>
 <p>On a <strong>bash</strong> terminal:</p>
-<div class="sourceCode" id="cb10"><pre class="sourceCode ruby"><code class="sourceCode ruby"><a class="sourceLine" id="cb10-1" data-line-number="1">. ~<span class="ot">/.config/</span>sng-batmon/config</a></code></pre></div>
+<div class="sourceCode" id="cb8"><pre class="sourceCode ruby"><code class="sourceCode ruby"><a class="sourceLine" id="cb8-1" data-line-number="1">. ~<span class="ot">/.config/</span>sng-batmon/config</a></code></pre></div>
 <p>If no error occurs, you are good to go.</p>
 <p>If <em>sng-batmon</em> has been suspended, resume its execution.</p>
-<div class="sourceCode" id="cb11"><pre class="sourceCode ruby"><code class="sourceCode ruby"><a class="sourceLine" id="cb11-1" data-line-number="1">sng-batmon resume</a></code></pre></div>
+<div class="sourceCode" id="cb9"><pre class="sourceCode ruby"><code class="sourceCode ruby"><a class="sourceLine" id="cb9-1" data-line-number="1">sng-batmon resume</a></code></pre></div>
 <dl>
 <dt>
 Note
@@ -290,98 +312,109 @@ If an error occurs, <i>sng-batmon</i> will terminate, so be aware.
 </dl>
 <h3 id="default-configuration">Default configuration</h3>
 <p>The default configuration is the following:</p>
-<div class="sourceCode" id="cb12"><pre class="sourceCode ruby"><code class="sourceCode ruby"><a class="sourceLine" id="cb12-1" data-line-number="1"><span class="co"># THRESHOLDS DEFINITION</span></a>
-<a class="sourceLine" id="cb12-2" data-line-number="2"><span class="co"># Thresholds are defined in arrays</span></a>
-<a class="sourceLine" id="cb12-3" data-line-number="3"><span class="co"># Items are:</span></a>
-<a class="sourceLine" id="cb12-4" data-line-number="4"><span class="co">#  0  battery limit</span></a>
-<a class="sourceLine" id="cb12-5" data-line-number="5"><span class="co">#  1  message title to display</span></a>
-<a class="sourceLine" id="cb12-6" data-line-number="6"><span class="co">#  2  message to display</span></a>
-<a class="sourceLine" id="cb12-7" data-line-number="7"><span class="co">#  3  icon to display</span></a>
-<a class="sourceLine" id="cb12-8" data-line-number="8"><span class="co">#  4  sound to play</span></a>
-<a class="sourceLine" id="cb12-9" data-line-number="9"><span class="co">#  5  time to display notification (in milliseconds)</span></a>
-<a class="sourceLine" id="cb12-10" data-line-number="10"><span class="co">#     it should be the same as the duration</span></a>
-<a class="sourceLine" id="cb12-11" data-line-number="11"><span class="co">#     of the sound file</span></a>
-<a class="sourceLine" id="cb12-12" data-line-number="12"><span class="co">#  6  check interval (in seconds)</span></a>
-<a class="sourceLine" id="cb12-13" data-line-number="13"><span class="co">#     time to wait between battery status check</span></a>
-<a class="sourceLine" id="cb12-14" data-line-number="14"><span class="co">#     if it is 0, do not wait</span></a>
-<a class="sourceLine" id="cb12-15" data-line-number="15"><span class="co">#     effectively displaying notification repeatedly</span></a>
-<a class="sourceLine" id="cb12-16" data-line-number="16"></a>
-<a class="sourceLine" id="cb12-17" data-line-number="17"><span class="co">#  - THRESHOLD_HIGH</span></a>
-<a class="sourceLine" id="cb12-18" data-line-number="18"><span class="co">#    If battery percentage is lower than this, a notification</span></a>
-<a class="sourceLine" id="cb12-19" data-line-number="19"><span class="co">#    will be displayed and a sound will be played once</span></a>
-<a class="sourceLine" id="cb12-20" data-line-number="20"><span class="dt">THRESHOLD_HIGH</span>[<span class="dv">0</span>]=<span class="dv">20</span></a>
-<a class="sourceLine" id="cb12-21" data-line-number="21"><span class="dt">THRESHOLD_HIGH</span>[<span class="dv">1</span>]=<span class="st">&quot;Low battery&quot;</span></a>
-<a class="sourceLine" id="cb12-22" data-line-number="22"><span class="dt">THRESHOLD_HIGH</span>[<span class="dv">2</span>]=<span class="st">&quot;Battery running critically low at $charge_percent%!&quot;</span></a>
-<a class="sourceLine" id="cb12-23" data-line-number="23"><span class="dt">THRESHOLD_HIGH</span>[<span class="dv">3</span>]=warning-high.png</a>
-<a class="sourceLine" id="cb12-24" data-line-number="24"><span class="dt">THRESHOLD_HIGH</span>[<span class="dv">4</span>]=warning-low-battery.mp3</a>
-<a class="sourceLine" id="cb12-25" data-line-number="25"><span class="dt">THRESHOLD_HIGH</span>[<span class="dv">5</span>]=<span class="dv">7000</span></a>
-<a class="sourceLine" id="cb12-26" data-line-number="26"><span class="dt">THRESHOLD_HIGH</span>[<span class="dv">6</span>]=<span class="dv">30</span></a>
-<a class="sourceLine" id="cb12-27" data-line-number="27"></a>
-<a class="sourceLine" id="cb12-28" data-line-number="28"><span class="co">#  - THRESHOLD_LOW</span></a>
-<a class="sourceLine" id="cb12-29" data-line-number="29"><span class="co">#    If battery percentage is lower than this, both the</span></a>
-<a class="sourceLine" id="cb12-30" data-line-number="30"><span class="co">#    notification and the sund will be on indefinatelly</span></a>
-<a class="sourceLine" id="cb12-31" data-line-number="31"><span class="dt">THRESHOLD_LOW</span>[<span class="dv">0</span>]=<span class="dv">15</span></a>
-<a class="sourceLine" id="cb12-32" data-line-number="32"><span class="dt">THRESHOLD_LOW</span>[<span class="dv">1</span>]=<span class="st">&quot;Low battery&quot;</span></a>
-<a class="sourceLine" id="cb12-33" data-line-number="33"><span class="dt">THRESHOLD_LOW</span>[<span class="dv">2</span>]=<span class="st">&quot;Battery running critically low at $charge_percent%!&quot;</span></a>
-<a class="sourceLine" id="cb12-34" data-line-number="34"><span class="dt">THRESHOLD_LOW</span>[<span class="dv">3</span>]=warning-low.png</a>
-<a class="sourceLine" id="cb12-35" data-line-number="35"><span class="dt">THRESHOLD_LOW</span>[<span class="dv">4</span>]=warning-low-battery.mp3</a>
-<a class="sourceLine" id="cb12-36" data-line-number="36"><span class="dt">THRESHOLD_LOW</span>[<span class="dv">6</span>]=<span class="dv">0</span></a>
-<a class="sourceLine" id="cb12-37" data-line-number="37"></a>
-<a class="sourceLine" id="cb12-38" data-line-number="38"><span class="co">#  - THRESHOLD_HALT</span></a>
-<a class="sourceLine" id="cb12-39" data-line-number="39"><span class="co">#    If a HALT_COMMAND is defined, the PC will be halted /</span></a>
-<a class="sourceLine" id="cb12-40" data-line-number="40"><span class="co">#    powered off, when battery status is bellow this</span></a>
-<a class="sourceLine" id="cb12-41" data-line-number="41"><span class="co">#    threshold</span></a>
-<a class="sourceLine" id="cb12-42" data-line-number="42"><span class="co">#</span></a>
-<a class="sourceLine" id="cb12-43" data-line-number="43"><span class="co">#    only item 0 has any meaning here</span></a>
-<a class="sourceLine" id="cb12-44" data-line-number="44"><span class="dt">THRESHOLD_HALT</span>[<span class="dv">0</span>]=<span class="dv">7</span></a>
-<a class="sourceLine" id="cb12-45" data-line-number="45"></a>
-<a class="sourceLine" id="cb12-46" data-line-number="46"><span class="co">#  - THRESHOLD_NOTIFY_HIGH</span></a>
-<a class="sourceLine" id="cb12-47" data-line-number="47"><span class="co">#    Notify that user can now disconnect the power supply</span></a>
-<a class="sourceLine" id="cb12-48" data-line-number="48"><span class="dt">THRESHOLD_NOTIFY_HIGH</span>[<span class="dv">0</span>]=<span class="dv">80</span></a>
-<a class="sourceLine" id="cb12-49" data-line-number="49"><span class="dt">THRESHOLD_NOTIFY_HIGH</span>[<span class="dv">1</span>]=<span class="st">&quot;Battery notification&quot;</span></a>
-<a class="sourceLine" id="cb12-50" data-line-number="50"><span class="dt">THRESHOLD_NOTIFY_HIGH</span>[<span class="dv">2</span>]=<span class="st">&quot;You can now disconnect the power supply&quot;</span></a>
-<a class="sourceLine" id="cb12-51" data-line-number="51"><span class="dt">THRESHOLD_NOTIFY_HIGH</span>[<span class="dv">3</span>]=notify-high.png</a>
-<a class="sourceLine" id="cb12-52" data-line-number="52"><span class="dt">THRESHOLD_NOTIFY_HIGH</span>[<span class="dv">4</span>]=notify-high.mp3</a>
-<a class="sourceLine" id="cb12-53" data-line-number="53"><span class="dt">THRESHOLD_NOTIFY_HIGH</span>[<span class="dv">5</span>]=<span class="dv">5000</span></a>
-<a class="sourceLine" id="cb12-54" data-line-number="54"><span class="dt">THRESHOLD_NOTIFY_HIGH</span>[<span class="dv">6</span>]=<span class="dv">60</span></a>
-<a class="sourceLine" id="cb12-55" data-line-number="55"></a>
-<a class="sourceLine" id="cb12-56" data-line-number="56"><span class="co">#  - THRESHOLD_NOTIFY_LOW</span></a>
-<a class="sourceLine" id="cb12-57" data-line-number="57"><span class="co">#    Notify that user should now connect the power supply</span></a>
-<a class="sourceLine" id="cb12-58" data-line-number="58"><span class="dt">THRESHOLD_NOTIFY_LOW</span>[<span class="dv">0</span>]=<span class="dv">40</span></a>
-<a class="sourceLine" id="cb12-59" data-line-number="59"><span class="dt">THRESHOLD_NOTIFY_LOW</span>[<span class="dv">1</span>]=<span class="st">&quot;Battery notification&quot;</span></a>
-<a class="sourceLine" id="cb12-60" data-line-number="60"><span class="dt">THRESHOLD_NOTIFY_LOW</span>[<span class="dv">2</span>]=<span class="st">&quot;You should now connect the power supply&quot;</span></a>
-<a class="sourceLine" id="cb12-61" data-line-number="61"><span class="dt">THRESHOLD_NOTIFY_LOW</span>[<span class="dv">3</span>]=notify-low.png</a>
-<a class="sourceLine" id="cb12-62" data-line-number="62"><span class="dt">THRESHOLD_NOTIFY_LOW</span>[<span class="dv">4</span>]=notify-low.mp3</a>
-<a class="sourceLine" id="cb12-63" data-line-number="63"><span class="dt">THRESHOLD_NOTIFY_LOW</span>[<span class="dv">5</span>]=<span class="dv">5000</span></a>
-<a class="sourceLine" id="cb12-64" data-line-number="64"><span class="dt">THRESHOLD_NOTIFY_LOW</span>[<span class="dv">6</span>]=<span class="dv">60</span></a>
-<a class="sourceLine" id="cb12-65" data-line-number="65"></a>
-<a class="sourceLine" id="cb12-66" data-line-number="66"><span class="co"># END OF THRESHOLDS DEFINITION</span></a>
-<a class="sourceLine" id="cb12-67" data-line-number="67"></a>
-<a class="sourceLine" id="cb12-68" data-line-number="68"><span class="co"># This is the command what will play the warning message.</span></a>
-<a class="sourceLine" id="cb12-69" data-line-number="69"><span class="co"># Default is mpg123, since it&#39;s very light on resources.</span></a>
-<a class="sourceLine" id="cb12-70" data-line-number="70"><span class="co"># If empty, no sound will be played</span></a>
-<a class="sourceLine" id="cb12-71" data-line-number="71"><span class="co">#</span></a>
-<a class="sourceLine" id="cb12-72" data-line-number="72"><span class="co"># Examples:</span></a>
-<a class="sourceLine" id="cb12-73" data-line-number="73"><span class="co">#PLAYER_COMMAND=&quot;cvlc -q&quot;</span></a>
-<a class="sourceLine" id="cb12-74" data-line-number="74"><span class="co">#PLAYER_COMMAND=&quot;ffplay -volume 100 --autoexit -nodisp -v 0 -i&quot;</span></a>
-<a class="sourceLine" id="cb12-75" data-line-number="75"><span class="co">#PLAYER_COMMAND=&quot;mplayer -msglevel all=-1&quot;</span></a>
-<a class="sourceLine" id="cb12-76" data-line-number="76"><span class="co">#PLAYER_COMMAND=&quot;play -q&quot;</span></a>
-<a class="sourceLine" id="cb12-77" data-line-number="77"><span class="dt">PLAYER_COMMAND</span>=<span class="st">&quot;mpg123 -q&quot;</span></a>
-<a class="sourceLine" id="cb12-78" data-line-number="78"></a>
-<a class="sourceLine" id="cb12-79" data-line-number="79"><span class="co"># HALT COMMAND DEFINITION</span></a>
-<a class="sourceLine" id="cb12-80" data-line-number="80"><span class="co"># Define here the command to be used to power off your PC</span></a>
-<a class="sourceLine" id="cb12-81" data-line-number="81"><span class="co"># It&#39;s up to you to make sure the command can be executed</span></a>
-<a class="sourceLine" id="cb12-82" data-line-number="82"><span class="co"># (has the right permission etc.)</span></a>
-<a class="sourceLine" id="cb12-83" data-line-number="83"><span class="co">#</span></a>
-<a class="sourceLine" id="cb12-84" data-line-number="84"><span class="co"># Examples:</span></a>
-<a class="sourceLine" id="cb12-85" data-line-number="85"><span class="co">#HALT_COMMAND=&quot;xfce4-session-logout -h&quot;</span></a>
-<a class="sourceLine" id="cb12-86" data-line-number="86"><span class="co">#HALT_COMMAND=&quot;xfce4-session-logout -s&quot;</span></a>
-<a class="sourceLine" id="cb12-87" data-line-number="87"><span class="co">#HALT_COMMAND=&quot;xfce4-session-logout --hibernate&quot;</span></a>
-<a class="sourceLine" id="cb12-88" data-line-number="88"><span class="co">#HALT_COMMAND=&quot;systemctl suspend&quot;</span></a>
-<a class="sourceLine" id="cb12-89" data-line-number="89"><span class="co">#HALT_COMMAND=&quot;systemctl hibernate&quot;</span></a>
-<a class="sourceLine" id="cb12-90" data-line-number="90"><span class="co">#HALT_COMMAND=&quot;systemctl hybrid-sleep&quot;</span></a>
-<a class="sourceLine" id="cb12-91" data-line-number="91"><span class="dt">HALT_COMMAND</span>=<span class="st">&quot;systemctl poweroff&quot;</span></a></code></pre></div>
+<div class="sourceCode" id="cb10"><pre class="sourceCode ruby"><code class="sourceCode ruby"><a class="sourceLine" id="cb10-1" data-line-number="1"><span class="co"># THRESHOLDS DEFINITION</span></a>
+<a class="sourceLine" id="cb10-2" data-line-number="2"><span class="co"># Thresholds are defined in arrays</span></a>
+<a class="sourceLine" id="cb10-3" data-line-number="3"><span class="co"># Items are:</span></a>
+<a class="sourceLine" id="cb10-4" data-line-number="4"><span class="co">#  0  battery limit</span></a>
+<a class="sourceLine" id="cb10-5" data-line-number="5"><span class="co">#  1  message title to display</span></a>
+<a class="sourceLine" id="cb10-6" data-line-number="6"><span class="co">#  2  message to display</span></a>
+<a class="sourceLine" id="cb10-7" data-line-number="7"><span class="co">#  3  icon to display</span></a>
+<a class="sourceLine" id="cb10-8" data-line-number="8"><span class="co">#  4  sound to play</span></a>
+<a class="sourceLine" id="cb10-9" data-line-number="9"><span class="co">#     either absolute or relative path to file</span></a>
+<a class="sourceLine" id="cb10-10" data-line-number="10"><span class="co">#     if relative, it should be in /usr/share/sng-batmon</span></a>
+<a class="sourceLine" id="cb10-11" data-line-number="11"><span class="co">#  5  time to display notification (in milliseconds)</span></a>
+<a class="sourceLine" id="cb10-12" data-line-number="12"><span class="co">#     it should be the same as the duration</span></a>
+<a class="sourceLine" id="cb10-13" data-line-number="13"><span class="co">#     of the sound file</span></a>
+<a class="sourceLine" id="cb10-14" data-line-number="14"><span class="co">#  6  check interval (in seconds)</span></a>
+<a class="sourceLine" id="cb10-15" data-line-number="15"><span class="co">#     time to wait between battery status check</span></a>
+<a class="sourceLine" id="cb10-16" data-line-number="16"><span class="co">#     if it is 0, do not wait</span></a>
+<a class="sourceLine" id="cb10-17" data-line-number="17"><span class="co">#     effectively displaying notification repeatedly</span></a>
+<a class="sourceLine" id="cb10-18" data-line-number="18"></a>
+<a class="sourceLine" id="cb10-19" data-line-number="19"><span class="co">#  - THRESHOLD_HIGH</span></a>
+<a class="sourceLine" id="cb10-20" data-line-number="20"><span class="co">#    If battery percentage is lower than this, a notification</span></a>
+<a class="sourceLine" id="cb10-21" data-line-number="21"><span class="co">#    will be displayed and a sound will be played once</span></a>
+<a class="sourceLine" id="cb10-22" data-line-number="22"><span class="dt">THRESHOLD_HIGH</span>[<span class="dv">0</span>]=<span class="dv">20</span></a>
+<a class="sourceLine" id="cb10-23" data-line-number="23"><span class="dt">THRESHOLD_HIGH</span>[<span class="dv">1</span>]=<span class="st">&quot;Low battery&quot;</span></a>
+<a class="sourceLine" id="cb10-24" data-line-number="24"><span class="dt">THRESHOLD_HIGH</span>[<span class="dv">2</span>]=<span class="st">&quot;Battery running critically low at $charge_percent%!&quot;</span></a>
+<a class="sourceLine" id="cb10-25" data-line-number="25"><span class="dt">THRESHOLD_HIGH</span>[<span class="dv">3</span>]=warning-high.png</a>
+<a class="sourceLine" id="cb10-26" data-line-number="26"><span class="dt">THRESHOLD_HIGH</span>[<span class="dv">4</span>]=warning-low-battery.mp3</a>
+<a class="sourceLine" id="cb10-27" data-line-number="27"><span class="dt">THRESHOLD_HIGH</span>[<span class="dv">5</span>]=<span class="dv">7000</span></a>
+<a class="sourceLine" id="cb10-28" data-line-number="28"><span class="dt">THRESHOLD_HIGH</span>[<span class="dv">6</span>]=<span class="dv">30</span></a>
+<a class="sourceLine" id="cb10-29" data-line-number="29"></a>
+<a class="sourceLine" id="cb10-30" data-line-number="30"><span class="co">#  - THRESHOLD_LOW</span></a>
+<a class="sourceLine" id="cb10-31" data-line-number="31"><span class="co">#    If battery percentage is lower than this, both the</span></a>
+<a class="sourceLine" id="cb10-32" data-line-number="32"><span class="co">#    notification and the sund will be on indefinatelly</span></a>
+<a class="sourceLine" id="cb10-33" data-line-number="33"><span class="dt">THRESHOLD_LOW</span>[<span class="dv">0</span>]=<span class="dv">15</span></a>
+<a class="sourceLine" id="cb10-34" data-line-number="34"><span class="dt">THRESHOLD_LOW</span>[<span class="dv">1</span>]=<span class="st">&quot;Low battery&quot;</span></a>
+<a class="sourceLine" id="cb10-35" data-line-number="35"><span class="dt">THRESHOLD_LOW</span>[<span class="dv">2</span>]=<span class="st">&quot;Battery running critically low at $charge_percent%!&quot;</span></a>
+<a class="sourceLine" id="cb10-36" data-line-number="36"><span class="dt">THRESHOLD_LOW</span>[<span class="dv">3</span>]=warning-low.png</a>
+<a class="sourceLine" id="cb10-37" data-line-number="37"><span class="dt">THRESHOLD_LOW</span>[<span class="dv">4</span>]=warning-low-battery.mp3</a>
+<a class="sourceLine" id="cb10-38" data-line-number="38"><span class="dt">THRESHOLD_LOW</span>[<span class="dv">6</span>]=<span class="dv">0</span></a>
+<a class="sourceLine" id="cb10-39" data-line-number="39"></a>
+<a class="sourceLine" id="cb10-40" data-line-number="40"><span class="co">#  - THRESHOLD_HALT</span></a>
+<a class="sourceLine" id="cb10-41" data-line-number="41"><span class="co">#    If a HALT_COMMAND is defined, the PC will be halted /</span></a>
+<a class="sourceLine" id="cb10-42" data-line-number="42"><span class="co">#    powered off, when battery status is bellow this</span></a>
+<a class="sourceLine" id="cb10-43" data-line-number="43"><span class="co">#    threshold</span></a>
+<a class="sourceLine" id="cb10-44" data-line-number="44"><span class="co">#</span></a>
+<a class="sourceLine" id="cb10-45" data-line-number="45"><span class="co">#    only item 0 has any meaning here</span></a>
+<a class="sourceLine" id="cb10-46" data-line-number="46"><span class="dt">THRESHOLD_HALT</span>[<span class="dv">0</span>]=<span class="dv">7</span></a>
+<a class="sourceLine" id="cb10-47" data-line-number="47"></a>
+<a class="sourceLine" id="cb10-48" data-line-number="48"><span class="co">#  - THRESHOLD_NOTIFY_HIGH</span></a>
+<a class="sourceLine" id="cb10-49" data-line-number="49"><span class="co">#    Notify that user can now disconnect the power supply</span></a>
+<a class="sourceLine" id="cb10-50" data-line-number="50"><span class="dt">THRESHOLD_NOTIFY_HIGH</span>[<span class="dv">0</span>]=<span class="dv">80</span></a>
+<a class="sourceLine" id="cb10-51" data-line-number="51"><span class="dt">THRESHOLD_NOTIFY_HIGH</span>[<span class="dv">1</span>]=<span class="st">&quot;Battery notification&quot;</span></a>
+<a class="sourceLine" id="cb10-52" data-line-number="52"><span class="dt">THRESHOLD_NOTIFY_HIGH</span>[<span class="dv">2</span>]=<span class="st">&quot;You can now disconnect the power supply&quot;</span></a>
+<a class="sourceLine" id="cb10-53" data-line-number="53"><span class="dt">THRESHOLD_NOTIFY_HIGH</span>[<span class="dv">3</span>]=notify-high.png</a>
+<a class="sourceLine" id="cb10-54" data-line-number="54"><span class="dt">THRESHOLD_NOTIFY_HIGH</span>[<span class="dv">4</span>]=notify-high.mp3</a>
+<a class="sourceLine" id="cb10-55" data-line-number="55"><span class="dt">THRESHOLD_NOTIFY_HIGH</span>[<span class="dv">5</span>]=<span class="dv">5000</span></a>
+<a class="sourceLine" id="cb10-56" data-line-number="56"><span class="dt">THRESHOLD_NOTIFY_HIGH</span>[<span class="dv">6</span>]=<span class="dv">60</span></a>
+<a class="sourceLine" id="cb10-57" data-line-number="57"></a>
+<a class="sourceLine" id="cb10-58" data-line-number="58"><span class="co">#  - THRESHOLD_NOTIFY_LOW</span></a>
+<a class="sourceLine" id="cb10-59" data-line-number="59"><span class="co">#    Notify that user should now connect the power supply</span></a>
+<a class="sourceLine" id="cb10-60" data-line-number="60"><span class="dt">THRESHOLD_NOTIFY_LOW</span>[<span class="dv">0</span>]=<span class="dv">40</span></a>
+<a class="sourceLine" id="cb10-61" data-line-number="61"><span class="dt">THRESHOLD_NOTIFY_LOW</span>[<span class="dv">1</span>]=<span class="st">&quot;Battery notification&quot;</span></a>
+<a class="sourceLine" id="cb10-62" data-line-number="62"><span class="dt">THRESHOLD_NOTIFY_LOW</span>[<span class="dv">2</span>]=<span class="st">&quot;You should now connect the power supply&quot;</span></a>
+<a class="sourceLine" id="cb10-63" data-line-number="63"><span class="dt">THRESHOLD_NOTIFY_LOW</span>[<span class="dv">3</span>]=notify-low.png</a>
+<a class="sourceLine" id="cb10-64" data-line-number="64"><span class="dt">THRESHOLD_NOTIFY_LOW</span>[<span class="dv">4</span>]=notify-low.mp3</a>
+<a class="sourceLine" id="cb10-65" data-line-number="65"><span class="dt">THRESHOLD_NOTIFY_LOW</span>[<span class="dv">5</span>]=<span class="dv">5000</span></a>
+<a class="sourceLine" id="cb10-66" data-line-number="66"><span class="dt">THRESHOLD_NOTIFY_LOW</span>[<span class="dv">6</span>]=<span class="dv">60</span></a>
+<a class="sourceLine" id="cb10-67" data-line-number="67"></a>
+<a class="sourceLine" id="cb10-68" data-line-number="68"><span class="co"># END OF THRESHOLDS DEFINITION</span></a>
+<a class="sourceLine" id="cb10-69" data-line-number="69"></a>
+<a class="sourceLine" id="cb10-70" data-line-number="70"><span class="co"># This is the command what will play the warning message.</span></a>
+<a class="sourceLine" id="cb10-71" data-line-number="71"><span class="co"># Default is mpg123, since it&#39;s very light on resources.</span></a>
+<a class="sourceLine" id="cb10-72" data-line-number="72"><span class="co"># If empty, no sound will be played</span></a>
+<a class="sourceLine" id="cb10-73" data-line-number="73"><span class="co">#</span></a>
+<a class="sourceLine" id="cb10-74" data-line-number="74"><span class="co"># Examples:</span></a>
+<a class="sourceLine" id="cb10-75" data-line-number="75"><span class="co">#PLAYER_COMMAND=&quot;cvlc -q&quot;</span></a>
+<a class="sourceLine" id="cb10-76" data-line-number="76"><span class="co">#PLAYER_COMMAND=&quot;ffplay -volume 100 --autoexit -nodisp -v 0 -i&quot;</span></a>
+<a class="sourceLine" id="cb10-77" data-line-number="77"><span class="co">#PLAYER_COMMAND=&quot;mplayer -msglevel all=-1&quot;</span></a>
+<a class="sourceLine" id="cb10-78" data-line-number="78"><span class="co">#PLAYER_COMMAND=&quot;play -q&quot;</span></a>
+<a class="sourceLine" id="cb10-79" data-line-number="79"><span class="dt">PLAYER_COMMAND</span>=<span class="st">&quot;mpg123 -q&quot;</span></a>
+<a class="sourceLine" id="cb10-80" data-line-number="80"></a>
+<a class="sourceLine" id="cb10-81" data-line-number="81"><span class="co"># HALT COMMAND DEFINITION</span></a>
+<a class="sourceLine" id="cb10-82" data-line-number="82"><span class="co"># Define here the command to be used to power off your PC</span></a>
+<a class="sourceLine" id="cb10-83" data-line-number="83"><span class="co"># It&#39;s up to you to make sure the command can be executed</span></a>
+<a class="sourceLine" id="cb10-84" data-line-number="84"><span class="co"># (has the right permission etc.)</span></a>
+<a class="sourceLine" id="cb10-85" data-line-number="85"><span class="co">#</span></a>
+<a class="sourceLine" id="cb10-86" data-line-number="86"><span class="co"># Examples:</span></a>
+<a class="sourceLine" id="cb10-87" data-line-number="87"><span class="co">#HALT_COMMAND=&quot;xfce4-session-logout -h&quot;</span></a>
+<a class="sourceLine" id="cb10-88" data-line-number="88"><span class="co">#HALT_COMMAND=&quot;xfce4-session-logout -s&quot;</span></a>
+<a class="sourceLine" id="cb10-89" data-line-number="89"><span class="co">#HALT_COMMAND=&quot;xfce4-session-logout --hibernate&quot;</span></a>
+<a class="sourceLine" id="cb10-90" data-line-number="90"><span class="co">#HALT_COMMAND=&quot;systemctl suspend&quot;</span></a>
+<a class="sourceLine" id="cb10-91" data-line-number="91"><span class="co">#HALT_COMMAND=&quot;systemctl hibernate&quot;</span></a>
+<a class="sourceLine" id="cb10-92" data-line-number="92"><span class="co">#HALT_COMMAND=&quot;systemctl hybrid-sleep&quot;</span></a>
+<a class="sourceLine" id="cb10-93" data-line-number="93"><span class="dt">HALT_COMMAND</span>=<span class="st">&quot;systemctl poweroff&quot;</span></a></code></pre></div>
+<h2 id="execution">Execution</h2>
+<p>Once <em>sng-batmon</em> is installed, one can test it using the following command:</p>
+<div class="sourceCode" id="cb11"><pre class="sourceCode ruby"><code class="sourceCode ruby"><a class="sourceLine" id="cb11-1" data-line-number="1">sng-batmon test</a></code></pre></div>
+<p>This will display (and play) all available alerts and notifications that will be used in normal operation.</p>
+<p>To execute <em>sng-batmon</em>, run the command:</p>
+<div class="sourceCode" id="cb12"><pre class="sourceCode ruby"><code class="sourceCode ruby"><a class="sourceLine" id="cb12-1" data-line-number="1">sudo systemctl start sng-batmon</a></code></pre></div>
+<p>To have <em>sng-batmon</em> run on system start up, run the command:</p>
+<div class="sourceCode" id="cb13"><pre class="sourceCode ruby"><code class="sourceCode ruby"><a class="sourceLine" id="cb13-1" data-line-number="1">sudo systemctl enable sng-batmon</a></code></pre></div>
 <h2 id="controlling-sng-batmon">Controlling sng-batmon</h2>
+<p>Communication with <em>sng-batmon</em> is done from command line.</p>
 <p><em>sng-batmon</em> listens for input on a named pipe (FIFO), <strong>/tmp/sng-batmon</strong>.</p>
 <p>Available commands:</p>
 <dl>
@@ -404,25 +437,27 @@ status
 report status - returns a string, either “<b>running</b>” or “<b>suspended</b>”
 </dd>
 <dt>
-exit
+vstatus
+</dt>
+<dd>
+report status visually - displays a notification reporting its current status
+</dd>
+<dt>
+exit | quit
 </dt>
 <dd>
 terminate execution
 </dd>
 </dl>
-<p>The commands can be issued from the command line:</p>
-<div class="sourceCode" id="cb13"><pre class="sourceCode ruby"><code class="sourceCode ruby"><a class="sourceLine" id="cb13-1" data-line-number="1">echo status&gt;<span class="ot">/tmp/</span>sng-batmon</a></code></pre></div>
-<p>It should be noted that normally, when <em>sng-batmon</em> is not running, <strong>/tmp/sng-batmon</strong> does not exist.</p>
-<p>In this case, executing the command above will return nothing; it will just create a plain text file. So, this is an indication that <em>sng-batmon</em> is actually not running.</p>
-<p>Havin said that, the correct way to communicate with <em>sng-batmon</em> would be:</p>
-<div class="sourceCode" id="cb14"><pre class="sourceCode ruby"><code class="sourceCode ruby"><a class="sourceLine" id="cb14-1" data-line-number="1">[ -p <span class="ot">/tmp/</span>sng-batmon ] &amp;&amp; echo resume&gt;<span class="ot">/tmp/</span>sng-batmon || echo terminated</a></code></pre></div>
+<p>Example:</p>
+<div class="sourceCode" id="cb14"><pre class="sourceCode ruby"><code class="sourceCode ruby"><a class="sourceLine" id="cb14-1" data-line-number="1">sng-battery status</a></code></pre></div>
 <h2 id="sources">Sources</h2>
 <h3 id="and-resources">(and resources)</h3>
 <ul>
 <li><p>The script is based on the <a href="https://agorf.gr/2016/06/29/low-battery-notification-in-i3wm/">batmon</a> script by <strong>Angelos Orfanakos</strong>, published under the <a href="http://creativecommons.org/licenses/by-nc-sa/4.0/">Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International License</a>.</p></li>
 <li><p>The icons are derived from <a href="https://github.com/maateen/battery-monitor">maateen/battery-monitor</a>.</p></li>
 <li><p>The sounds come from the Public Domain and <a href="http://www.fromtexttospeech.com">www.fromtexttospeech.com</a>.</p></li>
-<li><p>Numerous web pages on <strong>bash</strong> scripting and github markup.</p></li>
+<li><p>Numerous web pages on <strong>bash</strong> scripting, <strong>make</strong> and <strong>github markup</strong>.</p></li>
 </ul>
 <h2 id="changelog">Changelog</h2>
 <ul>

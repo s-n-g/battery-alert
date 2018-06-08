@@ -14,9 +14,11 @@ Battery monitoring with sound alert
       * [Using git](#using-git)
       * [Zip file](#zip-file)
    - [make options](#make-options)
-3. [Execution](#execution)
+      * [Variables](#variables)
+      * [Command line parameters](#command-line-parameters)
 3. [Configuration](#configuration)
    - [Default configuration](#default-configuration)
+3. [Execution](#execution)
 4. [Controlling sng-batmon](#controlling-sng-batmon)
 5. [Sources](#sources)
 6. [Changelog](#changelog)
@@ -75,7 +77,7 @@ Audio playback will occur in the background (i.e. no program window of any kind 
 
 *sng-batmon* by default uses **mpg123** as an audio player, because it is light-weight enough and gets installed by default on most systems, but any mp3 player can be used, provided that it is a terminal application (or it can hide its window) and will print no diagnostic or other messages in *stdout* (or it can suppress them).
 
-If for any reason one prefers not to install it, or use a different player, or even not to use one at all, one should follow the [relevant installation instructions](#installation).
+If for any reason one prefers not to install it, or use a different player, or even not to use one at all, one should follow the [relevant installation instructions](#make-options).
 
 ## Installation
 
@@ -106,7 +108,7 @@ unzip master.zip
 cd sng-batmon-master
 ```
 
-Run make
+Run make (refer to [make options](#make-options) for installation customization)
 
 ```ruby
 make
@@ -121,7 +123,26 @@ sudo make install
 
 ### make options
 
-The **Makefile** that comes with the package provides the follwoing targets (command line aguments to **make**):
+#### Variables
+
+The **Makefile** that comes with the package provides a couple of variables which control the installation process:
+
+PREFIX
+: Script installation prefix. The script will actually be installed in **$PREFIX/bin**.
+: Default value: **/usr/local**
+
+SYSTEMD_SERVICES_DIRECTORY
+: Systemd installation directory.
+: Default value: **/lib/systemd/system**
+
+If necessary, the **Makefile** should be edited so that these two variables match the system at hand.
+
+Note
+: If the system is a **non-systemd** one, no file editing is needed; **make** will detect the situation and will not install a systemd service.
+
+#### Command line parameters
+
+In addition to those, the following targets (command line augments to **make**):
 
 <dl>
     <dt>default</dt>
@@ -156,6 +177,7 @@ $ make
 ** Checking for head ... found
 ** Checking for notify-send ... found
 ** Checking for bc ... found
+** Checking for sed ... found
 ** Checking for mpg123 ... not found
   *** You must install mpg123 (package mpg123)
 make: *** [Makefile:15: check_dependencies] Error 1
@@ -164,6 +186,7 @@ $ make no-mpg123
 ** Checking for head ... found
 ** Checking for notify-send ... found
 ** Checking for bc ... found
+** Checking for sed ... found
 Creating systemd service ... done
 $
 ```
@@ -174,19 +197,6 @@ $
   <dd>If <b>PLAYER_COMMAND</b> is empty or invalid, audio notification will be inhibited.</dd>
 </dl>
 
-## Execution
-
-To execute *sng-batmon*, run the command:
-
-```ruby
-systemctl start sng-batmon
-```
-
-To have *sng-batmon* run on system start up, run the command:
-
-```ruby
-systemctl enable sng-batmon
-```
 
 ## Configuration
 
@@ -240,6 +250,8 @@ The default configuration is the following:
 #  2  message to display
 #  3  icon to display
 #  4  sound to play
+#     either absolute or relative path to file
+#     if relative, it should be in /usr/share/sng-batmon
 #  5  time to display notification (in milliseconds)
 #     it should be the same as the duration
 #     of the sound file
@@ -326,7 +338,31 @@ HALT_COMMAND="systemctl poweroff"
 
 ```
 
+## Execution
+
+Once *sng-batmon* is installed, one can test it using the following command:
+
+```ruby
+sng-batmon test
+```
+
+This will display (and play) all available alerts and notifications that will be used in normal operation.
+
+To execute *sng-batmon*, run the command:
+
+```ruby
+sudo systemctl start sng-batmon
+```
+
+To have *sng-batmon* run on system start up, run the command:
+
+```ruby
+sudo systemctl enable sng-batmon
+```
+
 ## Controlling sng-batmon
+
+Communication with *sng-batmon* is done from command line.
 
 *sng-batmon* listens for input on a named pipe (FIFO), **/tmp/sng-batmon**.
 
@@ -339,24 +375,16 @@ Available commands:
 <dd>resume execution - the script resumes checking and reporting battery status</dd>
 <dt>status</dt>
 <dd>report status - returns a string, either "<b>running</b>" or "<b>suspended</b>"</dd>
-<dt>exit</dt>
+<dt>vstatus</dt>
+<dd>report status visually - displays a notification reporting its current status</dd>
+<dt>exit | quit</dt>
 <dd>terminate execution</dd>
 </dl>
 
-The commands can be issued from the command line:
+Example:
 
 ```ruby
-echo status>/tmp/sng-batmon
-```
-
-It should be noted that normally, when *sng-batmon* is not running, **/tmp/sng-batmon** does not exist.
-
-In this case, executing the command above will return nothing; it will just create a plain text file. So, this is an indication that *sng-batmon* is actually not running.
-
-Havin said that, the correct way to communicate with  *sng-batmon* would be:
-
-```ruby
-[ -p /tmp/sng-batmon ] && echo resume>/tmp/sng-batmon || echo terminated
+sng-battery status
 ```
 
 ## Sources
@@ -369,7 +397,7 @@ Havin said that, the correct way to communicate with  *sng-batmon* would be:
 
 - The sounds come from the Public Domain and [www.fromtexttospeech.com](http://www.fromtexttospeech.com).
 
-- Numerous web pages on **bash** scripting and github markup.
+- Numerous web pages on **bash** scripting, **make** and **github markup**.
 
 ## Changelog
 

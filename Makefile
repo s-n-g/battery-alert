@@ -1,4 +1,7 @@
 PREFIX=/usr/local
+SYSTEMD_SERVICES_DIRECTORY=/lib/systemd/system
+
+# internal variables
 INSTALL_PREFIX=$(PREFIX)/bin
 service_substitution="s\#{{INSTALL_PREFIX}}\#$(INSTALL_PREFIX)\#g"
 visual_substitution="s\#DEBUG=yes\#unset DEBUG\#\
@@ -23,6 +26,8 @@ deps:
 	@ type head 1>/dev/null 2>&1 && echo found || ( echo "not found"; echo "  *** You must install head (probably package coreutils)"; exit 1 )
 	@ echo -n "** Checking for bc ... "
 	@ type bc 1>/dev/null 2>&1 && echo found || ( echo "not found"; echo "  *** You must install bc (package bc)"; exit 1 )
+	@ echo -n "** Checking for sed ... "
+	@ type sed 1>/dev/null 2>&1 && echo found || ( echo "not found"; echo "  *** You must install sed"; exit 1 )
 
 notify:
 	@ echo -n "** Checking for notify-send ... "
@@ -62,6 +67,12 @@ install:
 	@ install -m 755 -d /usr/share/sng-batmon
 	@ install -m 644 icons/* sounds/*.mp3 man/*.html /usr/share/sng-batmon
 	@ echo done
+	@ if [ -e sng-batmon.service ];then \
+	if [ -d $(SYSTEMD_SERVICES_DIRECTORY) ]; then \
+	echo -n "Installing systemd service ... " ; \
+	cp sng-batmon.service $(SYSTEMD_SERVICES_DIRECTORY); \
+	echo 'done'; \
+	fi; fi
 	@ echo -n "Installing man page ... "
 	@ MAN=$$(man -w | sed 's/:.*//')/man1; \
 	if [ ! -d "$$MAN" ]; \
@@ -82,6 +93,10 @@ uninstall:
 	@ echo -n "Removing date files ... "
 	@ rm -rf /usr/share/sng-batmon
 	@ echo done
+	@ if [ -e $(SYSTEMD_SERVICES_DIRECTORY)/sng-batmon.service ]; then \
+	echo -n "Removing systemd service ... "; \
+	rm $(SYSTEMD_SERVICES_DIRECTORY)/sng-batmon.service; \
+	echo 'done'; fi
 	@ echo -n "Removing man page ... "
 	@ MAN=$$(man -w | sed 's/:.*//')/man1 ; \
 	rm "$$MAN"/sng-batmon.1.gz
@@ -120,4 +135,5 @@ help:
 	@ echo "  console-no-mpg123"
 	@ echo "    Same as above, but mpg123 would not be required."
 	@ echo ""
-
+	@ echo "Edit Makefile to match your system:"
+	@ sed -n '1,2p' Makefile | sed 's/^/  /'

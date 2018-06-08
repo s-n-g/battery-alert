@@ -2,6 +2,7 @@
 Description=Battery monitoring with sound alert
 After=alsa-restore.target
 StartLimitIntervalSec=0
+
 [Service]
 Type=simple
 Restart=always

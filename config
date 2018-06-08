@@ -6,6 +6,8 @@
 #  2  message to display
 #  3  icon to display
 #  4  sound to play
+#     either absolute or relative path to file
+#     if relative, it should be in /usr/share/sng-batmon
 #  5  time to display notification (in milliseconds)
 #     it should be the same as the duration
 #     of the sound file
