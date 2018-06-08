@@ -189,21 +189,32 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <h4 id="variables">Variables</h4>
 <p>The <strong>Makefile</strong> that comes with the package provides a couple of variables which control the installation process:</p>
 <dl>
-<dt>PREFIX</dt>
-<dd><p>Script installation prefix. The script will actually be installed in <strong>$PREFIX/bin</strong>.</p>
+<dt>
+PREFIX
+</dt>
+<dd>
+Script installation prefix. The script will actually be installed in <strong>$PREFIX/bin</strong>.
 </dd>
-<dd><p>Default value: <strong>/usr/local</strong></p>
+<dd>
+Default value: <strong>/usr/local</strong>
 </dd>
-<dt>SYSTEMD_SERVICES_DIRECTORY</dt>
-<dd><p>Systemd installation directory.</p>
+<dt>
+SYSTEMD_SERVICES_DIRECTORY
+</dt>
+<dd>
+Systemd installation directory.
 </dd>
-<dd><p>Default value: <strong>/lib/systemd/system</strong></p>
+<dd>
+Default value: <strong>/lib/systemd/system</strong>
 </dd>
 </dl>
 <p>If necessary, the <strong>Makefile</strong> should be edited so that these two variables match the system at hand.</p>
 <dl>
-<dt>Note</dt>
-<dd>If the system is a <strong>non-systemd</strong> one, no file editing is needed; <strong>make</strong> will detect the situation and will not install a systemd service.
+<dt>
+Note
+</dt>
+<dd>
+If the system is a <strong>non-systemd</strong> one, no file editing is needed; <strong>make</strong> will detect the situation and will not install a systemd service.
 </dd>
 </dl>
 <h4 id="command-line-parameters">Command line parameters</h4>
