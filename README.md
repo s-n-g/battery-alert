@@ -126,11 +126,10 @@ The **Makefile** that comes with the package provides the follwoing targets (com
     <dt>default</dt>
     <dd>Contains the default options for *sng-batmon*.</dd>
     <dd>These are the options used when **make** is executed without any arguments.</dd>
-    <dd><br /></dd>
     <dd>These options are:</dd>
 </dl>
 
-<ol style="margin-top: 0; margin-left: 4em;">
+<ol style="margin-top: 0; -webkit-margin-start: 4em;">
 <li>make sure essential required packages are already installed</li>
 <li>make sure *notify-send* executable is already installed</li>
 <li>make sure *mpg123* executable is already installed</li>
