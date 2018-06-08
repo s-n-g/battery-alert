@@ -21,7 +21,6 @@ function send_command {
     unset REPLY
     if [ -p $1 ];then
         echo $2>$my_fifo
-        #sleep 1
         read -t 250 <$my_fifo
     fi
     if [ -z "$REPLY" ];then
@@ -93,7 +92,7 @@ function test {
     exit
 }
 
-set -x
+#set -x
 ##############################################################################
 #                                                                            #
 #                              Commands Section                              #

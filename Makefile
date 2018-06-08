@@ -8,7 +8,7 @@ debug_substitution="s\#unset DEBUG\#DEBUG=yes\#"
 console_substitution="s\#unset CONSOLE_ONLY\#CONSOLE_ONLY=yes\#"
 console_service_substitution="s\#WantedBy=graphical.target\#WantedBy=multi-user.target\#"
 
-.PHONY: install uninstall clean auto_clean console visual debug
+.PHONY: install uninstall clean auto_clean console visual debug help
 
 default: auto_clean deps notify with_mpg123 visual sng-batmon.service
 
@@ -97,3 +97,27 @@ clean:
 
 auto_clean:
 	@if [ -e sng-batmon.service ]; then rm *.service;fi
+
+help:
+	@ echo "sng-batmon make options:"
+	@ echo ""
+	@ echo "  default"
+	@ echo "    Contains the default options for sng-batmon."
+	@ echo "    These are the options used when make is executed without any arguments."
+	@ echo "    Options description:"
+	@ echo "      1. make sure essential packages are already installed"
+	@ echo "      2. make sure notify-send executable is already installed"
+	@ echo "      3. make sure mpg123 executable is already installed"
+	@ echo "      4. make sure systemd service is up to date"
+	@ echo ""
+	@ echo "  no-mpg123"
+	@ echo "    Do not require mpg123 to be installed."
+	@ echo ""
+	@ echo "  console"
+	@ echo "    This option will disable visual notification. In other words, one would"
+	@ echo "    use this option to have sng-batmon running on a non-graphical environment."
+	@ echo ""
+	@ echo "  console-no-mpg123"
+	@ echo "    Same as above, but mpg123 would not be required."
+	@ echo ""
+

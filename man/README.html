@@ -10,6 +10,7 @@
     h2 {margin-top: 2.5em; border-bottom:1px solid #D6D6D6;} 
     h3 {margin-top: 2em;} 
     dl {margin: 2em;} 
+    dd {margin: 1em;} 
     dt {font-weight: bold;}
       code{white-space: pre-wrap;}
       span.smallcaps{font-variant: small-caps;}
@@ -21,6 +22,7 @@
     h2 {margin-top: 2.5em; border-bottom:1px solid #D6D6D6;} 
     h3 {margin-top: 2em;} 
     dl {margin: 2em;} 
+    dd {margin: 1em;} 
     dt {font-weight: bold;}
 a.sourceLine { display: inline-block; line-height: 1.25; }
 a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
@@ -152,31 +154,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <div class="sourceCode" id="cb1"><pre class="sourceCode ruby"><code class="sourceCode ruby"><a class="sourceLine" id="cb1-1" data-line-number="1">git clone https:<span class="ot">//</span>github.com/s-n-g/sng-batmon.git</a></code></pre></div>
 <p>Run make</p>
 <div class="sourceCode" id="cb2"><pre class="sourceCode ruby"><code class="sourceCode ruby"><a class="sourceLine" id="cb2-1" data-line-number="1">make</a></code></pre></div>
-<p>If <em>make</em> fails because of <em>mpg123</em> not being installed, and one does not want to install it, one can use the <em>no-mpg123</em> make argument.</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode ruby"><code class="sourceCode ruby"><a class="sourceLine" id="cb3-1" data-line-number="1">$ make</a>
-<a class="sourceLine" id="cb3-2" data-line-number="2">** <span class="dt">Checking</span> <span class="kw">for</span> head ... found</a>
-<a class="sourceLine" id="cb3-3" data-line-number="3">** <span class="dt">Checking</span> <span class="kw">for</span> notify-send ... found</a>
-<a class="sourceLine" id="cb3-4" data-line-number="4">** <span class="dt">Checking</span> <span class="kw">for</span> bc ... found</a>
-<a class="sourceLine" id="cb3-5" data-line-number="5">** <span class="dt">Checking</span> <span class="kw">for</span> mpg123 ... <span class="kw">not</span> found</a>
-<a class="sourceLine" id="cb3-6" data-line-number="6">  *** <span class="dt">You</span> must install mpg123 (package mpg123)</a>
-<a class="sourceLine" id="cb3-7" data-line-number="7"><span class="st">make: </span>*** [<span class="dt">Makefile</span>:<span class="dv">15</span>: check_dependencies] <span class="dt">Error</span> <span class="dv">1</span></a>
-<a class="sourceLine" id="cb3-8" data-line-number="8">$</a>
-<a class="sourceLine" id="cb3-9" data-line-number="9">$ make no-mpg123</a>
-<a class="sourceLine" id="cb3-10" data-line-number="10">** <span class="dt">Checking</span> <span class="kw">for</span> head ... found</a>
-<a class="sourceLine" id="cb3-11" data-line-number="11">** <span class="dt">Checking</span> <span class="kw">for</span> notify-send ... found</a>
-<a class="sourceLine" id="cb3-12" data-line-number="12">** <span class="dt">Checking</span> <span class="kw">for</span> bc ... found</a>
-<a class="sourceLine" id="cb3-13" data-line-number="13">$</a></code></pre></div>
-<p>In this case, a valid <strong>PLAYER_COMMAND</strong> has to be provided for audio notification to work (see <a href="#configuration">Configuration</a>).</p>
-<dl>
-<dt>
-Note
-</dt>
-<dd>
-If <b>PLAYER_COMMAND</b> is empty or invalid, audio notification will be inhibited.
-</dd>
-</dl>
 <p>Finally, go on and install it</p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode ruby"><code class="sourceCode ruby"><a class="sourceLine" id="cb4-1" data-line-number="1">sudo make install</a></code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode ruby"><code class="sourceCode ruby"><a class="sourceLine" id="cb3-1" data-line-number="1">sudo make install</a></code></pre></div>
 <h3 id="make-options">make options</h3>
 <p>The <strong>Makefile</strong> that comes with the package provides the follwoing targets (command line aguments to <strong>make</strong>):</p>
 <dl>
@@ -192,10 +171,9 @@ These are the options used when <b>make</b> is executed without any arguments.
 <dd>
 Options description:
 <dd>
-</dl>
-<ol style="margin-left: 4em;">
+<ol>
 <li>
-make sure essential required packages are already installed
+make sure essential packages are already installed
 </li>
 <li>
 make sure <i>notify-send</i> executable is already installed
@@ -207,6 +185,7 @@ make sure <i>mpg123</i> executable is already installed
 make sure <i>systemd service</i> is up to date
 </li>
 </ol>
+</dl>
 <dl>
 <dt>
 no-mpg123
@@ -218,13 +197,44 @@ Do not require <b>mpg123</b> to be installed.
 console
 </dt>
 <dd>
-This option will disable visual notification. In other words, one would use this option to have <em>sng-batmon</em> running on a non-graphical environment.
+This option will disable visual notification. In other words, one would use this option to have <i>sng-batmon</i> running on a non-graphical environment.
 </dd>
 <dt>
 console-no-mpg123
 </dt>
 <dd>
 Same as above, but <b>mpg123</b> would not be required.
+</dd>
+<dt>
+help
+</dt>
+<dd>
+print help screen and exit
+</dd>
+</dl>
+<p>Example:</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode ruby"><code class="sourceCode ruby"><a class="sourceLine" id="cb4-1" data-line-number="1">$ make</a>
+<a class="sourceLine" id="cb4-2" data-line-number="2">** <span class="dt">Checking</span> <span class="kw">for</span> head ... found</a>
+<a class="sourceLine" id="cb4-3" data-line-number="3">** <span class="dt">Checking</span> <span class="kw">for</span> notify-send ... found</a>
+<a class="sourceLine" id="cb4-4" data-line-number="4">** <span class="dt">Checking</span> <span class="kw">for</span> bc ... found</a>
+<a class="sourceLine" id="cb4-5" data-line-number="5">** <span class="dt">Checking</span> <span class="kw">for</span> mpg123 ... <span class="kw">not</span> found</a>
+<a class="sourceLine" id="cb4-6" data-line-number="6">  *** <span class="dt">You</span> must install mpg123 (package mpg123)</a>
+<a class="sourceLine" id="cb4-7" data-line-number="7"><span class="st">make: </span>*** [<span class="dt">Makefile</span>:<span class="dv">15</span>: check_dependencies] <span class="dt">Error</span> <span class="dv">1</span></a>
+<a class="sourceLine" id="cb4-8" data-line-number="8">$</a>
+<a class="sourceLine" id="cb4-9" data-line-number="9">$ make no-mpg123</a>
+<a class="sourceLine" id="cb4-10" data-line-number="10">** <span class="dt">Checking</span> <span class="kw">for</span> head ... found</a>
+<a class="sourceLine" id="cb4-11" data-line-number="11">** <span class="dt">Checking</span> <span class="kw">for</span> notify-send ... found</a>
+<a class="sourceLine" id="cb4-12" data-line-number="12">** <span class="dt">Checking</span> <span class="kw">for</span> bc ... found</a>
+<a class="sourceLine" id="cb4-13" data-line-number="13"><span class="dt">Creating</span> systemd service ... done</a>
+<a class="sourceLine" id="cb4-14" data-line-number="14">$</a></code></pre></div>
+<dl>
+<dt>
+Note
+</dt>
+<dd>
+In this case, a valid <b>PLAYER_COMMAND</b> has to be provided for audio notification to work (see <a href="#configuration">Configuration</a>).
+<dd>
+If <b>PLAYER_COMMAND</b> is empty or invalid, audio notification will be inhibited.
 </dd>
 </dl>
 <h2 id="configuration">Configuration</h2>

@@ -85,32 +85,6 @@ Run make
 make
 ```
 
-If *make* fails because of *mpg123* not being installed, and one does not want to install it, one can use the *no-mpg123* make argument.
-
-```ruby
-$ make
-** Checking for head ... found
-** Checking for notify-send ... found
-** Checking for bc ... found
-** Checking for mpg123 ... not found
-  *** You must install mpg123 (package mpg123)
-make: *** [Makefile:15: check_dependencies] Error 1
-$
-$ make no-mpg123
-** Checking for head ... found
-** Checking for notify-send ... found
-** Checking for bc ... found
-$
-```
-
-In this case, a valid **PLAYER_COMMAND** has to be provided for audio notification to work (see [Configuration](#configuration)).
-
-<dl>
-  <dt>Note</dt>
-  <dd>If <b>PLAYER_COMMAND</b> is empty or invalid, audio notification will be inhibited.</dd>
-</dl>
-
-
 
 Finally, go on and install it
 
@@ -127,22 +101,50 @@ The **Makefile** that comes with the package provides the follwoing targets (com
     <dd>Contains the default options for <i>sng-batmon</i>.</dd>
     <dd>These are the options used when <b>make</b> is executed without any arguments.</dd>
     <dd>Options description:<dd>
-</dl>
 
-<ol style="margin-left: 4em;">
-<li>make sure essential required packages are already installed</li>
+<ol>
+<li>make sure essential packages are already installed</li>
 <li>make sure <i>notify-send</i> executable is already installed</li>
 <li>make sure <i>mpg123</i> executable is already installed</li>
 <li>make sure <i>systemd service</i> is up to date</li>
 </ol>
 
+</dl>
 <dl>
     <dt>no-mpg123</dt>
     <dd>Do not require <b>mpg123</b> to be installed.</dd>
     <dt>console</dt>
-    <dd>This option will disable visual notification. In other words, one would use this option to have *sng-batmon* running on a non-graphical environment.</dd>
+    <dd>This option will disable visual notification. In other words, one would use this option to have <i>sng-batmon</i> running on a non-graphical environment.</dd>
     <dt>console-no-mpg123</dt>
     <dd>Same as above, but <b>mpg123</b> would not be required.</dd>
+    <dt>help</dt>
+    <dd>print help screen and exit</dd>
+</dl>
+
+
+Example:
+
+```ruby
+$ make
+** Checking for head ... found
+** Checking for notify-send ... found
+** Checking for bc ... found
+** Checking for mpg123 ... not found
+  *** You must install mpg123 (package mpg123)
+make: *** [Makefile:15: check_dependencies] Error 1
+$
+$ make no-mpg123
+** Checking for head ... found
+** Checking for notify-send ... found
+** Checking for bc ... found
+Creating systemd service ... done
+$
+```
+
+<dl>
+  <dt>Note</dt>
+    <dd>In this case, a valid <b>PLAYER_COMMAND</b> has to be provided for audio notification to work (see <a href="#configuration">Configuration</a>).
+  <dd>If <b>PLAYER_COMMAND</b> is empty or invalid, audio notification will be inhibited.</dd>
 </dl>
 
 ## Configuration
