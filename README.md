@@ -130,17 +130,17 @@ The **Makefile** that comes with the package provides a couple of variables whic
 <dl>
 <dt>PREFIX</dt>
 <dd>Script installation prefix. The script will actually be installed in **$PREFIX/bin**.</dd> 
-<dd>Default value: **/usr/local**</dd>
+<dd>Default value: <b>/usr/local</b></dd>
 <dt>SYSTEMD_SERVICES_DIRECTORY</dt>
-<dd>Systemd installation directory.</dd>
-<dd>Default value: **/lib/systemd/system**</dd>
+<dd>Systemd installation directory. This is where the service file will be copied.</dd>
+<dd>Default value: <b>/lib/systemd/system</b></dd>
 </dl>
 
 If necessary, the **Makefile** should be edited so that these two variables match the system at hand.
 
 <dl>
 <dt>Note</dt>
-<dd>If the system is a **non-systemd** one, no file editing is needed; **make** will detect the situation and will not install a systemd service.</dd>
+<dd>If the system is a <b>non-systemd</b> one, no file editing is needed; <b>make</b> will detect the situation and will not install a systemd service.</dd>
 </dl>
 
 #### Command line parameters
@@ -252,9 +252,10 @@ The default configuration is the following:
 #  1  message title to display
 #  2  message to display
 #  3  icon to display
-#  4  sound to play
 #     either absolute or relative path to file
 #     if relative, it should be in /usr/share/sng-batmon
+#  4  sound to play
+#     path works the same as with icon
 #  5  time to display notification (in milliseconds)
 #     it should be the same as the duration
 #     of the sound file

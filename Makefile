@@ -4,18 +4,18 @@ SYSTEMD_SERVICES_DIRECTORY=/lib/systemd/system
 # internal variables
 INSTALL_PREFIX=$(PREFIX)/bin
 service_substitution="s\#{{INSTALL_PREFIX}}\#$(INSTALL_PREFIX)\#g"
-visual_substitution="s\#DEBUG=yes\#unset DEBUG\#\
+normal_substitution="s\#DEBUG=yes\#unset DEBUG\#\
 	;s\#CONSOLE_ONLY=yes\#unset CONSOLE_ONLY\#"
-visual_service_substitution="s\#WantedBy=multi-user.target\#WantedBy=graphical.target\#"
+normal_service_substitution="s\#WantedBy=multi-user.target\#WantedBy=graphical.target\#"
 debug_substitution="s\#unset DEBUG\#DEBUG=yes\#"
 console_substitution="s\#unset CONSOLE_ONLY\#CONSOLE_ONLY=yes\#"
 console_service_substitution="s\#WantedBy=graphical.target\#WantedBy=multi-user.target\#"
 
-.PHONY: install uninstall clean auto_clean console visual debug help
+.PHONY: install uninstall clean auto_clean console normal debug help
 
-default: auto_clean deps notify with_mpg123 visual sng-batmon.service
+default: auto_clean deps notify with_mpg123 normal sng-batmon.service
 
-no-mpg123: auto_clean deps notify visual sng-batmon.service
+no-mpg123: auto_clean deps notify normal sng-batmon.service
 
 console: auto_clean deps with_mpg123 console-only sng-batmon.service
 
@@ -27,7 +27,7 @@ deps:
 	@ echo -n "** Checking for bc ... "
 	@ type bc 1>/dev/null 2>&1 && echo found || ( echo "not found"; echo "  *** You must install bc (package bc)"; exit 1 )
 	@ echo -n "** Checking for sed ... "
-	@ type sed 1>/dev/null 2>&1 && echo found || ( echo "not found"; echo "  *** You must install sed"; exit 1 )
+	@ type osed 1>/dev/null 2>&1 && echo found || ( echo "not found"; echo "  *** You must install sed"; exit 1 )
 
 notify:
 	@ echo -n "** Checking for notify-send ... "
@@ -43,13 +43,21 @@ sng-batmon.service: sng-batmon.service.template
 	@ sed $(service_substitution) $< > $@
 	@ echo done
 
-visual:
-	@ sed -i $(visual_substitution) sng-batmon
-	@ sed -i $(visual_service_substitution) sng-batmon.service.template
-	@ if [ -e sng-batmon.service ];then sed -i $(visual_service_substitution) sng-batmon.service; fi
+normal:
+	@ sed -i $(normal_substitution) sng-batmon
+	@ sed -i '/^## DEBUG DATA FILE/,/^## END OF DEBUG DATA FILE/d' sng-batmon
+	@ sed -i $(normal_service_substitution) sng-batmon.service.template
+	@ if [ -e sng-batmon.service ];then sed -i $(normal_service_substitution) sng-batmon.service; fi
 
 debug:
 	@ sed -i $(debug_substitution) sng-batmon
+	@ sed -i '/^DEBUG=yes/ i \
+## DEBUG DATA FILE \
+[ -e /tmp/sng-batmon.txt ] || { \
+	echo "charge_percent=40" > /tmp/sng-batmon-data.txt \
+	echo "charge_status=Discharging" >> /tmp/sng-batmon-data.txt \
+} \
+## END OF DEBUG DATA FILE' sng-batmon
 
 console-only:
 	@ sed -i $(console_substitution) sng-batmon

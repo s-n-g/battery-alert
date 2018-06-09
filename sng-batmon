@@ -77,7 +77,6 @@ function test {
         [[ "${THRESHOLD_NOTIFY_HIGH[$i]}" == /* ]] || THRESHOLD_NOTIFY_HIGH[$i]=/usr/share/sng-batmon/"${THRESHOLD_NOTIFY_HIGH[$i]}"
         [[ "${THRESHOLD_NOTIFY_LOW[$i]}" == /* ]] || THRESHOLD_NOTIFY_LOW[$i]=/usr/share/sng-batmon/"${THRESHOLD_NOTIFY_LOW[$i]}"
     done
-
     
     charge_percent=20
     read -p 'Press ENTER for low alert'
@@ -211,7 +210,7 @@ while true;do
                 # remove everything after dot
                 charge_percent=${charge_percent%.*}
             else
-                . /tmp/batmon-data.txt
+                . /tmp/sng-batmon-data.txt
             fi
 
             if [ $charge_status == 'Discharging' ];then
