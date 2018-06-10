@@ -1,0 +1,19 @@
+#!/usr/bin/openrc-run
+# Copyright 2018 Spiros Georgaras <sng@hellug.gr>
+# place this in /etc/init.d/battery-alert
+
+depend() {
+	need alsasound
+}
+
+start() {
+	ebegin "Starting battery-alert"
+	start-stop-daemon --background --start --exec {{PREFIX}}/bin/battery-alert
+	eend $?
+}
+
+stop() {
+	ebegin "Stopping battery-alert"
+	start-stop-daemon --stop --name battery-alert
+	eend $?
+}
