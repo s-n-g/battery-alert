@@ -3,9 +3,9 @@ unset DEBUG
 unset CONSOLE_ONLY
 
 function error_occured {
-    [ -z "$CONSOLE_ONLY" ] && notify-send -t 10000 -u critical sng-batmon "
+    [ -z "$CONSOLE_ONLY" ] && notify-send -t 10000 -u critical battery-alert "
 An error occured at execution time!!!
-Terminating..." -i /usr/share/sng-batmon/notify-high.png
+Terminating..." -i /usr/share/battery-alert/notify-high.png
     rm $my_fifo 2>/dev/null
     exit 70
 }
@@ -64,18 +64,18 @@ function notify_high {
 }
 
 function test {
-    if [ -e /etc/sng-batmon.conf ]; then
-        . /etc/sng-batmon.conf
+    if [ -e /etc/battery-alert.conf ]; then
+        . /etc/battery-alert.conf
     fi
-    if [ -e ~/.config/sng-batmon/config ]; then
-        . ~/.config/sng-batmon/config
+    if [ -e ~/.config/battery-alert/config ]; then
+        . ~/.config/battery-alert/config
     fi
     for i in 3 4
     do
-        [[ "${THRESHOLD_HIGH[$i]}" == /* ]] || THRESHOLD_HIGH[$i]=/usr/share/sng-batmon/"${THRESHOLD_HIGH[$i]}"
-        [[ "${THRESHOLD_LOW[$i]}" == /* ]] || THRESHOLD_LOW[$i]=/usr/share/sng-batmon/"${THRESHOLD_LOW[$i]}"
-        [[ "${THRESHOLD_NOTIFY_HIGH[$i]}" == /* ]] || THRESHOLD_NOTIFY_HIGH[$i]=/usr/share/sng-batmon/"${THRESHOLD_NOTIFY_HIGH[$i]}"
-        [[ "${THRESHOLD_NOTIFY_LOW[$i]}" == /* ]] || THRESHOLD_NOTIFY_LOW[$i]=/usr/share/sng-batmon/"${THRESHOLD_NOTIFY_LOW[$i]}"
+        [[ "${THRESHOLD_HIGH[$i]}" == /* ]] || THRESHOLD_HIGH[$i]=/usr/share/battery-alert/"${THRESHOLD_HIGH[$i]}"
+        [[ "${THRESHOLD_LOW[$i]}" == /* ]] || THRESHOLD_LOW[$i]=/usr/share/battery-alert/"${THRESHOLD_LOW[$i]}"
+        [[ "${THRESHOLD_NOTIFY_HIGH[$i]}" == /* ]] || THRESHOLD_NOTIFY_HIGH[$i]=/usr/share/battery-alert/"${THRESHOLD_NOTIFY_HIGH[$i]}"
+        [[ "${THRESHOLD_NOTIFY_LOW[$i]}" == /* ]] || THRESHOLD_NOTIFY_LOW[$i]=/usr/share/battery-alert/"${THRESHOLD_NOTIFY_LOW[$i]}"
     done
     
     charge_percent=20
@@ -97,7 +97,7 @@ function test {
 #                              Commands Section                              #
 #                                                                            #
 ##############################################################################
-my_fifo=/tmp/sng-batmon
+my_fifo=/tmp/battery-alert
 
 if [[ "$1" =~ ^status|^vstatus ]];then
     send_command $my_fifo status
@@ -106,9 +106,9 @@ if [[ "$1" =~ ^status|^vstatus ]];then
         echo "$REPLY"
     else
         [ -z "$CONSOLE_ONLY" ] && notify-send -t 5000 -u normal \
-        -i /usr/share/sng-batmon/notify-high.png sng-batmon \
+        -i /usr/share/battery-alert/notify-high.png battery-alert \
 "
-Status: sng-batmon is <b>$REPLY</b>"
+Status: battery-alert is <b>$REPLY</b>"
     fi
     exit $ret
 elif [ "$1" = "suspend" ];then
@@ -169,10 +169,10 @@ fi
 mkfifo $my_fifo 2>/dev/null || {
     rm -rf $my_fifo 2>/dev/null
     mkfifo $my_fifo 2>/dev/null || {
-        [ -z "$CONSOLE_ONLY" ] && notify-send -t 10000 -u critical sng-batmon "
-Cannot create \"/tmp/sng-batmon\"
+        [ -z "$CONSOLE_ONLY" ] && notify-send -t 10000 -u critical battery-alert "
+Cannot create \"/tmp/battery-alert\"
 Please make sure it does not exist before executing this script
-Terminating..." -i /usr/share/sng-batmon/notify-high.png
+Terminating..." -i /usr/share/battery-alert/notify-high.png
         exit 74
     }
 }
@@ -180,21 +180,21 @@ Terminating..." -i /usr/share/sng-batmon/notify-high.png
 #set -x
 LOOP_TIME_OUT=60
 while true;do
-    if [ -e /etc/sng-batmon.conf ]; then
-        . /etc/sng-batmon.conf
+    if [ -e /etc/battery-alert.conf ]; then
+        . /etc/battery-alert.conf
     fi
-    if [ -e ~/.config/sng-batmon/config ]; then
-        . ~/.config/sng-batmon/config
+    if [ -e ~/.config/battery-alert/config ]; then
+        . ~/.config/battery-alert/config
     fi
 
     if [ -z "$INHIBIT_BY_COMMAND" ];then
 
         for i in 3 4
         do
-            [[ "${THRESHOLD_HIGH[$i]}" == /* ]] || THRESHOLD_HIGH[$i]=/usr/share/sng-batmon/"${THRESHOLD_HIGH[$i]}"
-            [[ "${THRESHOLD_LOW[$i]}" == /* ]] || THRESHOLD_LOW[$i]=/usr/share/sng-batmon/"${THRESHOLD_LOW[$i]}"
-            [[ "${THRESHOLD_NOTIFY_HIGH[$i]}" == /* ]] || THRESHOLD_NOTIFY_HIGH[$i]=/usr/share/sng-batmon/"${THRESHOLD_NOTIFY_HIGH[$i]}"
-            [[ "${THRESHOLD_NOTIFY_LOW[$i]}" == /* ]] || THRESHOLD_NOTIFY_LOW[$i]=/usr/share/sng-batmon/"${THRESHOLD_NOTIFY_LOW[$i]}"
+            [[ "${THRESHOLD_HIGH[$i]}" == /* ]] || THRESHOLD_HIGH[$i]=/usr/share/battery-alert/"${THRESHOLD_HIGH[$i]}"
+            [[ "${THRESHOLD_LOW[$i]}" == /* ]] || THRESHOLD_LOW[$i]=/usr/share/battery-alert/"${THRESHOLD_LOW[$i]}"
+            [[ "${THRESHOLD_NOTIFY_HIGH[$i]}" == /* ]] || THRESHOLD_NOTIFY_HIGH[$i]=/usr/share/battery-alert/"${THRESHOLD_NOTIFY_HIGH[$i]}"
+            [[ "${THRESHOLD_NOTIFY_LOW[$i]}" == /* ]] || THRESHOLD_NOTIFY_LOW[$i]=/usr/share/battery-alert/"${THRESHOLD_NOTIFY_LOW[$i]}"
         done
 
         if [ -z "$SUSPEND" ]; then
@@ -210,7 +210,7 @@ while true;do
                 # remove everything after dot
                 charge_percent=${charge_percent%.*}
             else
-                . /tmp/sng-batmon-data.txt
+                . /tmp/battery-alert-data.txt
             fi
 
             if [ $charge_status == 'Discharging' ];then

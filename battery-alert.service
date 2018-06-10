@@ -1,0 +1,14 @@
+[Unit]
+Description=Battery monitoring with sound alert
+After=alsa-restore.target
+StartLimitIntervalSec=0
+
+[Service]
+Type=simple
+Restart=always
+RestartSec=1
+ExecStart=/usr/bin/env bash /usr/local/bin/battery-alert
+Documentation=man:battery-alert(1)
+
+[Install]
+WantedBy=graphical.target

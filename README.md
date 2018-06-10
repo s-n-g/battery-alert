@@ -83,11 +83,13 @@ If for any reason one prefers not to install it, or use a different player, or e
 
 ### Requirements
 
-1. **coreutils** - The basic file, shell and text manipulation
-2. **sed** - GNU stream editor
-3. **bc** - An arbitrary precision calculator language
-4. **libnotify** - Library for sending desktop notifications
-5. **mpg123** - A console based real time MPEG Audio Player for Layer 1, 2 and 3 (optional)
+1. **bash** - Well, it is a **bash** script, after all
+2. **coreutils** - The basic file, shell and text manipulation
+3. **sed** - GNU stream editor
+4. **gzip** - GNU compression utility
+5. **bc** - An arbitrary precision calculator language
+6. **libnotify** - Library for sending desktop notifications
+7. **mpg123** - A console based real time MPEG Audio Player for Layer 1, 2 and 3 (optional)
 
 ### Procedure
 
@@ -168,6 +170,8 @@ In addition to those, the following targets (command line augments to **make**):
     <dd>This option will disable visual notification. In other words, one would use this option to have <i>battery-alert</i> running on a non-graphical environment.</dd>
     <dt>console-no-mpg123</dt>
     <dd>Same as above, but <b>mpg123</b> would not be required.</dd>
+    <dt>test</dt>
+    <dd>display (and play) all notification that would occur under normal operation</dd>
     <dt>help</dt>
     <dd>print help screen and exit</dd>
 </dl>
