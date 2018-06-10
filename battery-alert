@@ -48,19 +48,27 @@ function alert_threshold_high {
 }
 
 function notify_low {
-    LOOP_TIME_OUT=${THRESHOLD_NOTIFY_LOW[6]}
-    [ -z "$CONSOLE_ONLY" ] && notify-send -t ${THRESHOLD_NOTIFY_LOW[5]} -i "${THRESHOLD_NOTIFY_LOW[3]}" "${THRESHOLD_NOTIFY_LOW[1]}" "${THRESHOLD_NOTIFY_LOW[2]}"
-    if [ ! -z "$PLAYER_COMMAND" ] && [ -e "${THRESHOLD_NOTIFY_LOW[4]}" ]; then
-        $PLAYER_COMMAND "${THRESHOLD_NOTIFY_LOW[4]}"
-    fi
+    [ -z "${THRESHOLD_NOTIFY_LOW[7]}" ] || {
+        if [ "${THRESHOLD_NOTIFY_LOW[7]}" = "yes" ]; then
+            LOOP_TIME_OUT=${THRESHOLD_NOTIFY_LOW[6]}
+            [ -z "$CONSOLE_ONLY" ] && notify-send -t ${THRESHOLD_NOTIFY_LOW[5]} -i "${THRESHOLD_NOTIFY_LOW[3]}" "${THRESHOLD_NOTIFY_LOW[1]}" "${THRESHOLD_NOTIFY_LOW[2]}"
+            if [ ! -z "$PLAYER_COMMAND" ] && [ -e "${THRESHOLD_NOTIFY_LOW[4]}" ]; then
+                $PLAYER_COMMAND "${THRESHOLD_NOTIFY_LOW[4]}"
+            fi
+        fi
+    }
 }
 
 function notify_high {
-    LOOP_TIME_OUT=${THRESHOLD_NOTIFY_HIGH[6]}
-    [ -z "$CONSOLE_ONLY" ] && notify-send -t ${THRESHOLD_NOTIFY_HIGH[5]} -i "${THRESHOLD_NOTIFY_HIGH[3]}" "${THRESHOLD_NOTIFY_HIGH[1]}" "${THRESHOLD_NOTIFY_HIGH[2]}"
-    if [ ! -z "$PLAYER_COMMAND" ] && [ -e "${THRESHOLD_NOTIFY_HIGH[4]}" ]; then
-        $PLAYER_COMMAND "${THRESHOLD_NOTIFY_HIGH[4]}"
-    fi
+    [ -z "${THRESHOLD_NOTIFY_HIGH[7]}" ] || {
+        if [ "${THRESHOLD_NOTIFY_HIGH[7]}" = "yes" ]; then
+            LOOP_TIME_OUT=${THRESHOLD_NOTIFY_HIGH[6]}
+            [ -z "$CONSOLE_ONLY" ] && notify-send -t ${THRESHOLD_NOTIFY_HIGH[5]} -i "${THRESHOLD_NOTIFY_HIGH[3]}" "${THRESHOLD_NOTIFY_HIGH[1]}" "${THRESHOLD_NOTIFY_HIGH[2]}"
+            if [ ! -z "$PLAYER_COMMAND" ] && [ -e "${THRESHOLD_NOTIFY_HIGH[4]}" ]; then
+                $PLAYER_COMMAND "${THRESHOLD_NOTIFY_HIGH[4]}"
+            fi
+        fi
+    }
 }
 
 function test {

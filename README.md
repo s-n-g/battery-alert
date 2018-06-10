@@ -246,6 +246,12 @@ battery-alert resume
 
 The default configuration is the following:
 
+- if battery goes over 80%, issue notification "**Disconnect power supply**"
+- if battery drops below 40%, issue notification "**Connect power supply**"
+- if battery drops below 20%, issue notification "**Low battery**" every 30 seconds
+- if battery drops below 15%, issue notification "**Low battery**" repeatedly
+- if battery drops below 7%, **halt** the system
+
 ```ruby
 # THRESHOLDS DEFINITION
 # Thresholds are defined in arrays
@@ -265,6 +271,9 @@ The default configuration is the following:
 #     time to wait between battery status check
 #     if it is 0, do not wait
 #     effectively displaying notification repeatedly
+#  7  Enable / Disable
+#     Applies on notification alerts only
+#     Value: [yes] / no
 
 #  - THRESHOLD_HIGH
 #    If battery percentage is lower than this, a notification
@@ -285,6 +294,7 @@ THRESHOLD_LOW[1]="Low battery"
 THRESHOLD_LOW[2]="Battery running critically low at $charge_percent%!"
 THRESHOLD_LOW[3]=warning-low.png
 THRESHOLD_LOW[4]=warning-low.mp3
+THRESHOLD_LOW[5]=7000
 THRESHOLD_LOW[6]=0
 
 #  - THRESHOLD_HALT
@@ -304,6 +314,7 @@ THRESHOLD_NOTIFY_HIGH[3]=notify-high.png
 THRESHOLD_NOTIFY_HIGH[4]=notify-high.mp3
 THRESHOLD_NOTIFY_HIGH[5]=5300
 THRESHOLD_NOTIFY_HIGH[6]=60
+THRESHOLD_NOTIFY_HIGH[7]=yes
 
 #  - THRESHOLD_NOTIFY_LOW
 #    Notify that user should now connect the power supply
@@ -314,6 +325,7 @@ THRESHOLD_NOTIFY_LOW[3]=notify-low.png
 THRESHOLD_NOTIFY_LOW[4]=notify-low.mp3
 THRESHOLD_NOTIFY_LOW[5]=5300
 THRESHOLD_NOTIFY_LOW[6]=60
+THRESHOLD_NOTIFY_LOW[7]=yes
 
 # END OF THRESHOLDS DEFINITION
 
