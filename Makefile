@@ -3,23 +3,23 @@ SYSTEMD_SERVICES_DIRECTORY=/lib/systemd/system
 
 # internal variables
 INSTALL_PREFIX=$(PREFIX)/bin
-service_substitution="s\#{{INSTALL_PREFIX}}\#$(INSTALL_PREFIX)\#g"
+systemd_substitution="s\#{{INSTALL_PREFIX}}\#$(INSTALL_PREFIX)\#g"
 normal_substitution="s\#DEBUG=yes\#unset DEBUG\#\
 	;s\#CONSOLE_ONLY=yes\#unset CONSOLE_ONLY\#"
-normal_service_substitution="s\#WantedBy=multi-user.target\#WantedBy=graphical.target\#"
+normal_systemd_substitution="s\#WantedBy=multi-user.target\#WantedBy=graphical.target\#"
 debug_substitution="s\#unset DEBUG\#DEBUG=yes\#"
 console_substitution="s\#unset CONSOLE_ONLY\#CONSOLE_ONLY=yes\#"
-console_service_substitution="s\#WantedBy=graphical.target\#WantedBy=multi-user.target\#"
+console_systemd_substitution="s\#WantedBy=graphical.target\#WantedBy=multi-user.target\#"
 
 .PHONY: install uninstall clean auto_clean console normal debug help
 
-default: auto_clean deps notify with_mpg123 normal battery-alert.service
+default: auto_clean deps notify with_mpg123 normal battery-alert.systemd
 
-no-mpg123: auto_clean deps notify normal battery-alert.service
+no-mpg123: auto_clean deps notify normal battery-alert.systemd
 
-console: auto_clean deps with_mpg123 console-only battery-alert.service
+console: auto_clean deps with_mpg123 console-only battery-alert.systemd
 
-console-no-mpg123: auto_clean deps console-only battery-alert.service
+console-no-mpg123: auto_clean deps console-only battery-alert.systemd
 
 deps:
 	@ echo -n "** Checking for head ... "
@@ -42,16 +42,16 @@ with_mpg123:
 	@ type mpg123 1>/dev/null 2>&1 && echo found || ( echo "not found"; echo "  *** You must install mpg123 (package mpg123)"; exit 1 )
 
 
-battery-alert.service: battery-alert.service.template
+battery-alert.systemd: battery-alert.systemd.template
 	@ echo -n "Creating systemd service ... "
-	@ sed $(service_substitution) $< > $@
+	@ sed $(systemd_substitution) $< > $@
 	@ echo done
 
 normal:
 	@ sed -i $(normal_substitution) battery-alert
 	@ sed -i '/^## DEBUG DATA FILE/,/^## END OF DEBUG DATA FILE/d' battery-alert
-	@ sed -i $(normal_service_substitution) battery-alert.service.template
-	@ if [ -e battery-alert.service ];then sed -i $(normal_service_substitution) battery-alert.service; fi
+	@ sed -i $(normal_systemd_substitution) battery-alert.systemd.template
+	@ if [ -e battery-alert.systemd ];then sed -i $(normal_systemd_substitution) battery-alert.systemd; fi
 
 debug:
 	@ sed -i $(debug_substitution) battery-alert
@@ -65,8 +65,8 @@ debug:
 
 console-only:
 	@ sed -i $(console_substitution) battery-alert
-	@ sed -i $(console_service_substitution) battery-alert.service.template
-	@ if [ -e battery-alert.service ];then sed -i $(console_service_substitution) battery-alert.service; fi
+	@ sed -i $(console_systemd_substitution) battery-alert.systemd.template
+	@ if [ -e battery-alert.systemd ];then sed -i $(console_systemd_substitution) battery-alert.systemd; fi
 
 install:
 	@ echo -n "Installing script ... "
@@ -79,10 +79,10 @@ install:
 	@ install -m 755 -d /usr/share/battery-alert
 	@ install -m 644 icons/* sounds/*.mp3 man/*.html /usr/share/battery-alert
 	@ echo done
-	@ if [ -e battery-alert.service ];then \
+	@ if [ -e battery-alert.systemd ];then \
 	if [ -d $(SYSTEMD_SERVICES_DIRECTORY) ]; then \
 	echo -n "Installing systemd service ... " ; \
-	cp battery-alert.service $(SYSTEMD_SERVICES_DIRECTORY); \
+	cp battery-alert.systemd $(SYSTEMD_SERVICES_DIRECTORY); \
 	echo 'done'; \
 	fi; fi
 	@ echo -n "Installing man page ... "
@@ -105,9 +105,9 @@ uninstall:
 	@ echo -n "Removing date files ... "
 	@ rm -rf /usr/share/battery-alert
 	@ echo done
-	@ if [ -e $(SYSTEMD_SERVICES_DIRECTORY)/battery-alert.service ]; then \
+	@ if [ -e $(SYSTEMD_SERVICES_DIRECTORY)/battery-alert.systemd ]; then \
 	echo -n "Removing systemd service ... "; \
-	rm $(SYSTEMD_SERVICES_DIRECTORY)/battery-alert.service; \
+	rm $(SYSTEMD_SERVICES_DIRECTORY)/battery-alert.systemd; \
 	echo 'done'; fi
 	@ echo -n "Removing man page ... "
 	@ MAN=$$(man -w | sed 's/:.*//')/man1 ; \
@@ -119,11 +119,11 @@ uninstall:
 
 clean:
 	@echo -n "Cleaning up ... "
-	@if [ -e battery-alert.service ]; then rm *.service;fi
+	@if [ -e battery-alert.systemd ]; then rm *.systemd;fi
 	@echo done
 
 auto_clean:
-	@if [ -e battery-alert.service ]; then rm *.service;fi
+	@if [ -e battery-alert.systemd ]; then rm *.systemd;fi
 
 help:
 	@ echo "battery-alert make options:"
