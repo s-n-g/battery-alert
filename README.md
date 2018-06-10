@@ -1,5 +1,5 @@
 # battery-alert
-Battery monitoring with sound alert
+Battery monitoring with visible and audible notification
 
 ## Table of Contents
 
@@ -388,7 +388,7 @@ Available commands:
 Example:
 
 ```ruby
-sng-battery status
+battery-alert status
 ```
 
 ## Sources
