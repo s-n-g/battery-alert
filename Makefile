@@ -2,6 +2,10 @@ PREFIX=/usr/local
 SYSTEMD_SERVICES_DIRECTORY=/lib/systemd/system
 
 # internal variables
+SYSTEMD:=$(shell pgrep -c systemd)
+ifeq ($(SYSTEMD), 0)
+	SYSTEMD=
+endif
 INSTALL_PREFIX=$(PREFIX)/bin
 systemd_substitution="s\#{{INSTALL_PREFIX}}\#$(INSTALL_PREFIX)\#g"
 normal_substitution="s\#DEBUG=yes\#unset DEBUG\#\
@@ -10,6 +14,7 @@ normal_systemd_substitution="s\#WantedBy=multi-user.target\#WantedBy=graphical.t
 debug_substitution="s\#unset DEBUG\#DEBUG=yes\#"
 console_substitution="s\#unset CONSOLE_ONLY\#CONSOLE_ONLY=yes\#"
 console_systemd_substitution="s\#WantedBy=graphical.target\#WantedBy=multi-user.target\#"
+
 
 .PHONY: install uninstall clean auto_clean console normal debug help
 
@@ -32,6 +37,8 @@ deps:
 	@ type sed 1>/dev/null 2>&1 && echo found || ( echo "not found"; echo "  *** You must install sed"; exit 1 )
 	@ echo -n "** Checking for gzip ... "
 	@ type gzip 1>/dev/null 2>&1 && echo found || ( echo "not found"; echo "  *** You must install gzip"; exit 1 )
+	@ echo -n "** Checking for pgrep ... "
+	@ type pgrep 1>/dev/null 2>&1 && echo found || ( echo "not found"; echo "  *** You must install pgrep"; exit 1 )
 
 notify:
 	@ echo -n "** Checking for notify-send ... "
@@ -79,7 +86,7 @@ install:
 	@ install -m 755 -d /usr/share/battery-alert
 	@ install -m 644 icons/* sounds/*.mp3 man/*.html /usr/share/battery-alert
 	@ echo done
-	@ if [ -e battery-alert.systemd ];then \
+	@ if [ ! -z $(SYSTEMD) ];then \
 	if [ -d $(SYSTEMD_SERVICES_DIRECTORY) ]; then \
 	echo -n "Installing systemd service ... " ; \
 	cp battery-alert.systemd $(SYSTEMD_SERVICES_DIRECTORY); \
