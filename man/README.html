@@ -269,12 +269,6 @@ console-no-mpg123
 Same as above, but <b>mpg123</b> would not be required.
 </dd>
 <dt>
-test
-</dt>
-<dd>
-display (and play) all notification that would occur under normal operation
-</dd>
-<dt>
 help
 </dt>
 <dd>
@@ -357,7 +351,7 @@ If an error occurs, <i>battery-alert</i> will terminate, so be aware.
 <a class="sourceLine" id="cb10-24" data-line-number="24"><span class="dt">THRESHOLD_HIGH</span>[<span class="dv">1</span>]=<span class="st">&quot;Low battery&quot;</span></a>
 <a class="sourceLine" id="cb10-25" data-line-number="25"><span class="dt">THRESHOLD_HIGH</span>[<span class="dv">2</span>]=<span class="st">&quot;Battery running critically low at $charge_percent%!&quot;</span></a>
 <a class="sourceLine" id="cb10-26" data-line-number="26"><span class="dt">THRESHOLD_HIGH</span>[<span class="dv">3</span>]=warning-high.png</a>
-<a class="sourceLine" id="cb10-27" data-line-number="27"><span class="dt">THRESHOLD_HIGH</span>[<span class="dv">4</span>]=warning-low-battery.mp3</a>
+<a class="sourceLine" id="cb10-27" data-line-number="27"><span class="dt">THRESHOLD_HIGH</span>[<span class="dv">4</span>]=warning-low.mp3</a>
 <a class="sourceLine" id="cb10-28" data-line-number="28"><span class="dt">THRESHOLD_HIGH</span>[<span class="dv">5</span>]=<span class="dv">7000</span></a>
 <a class="sourceLine" id="cb10-29" data-line-number="29"><span class="dt">THRESHOLD_HIGH</span>[<span class="dv">6</span>]=<span class="dv">30</span></a>
 <a class="sourceLine" id="cb10-30" data-line-number="30"></a>
@@ -368,7 +362,7 @@ If an error occurs, <i>battery-alert</i> will terminate, so be aware.
 <a class="sourceLine" id="cb10-35" data-line-number="35"><span class="dt">THRESHOLD_LOW</span>[<span class="dv">1</span>]=<span class="st">&quot;Low battery&quot;</span></a>
 <a class="sourceLine" id="cb10-36" data-line-number="36"><span class="dt">THRESHOLD_LOW</span>[<span class="dv">2</span>]=<span class="st">&quot;Battery running critically low at $charge_percent%!&quot;</span></a>
 <a class="sourceLine" id="cb10-37" data-line-number="37"><span class="dt">THRESHOLD_LOW</span>[<span class="dv">3</span>]=warning-low.png</a>
-<a class="sourceLine" id="cb10-38" data-line-number="38"><span class="dt">THRESHOLD_LOW</span>[<span class="dv">4</span>]=warning-low-battery.mp3</a>
+<a class="sourceLine" id="cb10-38" data-line-number="38"><span class="dt">THRESHOLD_LOW</span>[<span class="dv">4</span>]=warning-low.mp3</a>
 <a class="sourceLine" id="cb10-39" data-line-number="39"><span class="dt">THRESHOLD_LOW</span>[<span class="dv">6</span>]=<span class="dv">0</span></a>
 <a class="sourceLine" id="cb10-40" data-line-number="40"></a>
 <a class="sourceLine" id="cb10-41" data-line-number="41"><span class="co">#  - THRESHOLD_HALT</span></a>
@@ -386,7 +380,7 @@ If an error occurs, <i>battery-alert</i> will terminate, so be aware.
 <a class="sourceLine" id="cb10-53" data-line-number="53"><span class="dt">THRESHOLD_NOTIFY_HIGH</span>[<span class="dv">2</span>]=<span class="st">&quot;You can now disconnect the power supply&quot;</span></a>
 <a class="sourceLine" id="cb10-54" data-line-number="54"><span class="dt">THRESHOLD_NOTIFY_HIGH</span>[<span class="dv">3</span>]=notify-high.png</a>
 <a class="sourceLine" id="cb10-55" data-line-number="55"><span class="dt">THRESHOLD_NOTIFY_HIGH</span>[<span class="dv">4</span>]=notify-high.mp3</a>
-<a class="sourceLine" id="cb10-56" data-line-number="56"><span class="dt">THRESHOLD_NOTIFY_HIGH</span>[<span class="dv">5</span>]=<span class="dv">5000</span></a>
+<a class="sourceLine" id="cb10-56" data-line-number="56"><span class="dt">THRESHOLD_NOTIFY_HIGH</span>[<span class="dv">5</span>]=<span class="dv">5300</span></a>
 <a class="sourceLine" id="cb10-57" data-line-number="57"><span class="dt">THRESHOLD_NOTIFY_HIGH</span>[<span class="dv">6</span>]=<span class="dv">60</span></a>
 <a class="sourceLine" id="cb10-58" data-line-number="58"></a>
 <a class="sourceLine" id="cb10-59" data-line-number="59"><span class="co">#  - THRESHOLD_NOTIFY_LOW</span></a>
@@ -396,7 +390,7 @@ If an error occurs, <i>battery-alert</i> will terminate, so be aware.
 <a class="sourceLine" id="cb10-63" data-line-number="63"><span class="dt">THRESHOLD_NOTIFY_LOW</span>[<span class="dv">2</span>]=<span class="st">&quot;You should now connect the power supply&quot;</span></a>
 <a class="sourceLine" id="cb10-64" data-line-number="64"><span class="dt">THRESHOLD_NOTIFY_LOW</span>[<span class="dv">3</span>]=notify-low.png</a>
 <a class="sourceLine" id="cb10-65" data-line-number="65"><span class="dt">THRESHOLD_NOTIFY_LOW</span>[<span class="dv">4</span>]=notify-low.mp3</a>
-<a class="sourceLine" id="cb10-66" data-line-number="66"><span class="dt">THRESHOLD_NOTIFY_LOW</span>[<span class="dv">5</span>]=<span class="dv">5000</span></a>
+<a class="sourceLine" id="cb10-66" data-line-number="66"><span class="dt">THRESHOLD_NOTIFY_LOW</span>[<span class="dv">5</span>]=<span class="dv">5300</span></a>
 <a class="sourceLine" id="cb10-67" data-line-number="67"><span class="dt">THRESHOLD_NOTIFY_LOW</span>[<span class="dv">6</span>]=<span class="dv">60</span></a>
 <a class="sourceLine" id="cb10-68" data-line-number="68"></a>
 <a class="sourceLine" id="cb10-69" data-line-number="69"><span class="co"># END OF THRESHOLDS DEFINITION</span></a>
@@ -454,13 +448,19 @@ resume execution - the script resumes checking and reporting battery status
 status
 </dt>
 <dd>
-report status - returns a string, either “<b>running</b>” or “<b>suspended</b>”
+report status - returns a string, either “<b>running</b>”, “<b>suspended</b>” or “<b>not running</b>”
 </dd>
 <dt>
 vstatus
 </dt>
 <dd>
 report status visually - displays a notification reporting its current status
+</dd>
+<dt>
+test
+</dt>
+<dd>
+display (and play) all notification that would occur under normal operation
 </dd>
 <dt>
 exit | quit

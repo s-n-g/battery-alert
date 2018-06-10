@@ -170,8 +170,6 @@ In addition to those, the following targets (command line augments to **make**):
     <dd>This option will disable visual notification. In other words, one would use this option to have <i>battery-alert</i> running on a non-graphical environment.</dd>
     <dt>console-no-mpg123</dt>
     <dd>Same as above, but <b>mpg123</b> would not be required.</dd>
-    <dt>test</dt>
-    <dd>display (and play) all notification that would occur under normal operation</dd>
     <dt>help</dt>
     <dd>print help screen and exit</dd>
 </dl>
@@ -275,7 +273,7 @@ THRESHOLD_HIGH[0]=20
 THRESHOLD_HIGH[1]="Low battery"
 THRESHOLD_HIGH[2]="Battery running critically low at $charge_percent%!"
 THRESHOLD_HIGH[3]=warning-high.png
-THRESHOLD_HIGH[4]=warning-low-battery.mp3
+THRESHOLD_HIGH[4]=warning-low.mp3
 THRESHOLD_HIGH[5]=7000
 THRESHOLD_HIGH[6]=30
 
@@ -286,7 +284,7 @@ THRESHOLD_LOW[0]=15
 THRESHOLD_LOW[1]="Low battery"
 THRESHOLD_LOW[2]="Battery running critically low at $charge_percent%!"
 THRESHOLD_LOW[3]=warning-low.png
-THRESHOLD_LOW[4]=warning-low-battery.mp3
+THRESHOLD_LOW[4]=warning-low.mp3
 THRESHOLD_LOW[6]=0
 
 #  - THRESHOLD_HALT
@@ -304,7 +302,7 @@ THRESHOLD_NOTIFY_HIGH[1]="Battery notification"
 THRESHOLD_NOTIFY_HIGH[2]="You can now disconnect the power supply"
 THRESHOLD_NOTIFY_HIGH[3]=notify-high.png
 THRESHOLD_NOTIFY_HIGH[4]=notify-high.mp3
-THRESHOLD_NOTIFY_HIGH[5]=5000
+THRESHOLD_NOTIFY_HIGH[5]=5300
 THRESHOLD_NOTIFY_HIGH[6]=60
 
 #  - THRESHOLD_NOTIFY_LOW
@@ -314,7 +312,7 @@ THRESHOLD_NOTIFY_LOW[1]="Battery notification"
 THRESHOLD_NOTIFY_LOW[2]="You should now connect the power supply"
 THRESHOLD_NOTIFY_LOW[3]=notify-low.png
 THRESHOLD_NOTIFY_LOW[4]=notify-low.mp3
-THRESHOLD_NOTIFY_LOW[5]=5000
+THRESHOLD_NOTIFY_LOW[5]=5300
 THRESHOLD_NOTIFY_LOW[6]=60
 
 # END OF THRESHOLDS DEFINITION
@@ -382,9 +380,11 @@ Available commands:
 <dt>resume</dt>
 <dd>resume execution - the script resumes checking and reporting battery status</dd>
 <dt>status</dt>
-<dd>report status - returns a string, either "<b>running</b>" or "<b>suspended</b>"</dd>
+<dd>report status - returns a string, either "<b>running</b>", "<b>suspended</b>" or "<b>not running</b>"</dd>
 <dt>vstatus</dt>
 <dd>report status visually - displays a notification reporting its current status</dd>
+<dt>test</dt>
+<dd>display (and play) all notification that would occur under normal operation</dd>
 <dt>exit | quit</dt>
 <dd>terminate execution</dd>
 </dl>
