@@ -188,6 +188,7 @@ $ make
 ** Checking for mpg123 ... not found
   *** You must install mpg123 (package mpg123)
 make: *** [Makefile:42: with_mpg123] Error 1
+$
 $ make no-mpg123
 ** Checking for head ... found
 ** Checking for bash ... found
