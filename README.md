@@ -180,20 +180,22 @@ Example:
 ```ruby
 $ make
 ** Checking for head ... found
-** Checking for notify-send ... found
+** Checking for bash ... found
 ** Checking for bc ... found
 ** Checking for sed ... found
+** Checking for gzip ... found
+** Checking for notify-send ... found
 ** Checking for mpg123 ... not found
   *** You must install mpg123 (package mpg123)
-make: *** [Makefile:15: check_dependencies] Error 1
-$
+make: *** [Makefile:42: with_mpg123] Error 1
 $ make no-mpg123
 ** Checking for head ... found
-** Checking for notify-send ... found
+** Checking for bash ... found
 ** Checking for bc ... found
 ** Checking for sed ... found
+** Checking for gzip ... found
+** Checking for notify-send ... found
 Creating systemd service ... done
-$
 ```
 
 <dl>
