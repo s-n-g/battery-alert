@@ -24,10 +24,12 @@ console-no-mpg123: auto_clean deps console-only sng-batmon.service
 deps:
 	@ echo -n "** Checking for head ... "
 	@ type head 1>/dev/null 2>&1 && echo found || ( echo "not found"; echo "  *** You must install head (probably package coreutils)"; exit 1 )
+	@ echo -n "** Checking for bash ... "
+	@ type bash 1>/dev/null 2>&1 && echo found || ( echo "not found"; echo "  *** You must install bash"; exit 1 )
 	@ echo -n "** Checking for bc ... "
 	@ type bc 1>/dev/null 2>&1 && echo found || ( echo "not found"; echo "  *** You must install bc (package bc)"; exit 1 )
 	@ echo -n "** Checking for sed ... "
-	@ type osed 1>/dev/null 2>&1 && echo found || ( echo "not found"; echo "  *** You must install sed"; exit 1 )
+	@ type sed 1>/dev/null 2>&1 && echo found || ( echo "not found"; echo "  *** You must install sed"; exit 1 )
 
 notify:
 	@ echo -n "** Checking for notify-send ... "
