@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
   <meta name="generator" content="pandoc" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
-  <title>sng-batmon</title>
+  <title>battery-alert</title>
   <style type="text/css">
     html {margin: 2em;} 
     h2 {margin-top: 2.5em; border-bottom:1px solid #D6D6D6;} 
@@ -95,7 +95,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <body>
 <header>
 </header>
-<h1 id="sng-batmon">sng-batmon</h1>
+<h1 id="battery-alert">battery-alert</h1>
 <p>Battery monitoring with sound alert</p>
 <h2 id="table-of-contents">Table of Contents</h2>
 <ol type="1">
@@ -125,12 +125,12 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li><a href="#default-configuration">Default configuration</a></li>
 </ul></li>
 <li><a href="#execution">Execution</a></li>
-<li><a href="#controlling-sng-batmon">Controlling sng-batmon</a></li>
+<li><a href="#controlling-battery-alert">Controlling battery-alert</a></li>
 <li><a href="#sources">Sources</a></li>
 <li><a href="#changelog">Changelog</a></li>
 </ol>
 <h2 id="description">Description</h2>
-<p><em>sng-batmon</em> is yet another battery monitoring script, written in <strong>bash</strong> scripting language.</p>
+<p><em>battery-alert</em> is yet another battery monitoring script, written in <strong>bash</strong> scripting language.</p>
 <p>Its difference from other similar scripts is that it provides visible <strong>and audible</strong> notification depending on battery charging level.</p>
 <p>The mentality behind this behavior is not to keep the system running as long as possible; it’s rather to keep the user notified about the situation and eventually halt the system before data loss occurs (due to an unexpected shutdown).</p>
 <p>The need for this script emerged after having my laptop (running i3 window manager) powering off on me on various occasions, like while listening to music and dealing with other staff, etc.</p>
@@ -161,7 +161,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </ol>
 <h3 id="audio-notification">Audio notification</h3>
 <p>Audio playback will occur in the background (i.e. no program window of any kind will be visible). Playback volume will be the one set at the system mixer, so some precaution should take place on this respect. After all, what is the point in using audio notification if audio volume is low enough to make it inaudible?</p>
-<p><em>sng-batmon</em> by default uses <strong>mpg123</strong> as an audio player, because it is light-weight enough and gets installed by default on most systems, but any mp3 player can be used, provided that it is a terminal application (or it can hide its window) and will print no diagnostic or other messages in <em>stdout</em> (or it can suppress them).</p>
+<p><em>battery-alert</em> by default uses <strong>mpg123</strong> as an audio player, because it is light-weight enough and gets installed by default on most systems, but any mp3 player can be used, provided that it is a terminal application (or it can hide its window) and will print no diagnostic or other messages in <em>stdout</em> (or it can suppress them).</p>
 <p>If for any reason one prefers not to install it, or use a different player, or even not to use one at all, one should follow the <a href="#make-options">relevant installation instructions</a>.</p>
 <h2 id="installation">Installation</h2>
 <h3 id="requirements">Requirements</h3>
@@ -173,14 +173,14 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li><strong>mpg123</strong> - A console based real time MPEG Audio Player for Layer 1, 2 and 3 (optional)</li>
 </ol>
 <h3 id="procedure">Procedure</h3>
-<p>Download <em>sng-batmon</em> either using <strong>git</strong> or by a <strong>zip file</strong>.</p>
+<p>Download <em>battery-alert</em> either using <strong>git</strong> or by a <strong>zip file</strong>.</p>
 <h4 id="using-git">Using git</h4>
-<div class="sourceCode" id="cb1"><pre class="sourceCode ruby"><code class="sourceCode ruby"><a class="sourceLine" id="cb1-1" data-line-number="1">git clone https:<span class="ot">//</span>github.com/s-n-g/sng-batmon.git</a>
-<a class="sourceLine" id="cb1-2" data-line-number="2">cd sng-batmon</a></code></pre></div>
+<div class="sourceCode" id="cb1"><pre class="sourceCode ruby"><code class="sourceCode ruby"><a class="sourceLine" id="cb1-1" data-line-number="1">git clone https:<span class="ot">//</span>github.com/s-n-g/battery-alert.git</a>
+<a class="sourceLine" id="cb1-2" data-line-number="2">cd battery-alert</a></code></pre></div>
 <h4 id="zip-file">Zip file</h4>
-<div class="sourceCode" id="cb2"><pre class="sourceCode ruby"><code class="sourceCode ruby"><a class="sourceLine" id="cb2-1" data-line-number="1">wget https:<span class="ot">//</span>github.com/s-n-g/sng-batmon/archive/master.zip</a>
+<div class="sourceCode" id="cb2"><pre class="sourceCode ruby"><code class="sourceCode ruby"><a class="sourceLine" id="cb2-1" data-line-number="1">wget https:<span class="ot">//</span>github.com/s-n-g/battery-alert/archive/master.zip</a>
 <a class="sourceLine" id="cb2-2" data-line-number="2">unzip master.zip</a>
-<a class="sourceLine" id="cb2-3" data-line-number="3">cd sng-batmon-master</a></code></pre></div>
+<a class="sourceLine" id="cb2-3" data-line-number="3">cd battery-alert-master</a></code></pre></div>
 <p>Run make (refer to <a href="#make-options">make options</a> for installation customization)</p>
 <div class="sourceCode" id="cb3"><pre class="sourceCode ruby"><code class="sourceCode ruby"><a class="sourceLine" id="cb3-1" data-line-number="1">make</a></code></pre></div>
 <p>Finally, go on and install it</p>
@@ -224,7 +224,7 @@ If the system is a <b>non-systemd</b> one, no file editing is needed; <b>make</b
 default
 </dt>
 <dd>
-Contains the default options for <i>sng-batmon</i>.
+Contains the default options for <i>battery-alert</i>.
 </dd>
 <dd>
 These are the options used when <b>make</b> is executed without any arguments.
@@ -258,7 +258,7 @@ Do not require <b>mpg123</b> to be installed.
 console
 </dt>
 <dd>
-This option will disable visual notification. In other words, one would use this option to have <i>sng-batmon</i> running on a non-graphical environment.
+This option will disable visual notification. In other words, one would use this option to have <i>battery-alert</i> running on a non-graphical environment.
 </dd>
 <dt>
 console-no-mpg123
@@ -301,24 +301,24 @@ If <b>PLAYER_COMMAND</b> is empty or invalid, audio notification will be inhibit
 </dd>
 </dl>
 <h2 id="configuration">Configuration</h2>
-<p>The package’s system wide configuration is located in <strong>/etc/sng-batmon.conf</strong>.</p>
+<p>The package’s system wide configuration is located in <strong>/etc/battery-alert.conf</strong>.</p>
 <p>To customize it, one has to create a user writable configuration file and edit it.</p>
-<div class="sourceCode" id="cb6"><pre class="sourceCode ruby"><code class="sourceCode ruby"><a class="sourceLine" id="cb6-1" data-line-number="1">mkdir ~<span class="ot">/.config/</span>sng-batmon</a>
-<a class="sourceLine" id="cb6-2" data-line-number="2">cp <span class="ot">/etc/</span>sng-batmon.conf ~<span class="ot">/.config/</span>sng-batmon/config</a></code></pre></div>
-<p>Before editing the file, one should suspend <em>sng-batmon</em>, if it is running.</p>
-<div class="sourceCode" id="cb7"><pre class="sourceCode ruby"><code class="sourceCode ruby"><a class="sourceLine" id="cb7-1" data-line-number="1">sng-batmon suspend</a></code></pre></div>
+<div class="sourceCode" id="cb6"><pre class="sourceCode ruby"><code class="sourceCode ruby"><a class="sourceLine" id="cb6-1" data-line-number="1">mkdir ~<span class="ot">/.config/</span>battery-alert</a>
+<a class="sourceLine" id="cb6-2" data-line-number="2">cp <span class="ot">/etc/</span>battery-alert.conf ~<span class="ot">/.config/</span>battery-alert/config</a></code></pre></div>
+<p>Before editing the file, one should suspend <em>battery-alert</em>, if it is running.</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode ruby"><code class="sourceCode ruby"><a class="sourceLine" id="cb7-1" data-line-number="1">battery-alert suspend</a></code></pre></div>
 <p>After editing this file, one should source it in order to check its validity.</p>
 <p>On a <strong>bash</strong> terminal:</p>
-<div class="sourceCode" id="cb8"><pre class="sourceCode ruby"><code class="sourceCode ruby"><a class="sourceLine" id="cb8-1" data-line-number="1">. ~<span class="ot">/.config/</span>sng-batmon/config</a></code></pre></div>
+<div class="sourceCode" id="cb8"><pre class="sourceCode ruby"><code class="sourceCode ruby"><a class="sourceLine" id="cb8-1" data-line-number="1">. ~<span class="ot">/.config/</span>battery-alert/config</a></code></pre></div>
 <p>If no error occurs, you are good to go.</p>
-<p>If <em>sng-batmon</em> has been suspended, resume its execution.</p>
-<div class="sourceCode" id="cb9"><pre class="sourceCode ruby"><code class="sourceCode ruby"><a class="sourceLine" id="cb9-1" data-line-number="1">sng-batmon resume</a></code></pre></div>
+<p>If <em>battery-alert</em> has been suspended, resume its execution.</p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode ruby"><code class="sourceCode ruby"><a class="sourceLine" id="cb9-1" data-line-number="1">battery-alert resume</a></code></pre></div>
 <dl>
 <dt>
 Note
 </dt>
 <dd>
-If an error occurs, <i>sng-batmon</i> will terminate, so be aware.
+If an error occurs, <i>battery-alert</i> will terminate, so be aware.
 </dd>
 </dl>
 <h3 id="default-configuration">Default configuration</h3>
@@ -331,7 +331,7 @@ If an error occurs, <i>sng-batmon</i> will terminate, so be aware.
 <a class="sourceLine" id="cb10-6" data-line-number="6"><span class="co">#  2  message to display</span></a>
 <a class="sourceLine" id="cb10-7" data-line-number="7"><span class="co">#  3  icon to display</span></a>
 <a class="sourceLine" id="cb10-8" data-line-number="8"><span class="co">#     either absolute or relative path to file</span></a>
-<a class="sourceLine" id="cb10-9" data-line-number="9"><span class="co">#     if relative, it should be in /usr/share/sng-batmon</span></a>
+<a class="sourceLine" id="cb10-9" data-line-number="9"><span class="co">#     if relative, it should be in /usr/share/battery-alert</span></a>
 <a class="sourceLine" id="cb10-10" data-line-number="10"><span class="co">#  4  sound to play</span></a>
 <a class="sourceLine" id="cb10-11" data-line-number="11"><span class="co">#     path works the same as with icon</span></a>
 <a class="sourceLine" id="cb10-12" data-line-number="12"><span class="co">#  5  time to display notification (in milliseconds)</span></a>
@@ -418,16 +418,16 @@ If an error occurs, <i>sng-batmon</i> will terminate, so be aware.
 <a class="sourceLine" id="cb10-93" data-line-number="93"><span class="co">#HALT_COMMAND=&quot;systemctl hybrid-sleep&quot;</span></a>
 <a class="sourceLine" id="cb10-94" data-line-number="94"><span class="dt">HALT_COMMAND</span>=<span class="st">&quot;systemctl poweroff&quot;</span></a></code></pre></div>
 <h2 id="execution">Execution</h2>
-<p>Once <em>sng-batmon</em> is installed, one can test it using the following command:</p>
-<div class="sourceCode" id="cb11"><pre class="sourceCode ruby"><code class="sourceCode ruby"><a class="sourceLine" id="cb11-1" data-line-number="1">sng-batmon test</a></code></pre></div>
+<p>Once <em>battery-alert</em> is installed, one can test it using the following command:</p>
+<div class="sourceCode" id="cb11"><pre class="sourceCode ruby"><code class="sourceCode ruby"><a class="sourceLine" id="cb11-1" data-line-number="1">battery-alert test</a></code></pre></div>
 <p>This will display (and play) all available alerts and notifications that will be used in normal operation.</p>
-<p>To execute <em>sng-batmon</em>, run the command:</p>
-<div class="sourceCode" id="cb12"><pre class="sourceCode ruby"><code class="sourceCode ruby"><a class="sourceLine" id="cb12-1" data-line-number="1">sudo systemctl start sng-batmon</a></code></pre></div>
-<p>To have <em>sng-batmon</em> run on system start up, run the command:</p>
-<div class="sourceCode" id="cb13"><pre class="sourceCode ruby"><code class="sourceCode ruby"><a class="sourceLine" id="cb13-1" data-line-number="1">sudo systemctl enable sng-batmon</a></code></pre></div>
-<h2 id="controlling-sng-batmon">Controlling sng-batmon</h2>
-<p>Communication with <em>sng-batmon</em> is done from command line.</p>
-<p><em>sng-batmon</em> listens for input on a named pipe (FIFO), <strong>/tmp/sng-batmon</strong>.</p>
+<p>To execute <em>battery-alert</em>, run the command:</p>
+<div class="sourceCode" id="cb12"><pre class="sourceCode ruby"><code class="sourceCode ruby"><a class="sourceLine" id="cb12-1" data-line-number="1">sudo systemctl start battery-alert</a></code></pre></div>
+<p>To have <em>battery-alert</em> run on system start up, run the command:</p>
+<div class="sourceCode" id="cb13"><pre class="sourceCode ruby"><code class="sourceCode ruby"><a class="sourceLine" id="cb13-1" data-line-number="1">sudo systemctl enable battery-alert</a></code></pre></div>
+<h2 id="controlling-battery-alert">Controlling battery-alert</h2>
+<p>Communication with <em>battery-alert</em> is done from command line.</p>
+<p><em>battery-alert</em> listens for input on a named pipe (FIFO), <strong>/tmp/battery-alert</strong>.</p>
 <p>Available commands:</p>
 <dl>
 <dt>

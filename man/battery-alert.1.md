@@ -1,4 +1,4 @@
-% SNG-BATMON (1)  User Manual
+% BATTERY-ALERT (1)  User Manual
 % sng \<sng at hellug dot gr\>
 % June 2018
 
@@ -8,7 +8,7 @@
 
 # DESCRIPTION
 
-## Passing commands to sng-batmon
+## Passing commands to battery-alert
 
 # FILES
 

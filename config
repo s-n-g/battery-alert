@@ -6,7 +6,7 @@
 #  2  message to display
 #  3  icon to display
 #     either absolute or relative path to file
-#     if relative, it should be in /usr/share/sng-batmon
+#     if relative, it should be in /usr/share/battery-alert
 #  4  sound to play
 #     path works the same as with icon
 #  5  time to display notification (in milliseconds)

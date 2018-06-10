@@ -1,4 +1,4 @@
-# sng-batmon
+# battery-alert
 Battery monitoring with sound alert
 
 ## Table of Contents
@@ -19,13 +19,13 @@ Battery monitoring with sound alert
 3. [Configuration](#configuration)
    - [Default configuration](#default-configuration)
 3. [Execution](#execution)
-4. [Controlling sng-batmon](#controlling-sng-batmon)
+4. [Controlling battery-alert](#controlling-battery-alert)
 5. [Sources](#sources)
 6. [Changelog](#changelog)
 
 ## Description
 
-*sng-batmon* is yet another battery monitoring script, written in **bash** scripting language.
+*battery-alert* is yet another battery monitoring script, written in **bash** scripting language.
 
 Its difference from other similar scripts is that it provides visible **and audible** notification depending on battery charging level.
 
@@ -75,7 +75,7 @@ These levels will produce a visible warning and an "annoying" audible notificati
 
 Audio playback will occur in the background (i.e. no program window of any kind will be visible). Playback volume will be the one set at the system mixer, so some precaution should take place on this respect. After all, what is the point in using audio notification if audio volume is low enough to make it inaudible?
 
-*sng-batmon* by default uses **mpg123** as an audio player, because it is light-weight enough and gets installed by default on most systems, but any mp3 player can be used, provided that it is a terminal application (or it can hide its window) and will print no diagnostic or other messages in *stdout* (or it can suppress them).
+*battery-alert* by default uses **mpg123** as an audio player, because it is light-weight enough and gets installed by default on most systems, but any mp3 player can be used, provided that it is a terminal application (or it can hide its window) and will print no diagnostic or other messages in *stdout* (or it can suppress them).
 
 If for any reason one prefers not to install it, or use a different player, or even not to use one at all, one should follow the [relevant installation instructions](#make-options).
 
@@ -91,21 +91,21 @@ If for any reason one prefers not to install it, or use a different player, or e
 
 ### Procedure
 
-Download *sng-batmon* either using **git** or by a **zip file**.
+Download *battery-alert* either using **git** or by a **zip file**.
 
 #### Using git
 
 ```ruby
-git clone https://github.com/s-n-g/sng-batmon.git
-cd sng-batmon
+git clone https://github.com/s-n-g/battery-alert.git
+cd battery-alert
 ```
 
 #### Zip file
 
 ```ruby
-wget https://github.com/s-n-g/sng-batmon/archive/master.zip
+wget https://github.com/s-n-g/battery-alert/archive/master.zip
 unzip master.zip
-cd sng-batmon-master
+cd battery-alert-master
 ```
 
 Run make (refer to [make options](#make-options) for installation customization)
@@ -149,7 +149,7 @@ In addition to those, the following targets (command line augments to **make**):
 
 <dl>
     <dt>default</dt>
-    <dd>Contains the default options for <i>sng-batmon</i>.</dd>
+    <dd>Contains the default options for <i>battery-alert</i>.</dd>
     <dd>These are the options used when <b>make</b> is executed without any arguments.</dd>
     <dd>Options description:<dd>
 
@@ -165,7 +165,7 @@ In addition to those, the following targets (command line augments to **make**):
     <dt>no-mpg123</dt>
     <dd>Do not require <b>mpg123</b> to be installed.</dd>
     <dt>console</dt>
-    <dd>This option will disable visual notification. In other words, one would use this option to have <i>sng-batmon</i> running on a non-graphical environment.</dd>
+    <dd>This option will disable visual notification. In other words, one would use this option to have <i>battery-alert</i> running on a non-graphical environment.</dd>
     <dt>console-no-mpg123</dt>
     <dd>Same as above, but <b>mpg123</b> would not be required.</dd>
     <dt>help</dt>
@@ -203,19 +203,19 @@ $
 
 ## Configuration
 
-The package's system wide configuration is located in **/etc/sng-batmon.conf**.
+The package's system wide configuration is located in **/etc/battery-alert.conf**.
 
 To customize it, one has to create a user writable configuration file and edit it.
 
 ```ruby
-mkdir ~/.config/sng-batmon
-cp /etc/sng-batmon.conf ~/.config/sng-batmon/config
+mkdir ~/.config/battery-alert
+cp /etc/battery-alert.conf ~/.config/battery-alert/config
 ```
 
-Before editing the file, one should suspend *sng-batmon*, if it is running.
+Before editing the file, one should suspend *battery-alert*, if it is running.
 
 ```ruby
-sng-batmon suspend
+battery-alert suspend
 ```
 
 After editing this file, one should source it in order to check its validity.
@@ -223,20 +223,20 @@ After editing this file, one should source it in order to check its validity.
 On a **bash** terminal:
 
 ```ruby
-. ~/.config/sng-batmon/config
+. ~/.config/battery-alert/config
 ```
   
 If no error occurs, you are good to go.
 
-If *sng-batmon* has been suspended, resume its execution.
+If *battery-alert* has been suspended, resume its execution.
 
 ```ruby
-sng-batmon resume
+battery-alert resume
 ```
 
 <dl>
   <dt>Note</dt>
-   <dd>If an error occurs, <i>sng-batmon</i> will terminate, so be aware.</dd>
+   <dd>If an error occurs, <i>battery-alert</i> will terminate, so be aware.</dd>
 </dl>
 
 
@@ -253,7 +253,7 @@ The default configuration is the following:
 #  2  message to display
 #  3  icon to display
 #     either absolute or relative path to file
-#     if relative, it should be in /usr/share/sng-batmon
+#     if relative, it should be in /usr/share/battery-alert
 #  4  sound to play
 #     path works the same as with icon
 #  5  time to display notification (in milliseconds)
@@ -344,31 +344,31 @@ HALT_COMMAND="systemctl poweroff"
 
 ## Execution
 
-Once *sng-batmon* is installed, one can test it using the following command:
+Once *battery-alert* is installed, one can test it using the following command:
 
 ```ruby
-sng-batmon test
+battery-alert test
 ```
 
 This will display (and play) all available alerts and notifications that will be used in normal operation.
 
-To execute *sng-batmon*, run the command:
+To execute *battery-alert*, run the command:
 
 ```ruby
-sudo systemctl start sng-batmon
+sudo systemctl start battery-alert
 ```
 
-To have *sng-batmon* run on system start up, run the command:
+To have *battery-alert* run on system start up, run the command:
 
 ```ruby
-sudo systemctl enable sng-batmon
+sudo systemctl enable battery-alert
 ```
 
-## Controlling sng-batmon
+## Controlling battery-alert
 
-Communication with *sng-batmon* is done from command line.
+Communication with *battery-alert* is done from command line.
 
-*sng-batmon* listens for input on a named pipe (FIFO), **/tmp/sng-batmon**.
+*battery-alert* listens for input on a named pipe (FIFO), **/tmp/battery-alert**.
 
 Available commands:
 
