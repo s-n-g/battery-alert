@@ -73,6 +73,7 @@ battery-alert.runit:
 	@ [ "$(RUNIT)" != "runit" ] && ok=1 || { \
 		echo -n "Creating runit service ... " ; \
 		echo '#!/bin/sh'>battery-alert.runit; \
+		echo "sv start alsa">>battery-alert.runit ; \
 		echo 'exec battery-alert'>>battery-alert.runit ; \
 		echo 'done' ; \
 	}
@@ -123,7 +124,7 @@ install:
 	@if [ -e battery-alert.runit ]; then \
 		echo -n "Installing runit service ... " ; \
 		mkdir /etc/sv/battery-alert ; \
-		cp battery-alert /etc/sv/battery-alert/run ; \
+		cp battery-alert.runit /etc/sv/battery-alert/run ; \
 		chmod +x /etc/sv/battery-alert/run ; \
 		echo 'done' ; \
 	fi
