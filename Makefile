@@ -6,6 +6,10 @@ SYSTEMD:=$(shell pgrep -c systemd)
 ifeq ($(SYSTEMD), 0)
 	SYSTEMD=
 endif
+OPENRC:=$(shell pgrep -c openrc)
+ifeq ($(OPENRC), 0)
+	OPENRC=
+endif
 INSTALL_PREFIX=$(PREFIX)/bin
 systemd_substitution="s\#{{INSTALL_PREFIX}}\#$(INSTALL_PREFIX)\#g"
 normal_substitution="s\#DEBUG=yes\#unset DEBUG\#\
@@ -18,27 +22,23 @@ console_systemd_substitution="s\#WantedBy=graphical.target\#WantedBy=multi-user.
 
 .PHONY: install uninstall clean auto_clean console normal debug help
 
-default: auto_clean deps notify with_mpg123 normal battery-alert.systemd
+default: auto_clean deps notify with_mpg123 normal battery-alert.systemd battery-alert.openrc
 
-no-mpg123: auto_clean deps notify normal battery-alert.systemd
+no-mpg123: auto_clean deps notify normal battery-alert.systemd battery-alert.openrc
 
-console: auto_clean deps with_mpg123 console-only battery-alert.systemd
+console: auto_clean deps with_mpg123 console-only battery-alert.systemd battery-alert.openrc
 
-console-no-mpg123: auto_clean deps console-only battery-alert.systemd
+console-no-mpg123: auto_clean deps console-only battery-alert.systemd battery-alert.openrc
 
 deps:
-	@ echo -n "** Checking for head ... "
-	@ type head 1>/dev/null 2>&1 && echo found || ( echo "not found"; echo "  *** You must install head (probably package coreutils)"; exit 1 )
-	@ echo -n "** Checking for bash ... "
-	@ type bash 1>/dev/null 2>&1 && echo found || ( echo "not found"; echo "  *** You must install bash"; exit 1 )
-	@ echo -n "** Checking for bc ... "
-	@ type bc 1>/dev/null 2>&1 && echo found || ( echo "not found"; echo "  *** You must install bc (package bc)"; exit 1 )
-	@ echo -n "** Checking for sed ... "
-	@ type sed 1>/dev/null 2>&1 && echo found || ( echo "not found"; echo "  *** You must install sed"; exit 1 )
-	@ echo -n "** Checking for gzip ... "
-	@ type gzip 1>/dev/null 2>&1 && echo found || ( echo "not found"; echo "  *** You must install gzip"; exit 1 )
-	@ echo -n "** Checking for pgrep ... "
-	@ type pgrep 1>/dev/null 2>&1 && echo found || ( echo "not found"; echo "  *** You must install pgrep"; exit 1 )
+	@ echo -n "** Checking for essential packages ... "
+	@ type head 1>/dev/null 2>&1 || ( echo "failed"; echo "  *** You must install head (probably package coreutils)"; exit 1 )
+	@ type bash 1>/dev/null 2>&1 || ( echo "failed"; echo "  *** You must install bash"; exit 1 )
+	@ type bc 1>/dev/null 2>&1 || ( echo "failed"; echo "  *** You must install bc (package bc)"; exit 1 )
+	@ type sed 1>/dev/null 2>&1 || ( echo "failed"; echo "  *** You must install sed"; exit 1 )
+	@ type gzip 1>/dev/null 2>&1 || ( echo "failed"; echo "  *** You must install gzip"; exit 1 )
+	@ type pgrep 1>/dev/null 2>&1 || ( echo "failed"; echo "  *** You must install pgrep"; exit 1 )
+	@ echo done
 
 notify:
 	@ echo -n "** Checking for notify-send ... "
@@ -50,9 +50,18 @@ with_mpg123:
 
 
 battery-alert.systemd: battery-alert.systemd.template
-	@ echo -n "Creating systemd service ... "
-	@ sed $(systemd_substitution) $< > $@
-	@ echo done
+	@ [ -z $(SYSTEMD) ] || { \
+		echo -n "Creating systemd service ... " ; \
+		sed $(systemd_substitution) $< > $@ ; \
+		echo done ; \
+		}
+
+battery-alert.openrc: battery-alert.openrc.template
+	@ [ -z $(OPENRC) ] || { \
+		echo -n "Creating openrc service ... " ; \
+		sed $(systemd_substitution) $< > $@ ; \
+		echo done ; \
+		}
 
 normal:
 	@ sed -i $(normal_substitution) battery-alert
@@ -127,10 +136,12 @@ uninstall:
 clean:
 	@echo -n "Cleaning up ... "
 	@if [ -e battery-alert.systemd ]; then rm *.systemd;fi
+	@if [ -e battery-alert.openrc ]; then rm *.openrc;fi
 	@echo done
 
 auto_clean:
 	@if [ -e battery-alert.systemd ]; then rm *.systemd;fi
+	@if [ -e battery-alert.openrc ]; then rm *.openrc;fi
 
 help:
 	@ echo "battery-alert make options:"
@@ -155,4 +166,4 @@ help:
 	@ echo "    Same as above, but mpg123 would not be required."
 	@ echo ""
 	@ echo "Edit Makefile to match your system:"
-	@ sed -n '1,2p' Makefile | sed 's/^/  /'
+	@ sed -n '1,/^$$/p' Makefile | sed 's/^/  /'

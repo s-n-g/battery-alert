@@ -8,7 +8,7 @@ depend() {
 
 start() {
 	ebegin "Starting battery-alert"
-	start-stop-daemon --background --start --exec {{PREFIX}}/bin/battery-alert
+	start-stop-daemon --background --start --exec {{INSTALL_PREFIX}}/battery-alert
 	eend $?
 }
 
