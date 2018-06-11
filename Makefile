@@ -70,7 +70,7 @@ battery-alert.openrc: battery-alert.openrc.template
 
 battery-alert.runit:
 	@ $(eval $(shell echo RUNIT=`ps -p 1 -o comm=`))
-	@ [ -z $(RUNIT) ] || { \
+	@ [ "$(RUNIT)" != "runit" ] && ok=1 || { \
 		echo -n "Creating runit service ... " ; \
 		echo '#!/bin/sh'>battery-alert.runit; \
 		echo 'exec battery-alert'>>battery-alert.runit ; \

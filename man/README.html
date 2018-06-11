@@ -124,7 +124,12 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <ul>
 <li><a href="#default-configuration">Default configuration</a></li>
 </ul></li>
-<li><a href="#execution">Execution</a></li>
+<li><a href="#execution">Execution</a>
+<ul>
+<li><a href="#systemd">systemd</a></li>
+<li><a href="#openrc">openrc</a></li>
+<li><a href="#manual-execution">Manual execution</a></li>
+</ul></li>
 <li><a href="#controlling-battery-alert">Controlling battery-alert</a></li>
 <li><a href="#sources">Sources</a></li>
 <li><a href="#changelog">Changelog</a></li>
@@ -165,6 +170,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <p>If for any reason one prefers not to install it, or use a different player, or even not to use one at all, one should follow the <a href="#make-options">relevant installation instructions</a>.</p>
 <h2 id="installation">Installation</h2>
 <h3 id="requirements">Requirements</h3>
+<p><em>battery-all</em> depends on GNU make for its configuration.</p>
+<p>Other programs it depends on are:</p>
 <ol type="1">
 <li><strong>bash</strong> - Well, it is a <strong>bash</strong> script, after all</li>
 <li><strong>coreutils</strong> - The basic file, shell and text manipulation</li>
@@ -277,24 +284,16 @@ print help screen and exit
 </dl>
 <p>Example:</p>
 <div class="sourceCode" id="cb5"><pre class="sourceCode ruby"><code class="sourceCode ruby"><a class="sourceLine" id="cb5-1" data-line-number="1">$ make</a>
-<a class="sourceLine" id="cb5-2" data-line-number="2">** <span class="dt">Checking</span> <span class="kw">for</span> head ... found</a>
-<a class="sourceLine" id="cb5-3" data-line-number="3">** <span class="dt">Checking</span> <span class="kw">for</span> bash ... found</a>
-<a class="sourceLine" id="cb5-4" data-line-number="4">** <span class="dt">Checking</span> <span class="kw">for</span> bc ... found</a>
-<a class="sourceLine" id="cb5-5" data-line-number="5">** <span class="dt">Checking</span> <span class="kw">for</span> sed ... found</a>
-<a class="sourceLine" id="cb5-6" data-line-number="6">** <span class="dt">Checking</span> <span class="kw">for</span> gzip ... found</a>
-<a class="sourceLine" id="cb5-7" data-line-number="7">** <span class="dt">Checking</span> <span class="kw">for</span> notify-send ... found</a>
-<a class="sourceLine" id="cb5-8" data-line-number="8">** <span class="dt">Checking</span> <span class="kw">for</span> mpg123 ... <span class="kw">not</span> found</a>
-<a class="sourceLine" id="cb5-9" data-line-number="9">  *** <span class="dt">You</span> must install mpg123 (package mpg123)</a>
-<a class="sourceLine" id="cb5-10" data-line-number="10"><span class="st">make: </span>*** [<span class="dt">Makefile</span>:<span class="dv">42</span>: with_mpg123] <span class="dt">Error</span> <span class="dv">1</span></a>
-<a class="sourceLine" id="cb5-11" data-line-number="11">$</a>
-<a class="sourceLine" id="cb5-12" data-line-number="12">$ make no-mpg123</a>
-<a class="sourceLine" id="cb5-13" data-line-number="13">** <span class="dt">Checking</span> <span class="kw">for</span> head ... found</a>
-<a class="sourceLine" id="cb5-14" data-line-number="14">** <span class="dt">Checking</span> <span class="kw">for</span> bash ... found</a>
-<a class="sourceLine" id="cb5-15" data-line-number="15">** <span class="dt">Checking</span> <span class="kw">for</span> bc ... found</a>
-<a class="sourceLine" id="cb5-16" data-line-number="16">** <span class="dt">Checking</span> <span class="kw">for</span> sed ... found</a>
-<a class="sourceLine" id="cb5-17" data-line-number="17">** <span class="dt">Checking</span> <span class="kw">for</span> gzip ... found</a>
-<a class="sourceLine" id="cb5-18" data-line-number="18">** <span class="dt">Checking</span> <span class="kw">for</span> notify-send ... found</a>
-<a class="sourceLine" id="cb5-19" data-line-number="19"><span class="dt">Creating</span> systemd service ... done</a></code></pre></div>
+<a class="sourceLine" id="cb5-2" data-line-number="2">** <span class="dt">Checking</span> <span class="kw">for</span> essential packages ... done </a>
+<a class="sourceLine" id="cb5-3" data-line-number="3">** <span class="dt">Checking</span> <span class="kw">for</span> notify-send ... found</a>
+<a class="sourceLine" id="cb5-4" data-line-number="4">** <span class="dt">Checking</span> <span class="kw">for</span> mpg123 ... <span class="kw">not</span> found</a>
+<a class="sourceLine" id="cb5-5" data-line-number="5">  *** <span class="dt">You</span> must install mpg123 (package mpg123)</a>
+<a class="sourceLine" id="cb5-6" data-line-number="6"><span class="st">make: </span>*** [<span class="dt">Makefile</span>:<span class="dv">42</span>: with_mpg123] <span class="dt">Error</span> <span class="dv">1</span></a>
+<a class="sourceLine" id="cb5-7" data-line-number="7">$</a>
+<a class="sourceLine" id="cb5-8" data-line-number="8">$ make no-mpg123</a>
+<a class="sourceLine" id="cb5-9" data-line-number="9">** <span class="dt">Checking</span> <span class="kw">for</span> essential packages ... done </a>
+<a class="sourceLine" id="cb5-10" data-line-number="10">** <span class="dt">Checking</span> <span class="kw">for</span> notify-send ... found</a>
+<a class="sourceLine" id="cb5-11" data-line-number="11"><span class="dt">Creating</span> systemd service ... done</a></code></pre></div>
 <dl>
 <dt>
 Note
@@ -439,10 +438,20 @@ If an error occurs, <i>battery-alert</i> will terminate, so be aware.
 <p>Once <em>battery-alert</em> is installed, one can test it using the following command:</p>
 <div class="sourceCode" id="cb11"><pre class="sourceCode ruby"><code class="sourceCode ruby"><a class="sourceLine" id="cb11-1" data-line-number="1">battery-alert test</a></code></pre></div>
 <p>This will display (and play) all available alerts and notifications that will be used in normal operation.</p>
+<h3 id="systemd">systemd</h3>
 <p>To execute <em>battery-alert</em>, run the command:</p>
 <div class="sourceCode" id="cb12"><pre class="sourceCode ruby"><code class="sourceCode ruby"><a class="sourceLine" id="cb12-1" data-line-number="1">sudo systemctl start battery-alert</a></code></pre></div>
 <p>To have <em>battery-alert</em> run on system start up, run the command:</p>
 <div class="sourceCode" id="cb13"><pre class="sourceCode ruby"><code class="sourceCode ruby"><a class="sourceLine" id="cb13-1" data-line-number="1">sudo systemctl enable battery-alert</a></code></pre></div>
+<h3 id="openrc">openrc</h3>
+<p>To execute <em>battery-alert</em>, run the command:</p>
+<div class="sourceCode" id="cb14"><pre class="sourceCode ruby"><code class="sourceCode ruby"><a class="sourceLine" id="cb14-1" data-line-number="1">sudo <span class="ot">/etc/ini</span>t.d/battery-alert start</a></code></pre></div>
+<p>To have <em>battery-alert</em> run on system start up, run the command:</p>
+<div class="sourceCode" id="cb15"><pre class="sourceCode ruby"><code class="sourceCode ruby"><a class="sourceLine" id="cb15-1" data-line-number="1">sudo rc-update add battery-alert</a></code></pre></div>
+<h3 id="manual-execution">Manual execution</h3>
+<p>If one prefers to manually execute <em>battery-alert</em>, he has to do that through the auto start feature provided by the DE or WM.</p>
+<p>For example, if using i3, one would add the following line to <strong>~/.config/i3/config</strong>:</p>
+<div class="sourceCode" id="cb16"><pre class="sourceCode ruby"><code class="sourceCode ruby"><a class="sourceLine" id="cb16-1" data-line-number="1">exec --no-startup-id <span class="ot">/usr/</span>loca/bin/battery-alert</a></code></pre></div>
 <h2 id="controlling-battery-alert">Controlling battery-alert</h2>
 <p>Communication with <em>battery-alert</em> is done from command line.</p>
 <p><em>battery-alert</em> listens for input on a named pipe (FIFO), <strong>/tmp/battery-alert</strong>.</p>
@@ -486,7 +495,7 @@ terminate execution
 </dd>
 </dl>
 <p>Example:</p>
-<div class="sourceCode" id="cb14"><pre class="sourceCode ruby"><code class="sourceCode ruby"><a class="sourceLine" id="cb14-1" data-line-number="1">battery-alert status</a></code></pre></div>
+<div class="sourceCode" id="cb17"><pre class="sourceCode ruby"><code class="sourceCode ruby"><a class="sourceLine" id="cb17-1" data-line-number="1">battery-alert status</a></code></pre></div>
 <h2 id="sources">Sources</h2>
 <h3 id="and-resources">(and resources)</h3>
 <ul>

@@ -19,6 +19,9 @@ Battery monitoring with visible and audible notification
 3. [Configuration](#configuration)
    - [Default configuration](#default-configuration)
 3. [Execution](#execution)
+   - [systemd](#systemd)
+   - [openrc](#openrc)
+   - [Manual execution](#manual-execution)
 4. [Controlling battery-alert](#controlling-battery-alert)
 5. [Sources](#sources)
 6. [Changelog](#changelog)
@@ -183,22 +186,14 @@ Example:
 
 ```ruby
 $ make
-** Checking for head ... found
-** Checking for bash ... found
-** Checking for bc ... found
-** Checking for sed ... found
-** Checking for gzip ... found
+** Checking for essential packages ... done 
 ** Checking for notify-send ... found
 ** Checking for mpg123 ... not found
   *** You must install mpg123 (package mpg123)
 make: *** [Makefile:42: with_mpg123] Error 1
 $
 $ make no-mpg123
-** Checking for head ... found
-** Checking for bash ... found
-** Checking for bc ... found
-** Checking for sed ... found
-** Checking for gzip ... found
+** Checking for essential packages ... done 
 ** Checking for notify-send ... found
 Creating systemd service ... done
 ```
@@ -373,6 +368,8 @@ battery-alert test
 
 This will display (and play) all available alerts and notifications that will be used in normal operation.
 
+### systemd
+
 To execute *battery-alert*, run the command:
 
 ```ruby
@@ -383,6 +380,30 @@ To have *battery-alert* run on system start up, run the command:
 
 ```ruby
 sudo systemctl enable battery-alert
+```
+
+### openrc
+
+To execute *battery-alert*, run the command:
+
+```ruby
+sudo /etc/init.d/battery-alert start
+```
+
+To have *battery-alert* run on system start up, run the command:
+
+```ruby
+sudo rc-update add battery-alert
+```
+
+### Manual execution
+
+If one prefers to manually execute *battery-alert*, he has to do that through the auto start feature provided by the DE or WM.
+
+For example, if using i3, one would add the following line to **~/.config/i3/config**:
+
+```ruby
+exec --no-startup-id /usr/loca/bin/battery-alert
 ```
 
 ## Controlling battery-alert
