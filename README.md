@@ -83,6 +83,10 @@ If for any reason one prefers not to install it, or use a different player, or e
 
 ### Requirements
 
+*battery-all* depends on GNU make for its configuration.
+
+Other programs it depends on are:
+
 1. **bash** - Well, it is a **bash** script, after all
 2. **coreutils** - The basic file, shell and text manipulation
 3. **sed** - GNU stream editor

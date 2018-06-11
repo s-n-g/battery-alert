@@ -19,13 +19,13 @@ console_systemd_substitution="s\#WantedBy=graphical.target\#WantedBy=multi-user.
 
 .PHONY: install uninstall clean auto_clean console normal debug help
 
-default: auto_clean deps notify with_mpg123 normal battery-alert.service battery-alert.openrc
+default: auto_clean deps notify with_mpg123 normal battery-alert.service battery-alert.openrc battery-alert.runit
 
-no-mpg123: auto_clean deps notify normal battery-alert.service battery-alert.openrc
+no-mpg123: auto_clean deps notify normal battery-alert.service battery-alert.openrc battery-alert.runit
 
-console: auto_clean deps with_mpg123 console-only battery-alert.service battery-alert.openrc
+console: auto_clean deps with_mpg123 console-only battery-alert.service battery-alert.openrc battery-alert.runit
 
-console-no-mpg123: auto_clean deps console-only battery-alert.service battery-alert.openrc
+console-no-mpg123: auto_clean deps console-only battery-alert.service battery-alert.openrc battery-alert.runit
 
 deps:
 	@ echo -n "** Checking for essential packages ... "
@@ -67,6 +67,15 @@ battery-alert.openrc: battery-alert.openrc.template
 		fi; \
 	fi
 	@ rm ./checkopenrc
+
+battery-alert.runit:
+	@ $(eval $(shell echo RUNIT=`ps -p 1 -o comm=`))
+	@ [ -z $(RUNIT) ] || { \
+		echo -n "Creating runit service ... " ; \
+		echo '#!/bin/sh'>battery-alert.runit; \
+		echo 'exec battery-alert'>>battery-alert.runit ; \
+		echo 'done' ; \
+	}
 
 normal:
 	@ sed -i $(normal_substitution) battery-alert
@@ -111,6 +120,13 @@ install:
 	cp battery-alert.openrc /etc/init.d/battery-alert ; \
 	echo 'done'; \
 	fi
+	@if [ -e battery-alert.runit ]; then \
+		echo -n "Installing runit service ... " ; \
+		mkdir /etc/sv/battery-alert ; \
+		cp battery-alert /etc/sv/battery-alert/run ; \
+		chmod +x /etc/sv/battery-alert/run ; \
+		echo 'done' ; \
+	fi
 	@ echo -n "Installing man page ... "
 	@ MAN=$$(man -w | sed 's/:.*//')/man1; \
 	if [ ! -d "$$MAN" ]; \
@@ -136,6 +152,11 @@ uninstall:
 	echo -n "Removing openrc service ... "; \
 	rm /etc/init.d/battery-alert ;\
 	echo 'done'; fi
+	@ if [ -d /etc/sv/battery-alert ]; then \
+		echo -n "Removing runit service ... "; \
+		rm -rf /etc/sv/battery-alert ; \
+		echo 'done' ; \
+	fi
 	@ echo -n "Removing man page ... "
 	@ MAN=$$(man -w | sed 's/:.*//')/man1 ; \
 	rm "$$MAN"/battery-alert.1.gz
@@ -145,11 +166,13 @@ clean:
 	@echo -n "Cleaning up ... "
 	@if [ -e battery-alert.service ]; then rm *.service;fi
 	@if [ -e battery-alert.openrc ]; then rm *.openrc;fi
+	@if [ -e battery-alert.runit ]; then rm *.runit;fi
 	@echo done
 
 auto_clean:
 	@if [ -e battery-alert.service ]; then rm *.service;fi
 	@if [ -e battery-alert.openrc ]; then rm *.openrc;fi
+	@if [ -e battery-alert.runit ]; then rm *.runit;fi
 
 help:
 	@ echo "battery-alert make options:"
