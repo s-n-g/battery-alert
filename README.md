@@ -21,6 +21,7 @@ Battery monitoring with visible and audible notification
 3. [Execution](#execution)
    - [systemd](#systemd)
    - [openrc](#openrc)
+   - [runit](#runit)
    - [Manual execution](#manual-execution)
 4. [Controlling battery-alert](#controlling-battery-alert)
 5. [Sources](#sources)
@@ -394,6 +395,13 @@ To have *battery-alert* run on system start up, run the command:
 
 ```ruby
 sudo rc-update add battery-alert
+```
+### runit
+
+To have *battery-alert* run on system start up and execute it, run the command:
+
+```ruby
+sudo ln -s /etc/sv/battery-alert /var/service
 ```
 
 ### Manual execution

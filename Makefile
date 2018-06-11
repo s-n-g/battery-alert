@@ -74,7 +74,7 @@ battery-alert.runit:
 		echo -n "Creating runit service ... " ; \
 		echo '#!/bin/sh'>battery-alert.runit; \
 		echo "sv start alsa">>battery-alert.runit ; \
-		echo 'exec battery-alert'>>battery-alert.runit ; \
+		echo "exec $(INSTALL_PREFIX)/battery-alert">>battery-alert.runit ; \
 		echo 'done' ; \
 	}
 
@@ -155,8 +155,10 @@ uninstall:
 	echo 'done'; fi
 	@ if [ -d /etc/sv/battery-alert ]; then \
 		echo -n "Removing runit service ... "; \
+		sv stop battery-alert ; \
+		[ -e /var/service/battery-alert ] && rm /var/service/battery-alert ; \
 		rm -rf /etc/sv/battery-alert ; \
-		echo 'done' ; \
+		echo ' done' ; \
 	fi
 	@ echo -n "Removing man page ... "
 	@ MAN=$$(dirname `man -w ls`) ; \
