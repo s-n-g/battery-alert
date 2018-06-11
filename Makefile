@@ -128,7 +128,7 @@ install:
 		echo 'done' ; \
 	fi
 	@ echo -n "Installing man page ... "
-	@ MAN=$$(man -w | sed 's/:.*//')/man1; \
+	@ MAN=$$(dirname `man -w ls`) ; \
 	if [ ! -d "$$MAN" ]; \
 	then mkdir "$$MAN" ; fi ; \
 	install -m 644 man/battery-alert.1.gz "$$MAN"/battery-alert.1.gz
@@ -158,7 +158,7 @@ uninstall:
 		echo 'done' ; \
 	fi
 	@ echo -n "Removing man page ... "
-	@ MAN=$$(man -w | sed 's/:.*//')/man1 ; \
+	@ MAN=$$(dirname `man -w ls`) ; \
 	rm "$$MAN"/battery-alert.1.gz
 	@ echo done
 
