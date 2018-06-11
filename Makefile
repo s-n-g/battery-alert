@@ -3,10 +3,6 @@ PREFIX=/usr/local
 SYSTEMD_SERVICES_DIRECTORY=/lib/systemd/system
 
 # internal variables
-SYSTEMD:=$(shell pgrep -c systemd)
-ifeq ($(SYSTEMD), 0)
-	SYSTEMD=
-endif
 INSTALL_PREFIX=$(PREFIX)/bin
 systemd_substitution="s\#{{INSTALL_PREFIX}}\#$(INSTALL_PREFIX)\#g"
 normal_substitution="s\#DEBUG=yes\#unset DEBUG\#\
@@ -34,10 +30,13 @@ deps:
 	@ type bc 1>/dev/null 2>&1 || ( echo "failed"; echo "  *** You must install bc (package bc)"; exit 1 )
 	@ type sed 1>/dev/null 2>&1 || ( echo "failed"; echo "  *** You must install sed"; exit 1 )
 	@ type gzip 1>/dev/null 2>&1 || ( echo "failed"; echo "  *** You must install gzip"; exit 1 )
-	@ type pgrep 1>/dev/null 2>&1 || ( echo "failed"; echo "  *** You must install pgrep"; exit 1 )
+	@ type grep 1>/dev/null 2>&1 || ( echo "failed"; echo "  *** You must install grep"; exit 1 )
 	@ type ps 1>/dev/null 2>&1 || ( echo "failed"; echo "  *** You must install ps"; exit 1 )
+	@ echo '#!/bin/bash' > checksystemd
+	@ echo 'ps aex | grep systemd | grep -v grep | grep -v checksystemd | wc -l | sed -e "s/ //g" -e "s/0//g"' >> checksystemd
+	@ chmod +x ./checksystemd
 	@ echo '#!/bin/bash' > checkopenrc
-	@ echo 'ps aex | grep oopenrc | grep -v grep | wc -l | sed -e "s/ //g" -e "s/0//g"' >> checkopenrc
+	@ echo 'ps aex | grep openrc | grep -v grep | grep -v checkopenrc | wc -l | sed -e "s/ //g" -e "s/0//g"' >> checkopenrc
 	@ chmod +x ./checkopenrc
 	@ echo done
 
@@ -51,11 +50,13 @@ with_mpg123:
 
 
 battery-alert.service: battery-alert.systemd.template
-	@ [ -z $(SYSTEMD) ] || { \
+	@ $(eval $(shell echo SYSTEMD=`./checksystemd`))
+	@ if [ ! -z "$(SYSTEMD)" ]; then \
 		echo -n "Creating systemd service ... " ; \
 		sed $(systemd_substitution) $< > $@ ; \
 		echo done ; \
-		}
+		fi
+	@ rm ./checksystemd
 
 battery-alert.openrc: battery-alert.openrc.template
 	@ $(eval $(shell echo OPENRC=`./checkopenrc`))
