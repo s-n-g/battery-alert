@@ -1,3 +1,4 @@
+SHELL=/bin/bash
 PREFIX=/usr/local
 SYSTEMD_SERVICES_DIRECTORY=/lib/systemd/system
 
@@ -36,7 +37,7 @@ deps:
 	@ type pgrep 1>/dev/null 2>&1 || ( echo "failed"; echo "  *** You must install pgrep"; exit 1 )
 	@ type ps 1>/dev/null 2>&1 || ( echo "failed"; echo "  *** You must install ps"; exit 1 )
 	@ echo '#!/bin/bash' > checkopenrc
-	@ echo 'ps aex | grep oopenrc | grep -v grep | wc -l' >> checkopenrc
+	@ echo 'ps aex | grep oopenrc | grep -v grep | wc -l | sed -e "s/ //g" -e "s/0//g"' >> checkopenrc
 	@ chmod +x ./checkopenrc
 	@ echo done
 
@@ -59,7 +60,6 @@ battery-alert.service: battery-alert.systemd.template
 battery-alert.openrc: battery-alert.openrc.template
 	@ $(eval $(shell echo OPENRC=`./checkopenrc`))
 	@ if [ -z $(SYSTEMD) ]; then \
-	if [[ $(OPENRC) -eq 0 ]]; then OPENRC=''; fi; \
 	if [ ! -z "$(OPENRC)" ]; then \
 		echo -n "Creating openrc service ... " ; \
 		sed $(systemd_substitution) $< > $@ ; \
