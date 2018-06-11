@@ -58,12 +58,14 @@ battery-alert.service: battery-alert.systemd.template
 
 battery-alert.openrc: battery-alert.openrc.template
 	@ $(eval $(shell echo OPENRC=`./checkopenrc`))
-	@ [[ $(OPENRC) -eq 0 ]] && OPENRC='' || ok=1
-	@ [ -z "$(OPENRC)" ] || { \
+	@ if [ -z $(SYSTEMD) ]; then \
+	if [[ $(OPENRC) -eq 0 ]]; then OPENRC=''; fi; \
+	if [ ! -z "$(OPENRC)" ]; then \
 		echo -n "Creating openrc service ... " ; \
 		sed $(systemd_substitution) $< > $@ ; \
 		echo done ; \
-		}
+		fi; \
+	fi
 	@ rm ./checkopenrc
 
 normal:
