@@ -1,3 +1,9 @@
+# USER
+# This will be the user that visual notification will
+# be executed for. Default value is the user name of
+# whoever executes make
+USER=sng
+
 # THRESHOLDS DEFINITION
 # Thresholds are defined in arrays
 # Items are:

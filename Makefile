@@ -89,9 +89,10 @@ debug:
 	@ sed -i $(debug_substitution) battery-alert
 	@ sed -i '/^DEBUG=yes/ i \
 ## DEBUG DATA FILE \
-[ -e /tmp/battery-alert.txt ] || { \
+[ -e /tmp/battery-alert-data.txt ] || { \
 	echo "charge_percent=40" > /tmp/battery-alert-data.txt \
 	echo "charge_status=Discharging" >> /tmp/battery-alert-data.txt \
+	chmod 666 /txt/battery-alert-data.txt \
 } \
 ## END OF DEBUG DATA FILE' battery-alert
 
@@ -120,6 +121,7 @@ install:
 	@ if [ -e battery-alert.openrc ]; then \
 	echo -n "Installing openrc service ... " ; \
 	cp battery-alert.openrc /etc/init.d/battery-alert ; \
+	chmod +x /etc/init.d/battery-alert ; \
 	echo 'done'; \
 	fi
 	@if [ -e battery-alert.runit ]; then \

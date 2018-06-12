@@ -1,9 +1,9 @@
-#!/usr/bin/env bash
+#!/bin/bash
 unset DEBUG
 unset CONSOLE_ONLY
 
 function error_occured {
-    [ -z "$CONSOLE_ONLY" ] && notify-send -t 10000 -u critical battery-alert "
+    [ -z "$CONSOLE_ONLY" ] && $NOTIFY_COMMAND -t 10000 -u critical battery-alert "
 An error occured at execution time!!!
 Terminating..." -i /usr/share/battery-alert/notify-high.png
     rm $my_fifo 2>/dev/null
@@ -33,7 +33,7 @@ function send_command {
 
 function alert_threshold_low {
     LOOP_TIME_OUT=${THRESHOLD_LOW[6]}
-    [ -z "$CONSOLE_ONLY" ] && notify-send -t ${THRESHOLD_LOW[5]} -i "${THRESHOLD_LOW[3]}" "${THRESHOLD_LOW[1]}" "${THRESHOLD_LOW[2]}"
+    [ -z "$CONSOLE_ONLY" ] && $NOTIFY_COMMAND -t ${THRESHOLD_LOW[5]} -i "${THRESHOLD_LOW[3]}" "${THRESHOLD_LOW[1]}" "${THRESHOLD_LOW[2]}"
     if [ ! -z "$PLAYER_COMMAND" ] && [ -e "${THRESHOLD_LOW[4]}" ]; then
         $PLAYER_COMMAND "${THRESHOLD_LOW[4]}"
     fi
@@ -41,7 +41,7 @@ function alert_threshold_low {
 
 function alert_threshold_high {
     LOOP_TIME_OUT=${THRESHOLD_HIGH[6]}
-    [ -z "$CONSOLE_ONLY" ] && notify-send -t ${THRESHOLD_HIGH[5]} -i "${THRESHOLD_HIGH[3]}" "${THRESHOLD_HIGH[1]}" "${THRESHOLD_HIGH[2]}"
+    [ -z "$CONSOLE_ONLY" ] && $NOTIFY_COMMAND -t ${THRESHOLD_HIGH[5]} -i "${THRESHOLD_HIGH[3]}" "${THRESHOLD_HIGH[1]}" "${THRESHOLD_HIGH[2]}"
     if [ ! -z "$PLAYER_COMMAND" ] && [ -e "${THRESHOLD_HIGH[4]}" ]; then
         $PLAYER_COMMAND "${THRESHOLD_HIGH[4]}"
     fi
@@ -51,7 +51,7 @@ function notify_low {
     [ -z "${THRESHOLD_NOTIFY_LOW[7]}" ] || {
         if [ "${THRESHOLD_NOTIFY_LOW[7]}" = "yes" ]; then
             LOOP_TIME_OUT=${THRESHOLD_NOTIFY_LOW[6]}
-            [ -z "$CONSOLE_ONLY" ] && notify-send -t ${THRESHOLD_NOTIFY_LOW[5]} -i "${THRESHOLD_NOTIFY_LOW[3]}" "${THRESHOLD_NOTIFY_LOW[1]}" "${THRESHOLD_NOTIFY_LOW[2]}"
+            [ -z "$CONSOLE_ONLY" ] && $NOTIFY_COMMAND -t ${THRESHOLD_NOTIFY_LOW[5]} -i "${THRESHOLD_NOTIFY_LOW[3]}" "${THRESHOLD_NOTIFY_LOW[1]}" "${THRESHOLD_NOTIFY_LOW[2]}"
             if [ ! -z "$PLAYER_COMMAND" ] && [ -e "${THRESHOLD_NOTIFY_LOW[4]}" ]; then
                 $PLAYER_COMMAND "${THRESHOLD_NOTIFY_LOW[4]}"
             fi
@@ -63,7 +63,7 @@ function notify_high {
     [ -z "${THRESHOLD_NOTIFY_HIGH[7]}" ] || {
         if [ "${THRESHOLD_NOTIFY_HIGH[7]}" = "yes" ]; then
             LOOP_TIME_OUT=${THRESHOLD_NOTIFY_HIGH[6]}
-            [ -z "$CONSOLE_ONLY" ] && notify-send -t ${THRESHOLD_NOTIFY_HIGH[5]} -i "${THRESHOLD_NOTIFY_HIGH[3]}" "${THRESHOLD_NOTIFY_HIGH[1]}" "${THRESHOLD_NOTIFY_HIGH[2]}"
+            [ -z "$CONSOLE_ONLY" ] && $NOTIFY_COMMAND -t ${THRESHOLD_NOTIFY_HIGH[5]} -i "${THRESHOLD_NOTIFY_HIGH[3]}" "${THRESHOLD_NOTIFY_HIGH[1]}" "${THRESHOLD_NOTIFY_HIGH[2]}"
             if [ ! -z "$PLAYER_COMMAND" ] && [ -e "${THRESHOLD_NOTIFY_HIGH[4]}" ]; then
                 $PLAYER_COMMAND "${THRESHOLD_NOTIFY_HIGH[4]}"
             fi
@@ -99,6 +99,14 @@ function test {
     exit
 }
 
+if [ -e /etc/battery-alert.conf ]; then
+. /etc/battery-alert.conf
+fi
+NOTIFY_COMMAND=notify-send
+if [[ $UID -eq 0 ]];then
+    [ -z "$USER" ] || NOTIFY_COMMAND="bash -c "runuser -u $USER DISPLAY=:0 notify-send --i""
+fi
+
 #set -x
 ##############################################################################
 #                                                                            #
@@ -113,7 +121,7 @@ if [[ "$1" =~ ^status|^vstatus ]];then
     if [ "$1" = "status" ];then
         echo "$REPLY"
     else
-        [ -z "$CONSOLE_ONLY" ] && notify-send -t 5000 -u normal \
+        [ -z "$CONSOLE_ONLY" ] && $NOTIFY_COMMAND -t 5000 -u normal \
         -i /usr/share/battery-alert/notify-high.png battery-alert \
 "
 Status: battery-alert is <b>$REPLY</b>"
@@ -177,7 +185,7 @@ fi
 mkfifo $my_fifo 2>/dev/null || {
     rm -rf $my_fifo 2>/dev/null
     mkfifo $my_fifo 2>/dev/null || {
-        [ -z "$CONSOLE_ONLY" ] && notify-send -t 10000 -u critical battery-alert "
+        [ -z "$CONSOLE_ONLY" ] && $NOTIFY_COMMAND -t 10000 -u critical battery-alert "
 Cannot create \"/tmp/battery-alert\"
 Please make sure it does not exist before executing this script
 Terminating..." -i /usr/share/battery-alert/notify-high.png
@@ -188,9 +196,6 @@ Terminating..." -i /usr/share/battery-alert/notify-high.png
 #set -x
 LOOP_TIME_OUT=60
 while true;do
-    if [ -e /etc/battery-alert.conf ]; then
-        . /etc/battery-alert.conf
-    fi
     if [ -e ~/.config/battery-alert/config ]; then
         . ~/.config/battery-alert/config
     fi
