@@ -15,13 +15,13 @@ console_systemd_substitution="s\#WantedBy=graphical.target\#WantedBy=multi-user.
 
 .PHONY: install uninstall clean auto_clean console normal debug help
 
-default: auto_clean visdeps deps notify with_mpg123 normal battery-alert.service battery-alert.openrc battery-alert.runit
+default: auto_clean visdeps deps notify with_mpg123 normal battery-alert.systemd battery-alert.openrc battery-alert.runit
 
-no-mpg123: auto_clean visdeps deps notify normal battery-alert.service battery-alert.openrc battery-alert.runit
+no-mpg123: auto_clean visdeps deps notify normal battery-alert.systemd battery-alert.openrc battery-alert.runit
 
-console: auto_clean deps with_mpg123 console-only battery-alert.service battery-alert.openrc battery-alert.runit
+console: auto_clean deps with_mpg123 only-terminal battery-alert.systemd battery-alert.openrc battery-alert.runit
 
-console-no-mpg123: auto_clean deps console-only battery-alert.service battery-alert.openrc battery-alert.runit
+console-no-mpg123: auto_clean deps only-terminal battery-alert.systemd battery-alert.openrc battery-alert.runit
 
 visdeps:
 	@ $(eval $(shell echo MY_DISPLAY=`echo $$DISPLAY`))
@@ -57,7 +57,7 @@ with_mpg123:
 	@ type mpg123 1>/dev/null 2>&1 && echo found || ( echo "not found"; echo "  *** You must install mpg123 (package mpg123)"; exit 1 )
 
 
-battery-alert.service: battery-alert.systemd.template
+battery-alert.systemd: battery-alert.systemd.template
 	@ $(eval $(shell echo SYSTEMD=`./checksystemd`))
 	@ if [ ! -z "$(SYSTEMD)" ]; then \
 		echo -n "Creating systemd service ... " ; \
@@ -91,7 +91,7 @@ normal:
 	@ sed -i $(normal_substitution) battery-alert
 	@ sed -i '/^## DEBUG DATA FILE/,/^## END OF DEBUG DATA FILE/d' battery-alert
 	@ sed -i $(normal_systemd_substitution) battery-alert.systemd.template
-	@ if [ -e battery-alert.service ];then sed -i $(normal_systemd_substitution) battery-alert.service; fi
+	@ if [ -e battery-alert.systemd ];then sed -i $(normal_systemd_substitution) battery-alert.systemd; fi
 
 debug:
 	@ sed -i $(debug_substitution) battery-alert
@@ -104,10 +104,10 @@ debug:
 } \
 ## END OF DEBUG DATA FILE' battery-alert
 
-console-only:
+only-terminal:
 	@ sed -i $(console_substitution) battery-alert
-	@ sed -i $(console_systemd_substitution) battery-alert.service.template
-	@ if [ -e battery-alert.service ];then sed -i $(console_systemd_substitution) battery-alert.service; fi
+	@ sed -i $(console_systemd_substitution) battery-alert.systemd.template
+	@ if [ -e battery-alert.systemd ];then sed -i $(console_systemd_substitution) battery-alert.systemd; fi
 
 install:
 	@ echo -n "Installing script ... "
@@ -123,7 +123,7 @@ install:
 	@ if [ ! -z $(SYSTEMD) ];then \
 	if [ -d $(SYSTEMD_SERVICES_DIRECTORY) ]; then \
 	echo -n "Installing systemd service ... " ; \
-	cp battery-alert.service $(SYSTEMD_SERVICES_DIRECTORY); \
+	cp battery-alert.systemd $(SYSTEMD_SERVICES_DIRECTORY); \
 	echo 'done'; \
 	fi; fi
 	@ if [ -e battery-alert.openrc ]; then \
@@ -156,9 +156,9 @@ uninstall:
 	@ echo -n "Removing data files ... "
 	@ rm -rf /usr/share/battery-alert
 	@ echo done
-	@ if [ -e $(SYSTEMD_SERVICES_DIRECTORY)/battery-alert.service ]; then \
+	@ if [ -e $(SYSTEMD_SERVICES_DIRECTORY)/battery-alert.systemd ]; then \
 	echo -n "Removing systemd service ... "; \
-	rm $(SYSTEMD_SERVICES_DIRECTORY)/battery-alert.service \
+	rm $(SYSTEMD_SERVICES_DIRECTORY)/battery-alert.systemd \
 	echo 'done'; fi
 	@ if [ -e /etc/init.d/battery-alert ]; then \
 	echo -n "Removing openrc service ... "; \
@@ -179,14 +179,14 @@ uninstall:
 clean:
 	@echo -n "Cleaning up ... "
 	@ sed -i "s/^MY_DISPLAY=.*/unset MY_DISPLAY/" battery-alert
-	@if [ -e battery-alert.service ]; then rm *.service;fi
+	@if [ -e battery-alert.systemd ]; then rm *.systemd;fi
 	@if [ -e battery-alert.openrc ]; then rm *.openrc;fi
 	@if [ -e battery-alert.runit ]; then rm *.runit;fi
 	@echo done
 
 auto_clean:
 	@ sed -i "s/^MY_DISPLAY=.*/unset MY_DISPLAY/" battery-alert
-	@if [ -e battery-alert.service ]; then rm *.service;fi
+	@if [ -e battery-alert.systemd ]; then rm *.systemd;fi
 	@if [ -e battery-alert.openrc ]; then rm *.openrc;fi
 	@if [ -e battery-alert.runit ]; then rm *.runit;fi
 

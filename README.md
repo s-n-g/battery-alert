@@ -87,7 +87,7 @@ If for any reason one prefers not to install it, or use a different player, or e
 
 ### Requirements
 
-*battery-all* depends on **GNU make** for its configuration.
+*battery-alert* depends on **GNU make** for its configuration.
 
 The following programs are also used:
 
@@ -97,12 +97,12 @@ The following programs are also used:
 4. **sed** - GNU stream editor
 5. **gzip** - GNU compression utility
 
-**battery-alert** depends on the follwoing programs for its execution:
+*battery-alert* depends on the follwoing programs for its execution:
 
 1. **bash** - Well, it is a **bash** script, after all
 2. **bc** - An arbitrary precision calculator language
-3. **su** - Run a command with substitute user and group ID
-4. **libnotify** - Library for sending desktop notifications
+3. **su** - Run a command with substitute user and group ID (if run as a service; refer to: [Execution](#execution))
+4. **libnotify** - Library for sending desktop notifications (not required if **console** or **console-no-mpg123** make arguments are used; refer to [make options](#make-options))
 5. **mpg123** - A console based real time MPEG Audio Player for Layer 1, 2 and 3 (optional)
 
 ### Procedure
