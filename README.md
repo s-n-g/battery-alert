@@ -93,6 +93,8 @@ Other programs it depends on are:
 
 1. **bash** - Well, it is a **bash** script, after all
 2. **coreutils** - The basic file, shell and text manipulation
+   **ps** - Report a snapshot of the current processes
+   **grep** - A string search utility
 3. **sed** - GNU stream editor
 4. **gzip** - GNU compression utility
 5. **bc** - An arbitrary precision calculator language
