@@ -256,6 +256,12 @@ The default configuration is the following:
 - if battery drops below 7%, **halt** the system
 
 ```ruby
+# USER
+# This will be the user that visual notification will
+# be executed for. Default value is the user name of
+# whoever executes make
+USER=spiros
+
 # THRESHOLDS DEFINITION
 # Thresholds are defined in arrays
 # Items are:
