@@ -171,14 +171,20 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <p>If for any reason one prefers not to install it, or use a different player, or even not to use one at all, one should follow the <a href="#make-options">relevant installation instructions</a>.</p>
 <h2 id="installation">Installation</h2>
 <h3 id="requirements">Requirements</h3>
-<p><em>battery-all</em> depends on GNU make for its configuration.</p>
-<p>Other programs it depends on are:</p>
+<p><em>battery-all</em> depends on <strong>GNU make</strong> for its configuration.</p>
+<p>The following programs are also used:</p>
 <ol type="1">
-<li><strong>bash</strong> - Well, it is a <strong>bash</strong> script, after all</li>
-<li><strong>coreutils</strong> - The basic file, shell and text manipulation <strong>ps</strong> - Report a snapshot of the current processes <strong>grep</strong> - A string search utility</li>
+<li><strong>coreutils</strong> - The basic file, shell and text manipulation</li>
+<li><strong>ps</strong> - Report a snapshot of the current processes</li>
+<li><strong>grep</strong> - A string search utility</li>
 <li><strong>sed</strong> - GNU stream editor</li>
 <li><strong>gzip</strong> - GNU compression utility</li>
+</ol>
+<p><strong>battery-alert</strong> depends on the follwoing programs for its execution:</p>
+<ol type="1">
+<li><strong>bash</strong> - Well, it is a <strong>bash</strong> script, after all</li>
 <li><strong>bc</strong> - An arbitrary precision calculator language</li>
+<li><strong>su</strong> - Run a command with substitute user and group ID</li>
 <li><strong>libnotify</strong> - Library for sending desktop notifications</li>
 <li><strong>mpg123</strong> - A console based real time MPEG Audio Player for Layer 1, 2 and 3 (optional)</li>
 </ol>

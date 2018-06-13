@@ -87,19 +87,23 @@ If for any reason one prefers not to install it, or use a different player, or e
 
 ### Requirements
 
-*battery-all* depends on GNU make for its configuration.
+*battery-all* depends on **GNU make** for its configuration.
 
-Other programs it depends on are:
+The following programs are also used:
+
+1. **coreutils** - The basic file, shell and text manipulation
+2. **ps** - Report a snapshot of the current processes
+3. **grep** - A string search utility
+4. **sed** - GNU stream editor
+5. **gzip** - GNU compression utility
+
+**battery-alert** depends on the follwoing programs for its execution:
 
 1. **bash** - Well, it is a **bash** script, after all
-2. **coreutils** - The basic file, shell and text manipulation
-   **ps** - Report a snapshot of the current processes
-   **grep** - A string search utility
-3. **sed** - GNU stream editor
-4. **gzip** - GNU compression utility
-5. **bc** - An arbitrary precision calculator language
-6. **libnotify** - Library for sending desktop notifications
-7. **mpg123** - A console based real time MPEG Audio Player for Layer 1, 2 and 3 (optional)
+2. **bc** - An arbitrary precision calculator language
+3. **su** - Run a command with substitute user and group ID
+4. **libnotify** - Library for sending desktop notifications
+5. **mpg123** - A console based real time MPEG Audio Player for Layer 1, 2 and 3 (optional)
 
 ### Procedure
 

@@ -15,19 +15,21 @@ console_systemd_substitution="s\#WantedBy=graphical.target\#WantedBy=multi-user.
 
 .PHONY: install uninstall clean auto_clean console normal debug help
 
-default: auto_clean deps notify with_mpg123 normal battery-alert.service battery-alert.openrc battery-alert.runit
+default: auto_clean visdeps deps notify with_mpg123 normal battery-alert.service battery-alert.openrc battery-alert.runit
 
-no-mpg123: auto_clean deps notify normal battery-alert.service battery-alert.openrc battery-alert.runit
+no-mpg123: auto_clean visdeps deps notify normal battery-alert.service battery-alert.openrc battery-alert.runit
 
 console: auto_clean deps with_mpg123 console-only battery-alert.service battery-alert.openrc battery-alert.runit
 
 console-no-mpg123: auto_clean deps console-only battery-alert.service battery-alert.openrc battery-alert.runit
 
-deps:
+visdeps:
 	@ $(eval $(shell echo MY_DISPLAY=`echo $$DISPLAY`))
 	@ if [ -z "$(MY_DISPLAY)" ]; then echo "Please set DISPLAY variable"; exit 1 ;fi
 	@ $(eval $(shell echo USER=`whoami`))
 	@ if [ "$(USER)" = "root" ]; then echo "Please execute make as a normal user"; exit 1 ;fi
+
+deps:
 	@ echo -n "** Checking for essential packages ... "
 	@ type head 1>/dev/null 2>&1 || ( echo "failed"; echo "  *** You must install head (probably package coreutils)"; exit 1 )
 	@ type bash 1>/dev/null 2>&1 || ( echo "failed"; echo "  *** You must install bash"; exit 1 )

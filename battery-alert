@@ -121,7 +121,9 @@ if [ -e /etc/battery-alert.conf ]; then
 fi
 NOTIFY_COMMAND=notify-send
 if [[ $UID -eq 0 ]];then
-    [ -z "$USER" ] || NOTIFY_COMMAND=mynotify
+    if [ ! -z "$USER" ] && [ -z "$CONSOLE_ONLY"  ];then
+        NOTIFY_COMMAND=mynotify
+    fi
 fi
 
 #set -x
