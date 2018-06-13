@@ -24,6 +24,10 @@ console: auto_clean deps with_mpg123 console-only battery-alert.service battery-
 console-no-mpg123: auto_clean deps console-only battery-alert.service battery-alert.openrc battery-alert.runit
 
 deps:
+	@ $(eval $(shell echo MY_DISPLAY=`echo $$DISPLAY`))
+	@ if [ -z "$(MY_DISPLAY)" ]; then echo "Please set DISPLAY variable"; exit 1 ;fi
+	@ $(eval $(shell echo USER=`whoami`))
+	@ if [ "$(USER)" = "root" ]; then echo "Please execute make as a normal user"; exit 1 ;fi
 	@ echo -n "** Checking for essential packages ... "
 	@ type head 1>/dev/null 2>&1 || ( echo "failed"; echo "  *** You must install head (probably package coreutils)"; exit 1 )
 	@ type bash 1>/dev/null 2>&1 || ( echo "failed"; echo "  *** You must install bash"; exit 1 )
@@ -38,6 +42,8 @@ deps:
 	@ echo '#!/bin/bash' > checkopenrc
 	@ echo 'ps aex | grep openrc | grep -v grep | grep -v checkopenrc | wc -l | sed -e "s/ //g" -e "s/0//g"' >> checkopenrc
 	@ chmod +x ./checkopenrc
+	@ sed -i "s/^USER=.*/USER=$(USER)/" config
+	@ sed -i "s/^unset MY_DISPLAY.*/MY_DISPLAY=$(MY_DISPLAY)/" battery-alert
 	@ echo done
 
 notify:
@@ -170,12 +176,14 @@ uninstall:
 
 clean:
 	@echo -n "Cleaning up ... "
+	@ sed -i "s/^MY_DISPLAY=.*/unset MY_DISPLAY/" battery-alert
 	@if [ -e battery-alert.service ]; then rm *.service;fi
 	@if [ -e battery-alert.openrc ]; then rm *.openrc;fi
 	@if [ -e battery-alert.runit ]; then rm *.runit;fi
 	@echo done
 
 auto_clean:
+	@ sed -i "s/^MY_DISPLAY=.*/unset MY_DISPLAY/" battery-alert
 	@if [ -e battery-alert.service ]; then rm *.service;fi
 	@if [ -e battery-alert.openrc ]; then rm *.openrc;fi
 	@if [ -e battery-alert.runit ]; then rm *.runit;fi

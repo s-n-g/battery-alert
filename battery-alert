@@ -1,6 +1,30 @@
 #!/bin/bash
-unset DEBUG
+## DEBUG DATA FILE 
+[ -e /tmp/battery-alert-data.txt ] || { 
+echo "charge_percent=40" > /tmp/battery-alert-data.txt 
+echo "charge_status=Discharging" >> /tmp/battery-alert-data.txt 
+chmod 666 /txt/battery-alert-data.txt 
+} 
+## END OF DEBUG DATA FILE
+DEBUG=yes
 unset CONSOLE_ONLY
+unset MY_DISPLAY
+
+function mynotify {
+    local outf
+    outf=/tmp/battery-alert-$(date '+%N')
+    echo -n "su - $USER -c 'DISPLAY=" > $outf
+    echo -n "$MY_DISPLAY notify-send " >> $outf
+    while [ ! -z "$1" ];do
+	echo -n ' "' >> $outf
+        echo -n "$1" >> $outf
+	echo -n '"' >> $outf
+	shift
+    done
+    echo "'" >> $outf
+    . $outf
+    rm $outf
+}
 
 function error_occured {
     [ -z "$CONSOLE_ONLY" ] && $NOTIFY_COMMAND -t 10000 -u critical battery-alert "
@@ -104,7 +128,7 @@ if [ -e /etc/battery-alert.conf ]; then
 fi
 NOTIFY_COMMAND=notify-send
 if [[ $UID -eq 0 ]];then
-    [ -z "$USER" ] || NOTIFY_COMMAND="bash -c "runuser -u $USER DISPLAY=:0 notify-send --i""
+    [ -z "$USER" ] || NOTIFY_COMMAND=mynotify
 fi
 
 #set -x
