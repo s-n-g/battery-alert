@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
   <meta name="generator" content="pandoc" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
-  <title>sng-batmon</title>
+  <title>battery-alert</title>
   <style type="text/css">
     html {margin: 2em;} 
     h2 {margin-top: 2.5em; border-bottom:1px solid #D6D6D6;} 
@@ -205,6 +205,15 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <h4 id="variables">Variables</h4>
 <p>The <strong>Makefile</strong> that comes with the package provides a couple of variables which control the installation process:</p>
 <dl>
+<dt>
+SHELL
+</dt>
+<dd>
+The shell to be used by <b>make</b> for its execution.
+</dd>
+<dd>
+Default value: <b>/bin/bash</b>
+</dd>
 <dt>
 PREFIX
 </dt>

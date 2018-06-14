@@ -1,0 +1,22 @@
+#!/bin/bash
+[ -z "$(git status | grep 'modified:' | grep battery-alert.1.md)" ] || {
+    pandoc man/battery-alert.1.md -t man |gzip -9 > man/battery-alert.1.gz
+    git add man/battery-alert.1.gz
+}
+
+
+[ -z "$(git status | grep 'modified:' | grep README.md)" ] || {
+    echo '% battery-alert' > man/int.md
+    cat README.md >> man/int.md
+    pandoc -s -t html man/int.md -o man/README.html
+    sed -i '/<style /a \
+    html {margin: 2em;} \
+    h2 {margin-top: 2.5em; border-bottom:1px solid #D6D6D6;} \
+    h3 {margin-top: 2em;} \
+    dl {margin: 2em;} \
+    dd {margin: 1em;} \
+    dt {font-weight: bold;}' man/README.html
+    sed -i -e 's/div.sourceCode { margin: 1em 0; }/div.sourceCode { margin: 1em 0;  background-color: #F6F6F6; margin: 1em; }/' -e 's/pre.sourceCode { margin: 0; }/pre.sourceCode { margin: 2em; }/' -e '/class="title"/d' man/README.html
+    rm man/int.md
+    git add man/README.html
+}

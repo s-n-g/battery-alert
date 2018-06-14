@@ -191,7 +191,6 @@ In addition to those, the following targets (command line augments to **make**):
     <dd>print help screen and exit</dd>
 </dl>
 
-
 Example:
 
 ```ruby
