@@ -144,6 +144,9 @@ sudo make install
 The **Makefile** that comes with the package provides a couple of variables which control the installation process:
 
 <dl>
+<dt>SHELL</dt>
+<dd>The shell to be used by <b>make</b> for its execution.</dd>
+<dd>Default value: <b>/bin/bash</b></dd>
 <dt>PREFIX</dt>
 <dd>Script installation prefix. The script will actually be installed in **$PREFIX/bin**.</dd> 
 <dd>Default value: <b>/usr/local</b></dd>
