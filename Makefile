@@ -59,7 +59,7 @@ with_mpg123:
 
 battery-alert.systemd: battery-alert.systemd.template
 	@ $(eval $(shell echo SYSTEMD=`./checksystemd`))
-	@ if [ ! -z "$(SYSTEMD)" ]; then \
+	@ if [ ! -z "$(SYSTEMD)" ] && [ -d "$(SYSTEMD_SERVICES_DIRECTORY)" ]; then \
 		echo -n "Creating systemd service ... " ; \
 		sed $(systemd_substitution) $< > $@ ; \
 		echo done ; \
