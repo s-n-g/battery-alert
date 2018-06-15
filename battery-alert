@@ -210,6 +210,7 @@ Please make sure it does not exist before executing this script
 Terminating..." -i /usr/share/battery-alert/notify-high.png
         exit 74
     }
+    chmod 666 /tmp/battery-alert
 }
 
 #set -x

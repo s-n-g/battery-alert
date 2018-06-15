@@ -100,7 +100,7 @@ debug:
 [ -e /tmp/battery-alert-data.txt ] || { \
 	echo "charge_percent=40" > /tmp/battery-alert-data.txt \
 	echo "charge_status=Discharging" >> /tmp/battery-alert-data.txt \
-	chmod 666 /txt/battery-alert-data.txt \
+	chmod 666 /tmp/battery-alert-data.txt \
 } \
 ## END OF DEBUG DATA FILE' battery-alert
 
