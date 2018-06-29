@@ -165,6 +165,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <p>The command to halt the system is configurable (see <a href="#configuration">Configuration</a>).</p>
 <p>Default command: <strong>systemctl poweroff</strong>.</p></li>
 </ol>
+<h3 id="visual-notification">Visual notification</h3>
+<p>The command used (<em>notify-send</em>) will work with any notification daemon (<strong>notification-daemon</strong>, <strong>xfce4-notifyd</strong>, <strong>mate-notification-daemon</strong>, etc.); Canonical’s notification daemon (<strong>notify-osd</strong>) will pose a problem: it will not respect the time to display the notification.</p>
 <h3 id="audio-notification">Audio notification</h3>
 <p>Audio playback will occur in the background (i.e. no program window of any kind will be visible). Playback volume will be the one set at the system mixer, so some precaution should take place on this respect. After all, what is the point in using audio notification if audio volume is low enough to make it inaudible?</p>
 <p><em>battery-alert</em> by default uses <strong>mpg123</strong> as an audio player, because it is light-weight enough and gets installed by default on most systems, but any mp3 player can be used, provided that it is a terminal application (or it can hide its window) and will print no diagnostic or other messages in <em>stdout</em> (or it can suppress them).</p>
@@ -185,7 +187,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li><strong>bash</strong> - Well, it is a <strong>bash</strong> script, after all</li>
 <li><strong>bc</strong> - An arbitrary precision calculator language</li>
 <li><strong>su</strong> - Run a command with substitute user and group ID (if run as a service; refer to: <a href="#execution">Execution</a>)</li>
-<li><strong>libnotify</strong> - Library for sending desktop notifications (not required if <strong>console</strong> or <strong>console-no-mpg123</strong> make arguments are used; refer to <a href="#make-options">make options</a>). The command used (<em>notify-send</em>) will work with any notifiaction daemon (<strong>notification-daemon</strong>, <strong>xfce4-notifyd</strong>, <strong>mate-notification-daemon</strong>, etc.); Canonical’s notification daemon (<strong>notify-osd</strong>) will pose a problem: it will not respect the time to display the notification.</li>
+<li><strong>libnotify</strong> - Library for sending desktop notifications (not required if <strong>console</strong> or <strong>console-no-mpg123</strong> make arguments are used; refer to <a href="#make-options">make options</a>)</li>
 <li><strong>mpg123</strong> - A console based real time MPEG Audio Player for Layer 1, 2 and 3 (optional)</li>
 </ol>
 <h3 id="procedure">Procedure</h3>
@@ -476,7 +478,7 @@ If an error occurs, <i>battery-alert</i> will terminate, so be aware.
 <h3 id="manual-execution">Manual execution</h3>
 <p>If one prefers to manually execute <em>battery-alert</em>, he has to do that through the auto start feature provided by the DE or WM.</p>
 <p>For example, if using i3, one would add the following line to <strong>~/.config/i3/config</strong>:</p>
-<div class="sourceCode" id="cb17"><pre class="sourceCode ruby"><code class="sourceCode ruby"><a class="sourceLine" id="cb17-1" data-line-number="1">exec --no-startup-id <span class="ot">/usr/</span>loca/bin/battery-alert</a></code></pre></div>
+<div class="sourceCode" id="cb17"><pre class="sourceCode ruby"><code class="sourceCode ruby"><a class="sourceLine" id="cb17-1" data-line-number="1">exec --no-startup-id <span class="ot">/usr/</span>local/bin/battery-alert</a></code></pre></div>
 <h2 id="controlling-battery-alert">Controlling battery-alert</h2>
 <p>Communication with <em>battery-alert</em> is done from command line.</p>
 <p><em>battery-alert</em> listens for input on a named pipe (FIFO), <strong>/tmp/battery-alert</strong>.</p>

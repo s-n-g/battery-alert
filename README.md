@@ -75,6 +75,10 @@ These levels will produce a visible warning and an "annoying" audible notificati
    
    Default command: **systemctl poweroff**.
 
+### Visual notification
+
+The command used (*notify-send*) will work with any notification daemon (**notification-daemon**, **xfce4-notifyd**, **mate-notification-daemon**, etc.); Canonical's notification daemon (**notify-osd**) will pose a problem: it will not respect the time to display the notification.
+
 ### Audio notification
 
 Audio playback will occur in the background (i.e. no program window of any kind will be visible). Playback volume will be the one set at the system mixer, so some precaution should take place on this respect. After all, what is the point in using audio notification if audio volume is low enough to make it inaudible?
@@ -102,7 +106,7 @@ The following programs are also used:
 1. **bash** - Well, it is a **bash** script, after all
 2. **bc** - An arbitrary precision calculator language
 3. **su** - Run a command with substitute user and group ID (if run as a service; refer to: [Execution](#execution))
-4. **libnotify** - Library for sending desktop notifications (not required if **console** or **console-no-mpg123** make arguments are used; refer to [make options](#make-options)). The command used (*notify-send*) will work with any notifiaction daemon (**notification-daemon**, **xfce4-notifyd**, **mate-notification-daemon**, etc.); Canonical's notification daemon (**notify-osd**) will pose a problem: it will not respect the time to display the notification.
+4. **libnotify** - Library for sending desktop notifications (not required if **console** or **console-no-mpg123** make arguments are used; refer to [make options](#make-options))
 5. **mpg123** - A console based real time MPEG Audio Player for Layer 1, 2 and 3 (optional)
 
 ### Procedure
@@ -425,7 +429,7 @@ If one prefers to manually execute *battery-alert*, he has to do that through th
 For example, if using i3, one would add the following line to **~/.config/i3/config**:
 
 ```ruby
-exec --no-startup-id /usr/loca/bin/battery-alert
+exec --no-startup-id /usr/local/bin/battery-alert
 ```
 
 ## Controlling battery-alert
