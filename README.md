@@ -7,6 +7,7 @@ Battery monitoring with visible and audible notification
    - [Notification levels](#notification-levels)
    - [Alert levels](#alert-levels)
    - [Halt level](#halt-level)
+   - [Visual notification](#visual-notification)
    - [Audio notification](#audio-notification)
 2. [Installation](#installation)
    - [Requirements](#requirements)
