@@ -185,7 +185,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li><strong>bash</strong> - Well, it is a <strong>bash</strong> script, after all</li>
 <li><strong>bc</strong> - An arbitrary precision calculator language</li>
 <li><strong>su</strong> - Run a command with substitute user and group ID (if run as a service; refer to: <a href="#execution">Execution</a>)</li>
-<li><strong>libnotify</strong> - Library for sending desktop notifications (not required if <strong>console</strong> or <strong>console-no-mpg123</strong> make arguments are used; refer to <a href="#make-options">make options</a>)</li>
+<li><strong>libnotify</strong> - Library for sending desktop notifications (not required if <strong>console</strong> or <strong>console-no-mpg123</strong> make arguments are used; refer to <a href="#make-options">make options</a>). The command used (<em>notify-send</em>) will work with any notifiaction daemon (<strong>notification-daemon</strong>, <strong>xfce4-notifyd</strong>, <strong>mate-notification-daemon</strong>, etc.); Canonical’s notification daemon (<strong>notify-osd</strong>) will pose a problem: it will not respect the time to display the notification.</li>
 <li><strong>mpg123</strong> - A console based real time MPEG Audio Player for Layer 1, 2 and 3 (optional)</li>
 </ol>
 <h3 id="procedure">Procedure</h3>
@@ -383,7 +383,7 @@ If an error occurs, <i>battery-alert</i> will terminate, so be aware.
 <a class="sourceLine" id="cb10-31" data-line-number="31"><span class="co">#    will be displayed and a sound will be played once</span></a>
 <a class="sourceLine" id="cb10-32" data-line-number="32"><span class="dt">THRESHOLD_HIGH</span>[<span class="dv">0</span>]=<span class="dv">20</span></a>
 <a class="sourceLine" id="cb10-33" data-line-number="33"><span class="dt">THRESHOLD_HIGH</span>[<span class="dv">1</span>]=<span class="st">&quot;Low battery&quot;</span></a>
-<a class="sourceLine" id="cb10-34" data-line-number="34"><span class="dt">THRESHOLD_HIGH</span>[<span class="dv">2</span>]=<span class="st">&quot;Battery running critically low at $charge_percent%!&quot;</span></a>
+<a class="sourceLine" id="cb10-34" data-line-number="34"><span class="dt">THRESHOLD_HIGH</span>[<span class="dv">2</span>]=<span class="st">&quot;Battery running low at |CHARGE|%!&quot;</span></a>
 <a class="sourceLine" id="cb10-35" data-line-number="35"><span class="dt">THRESHOLD_HIGH</span>[<span class="dv">3</span>]=warning-high.png</a>
 <a class="sourceLine" id="cb10-36" data-line-number="36"><span class="dt">THRESHOLD_HIGH</span>[<span class="dv">4</span>]=warning-low.mp3</a>
 <a class="sourceLine" id="cb10-37" data-line-number="37"><span class="dt">THRESHOLD_HIGH</span>[<span class="dv">5</span>]=<span class="dv">7000</span></a>
@@ -394,7 +394,7 @@ If an error occurs, <i>battery-alert</i> will terminate, so be aware.
 <a class="sourceLine" id="cb10-42" data-line-number="42"><span class="co">#    notification and the sund will be on indefinatelly</span></a>
 <a class="sourceLine" id="cb10-43" data-line-number="43"><span class="dt">THRESHOLD_LOW</span>[<span class="dv">0</span>]=<span class="dv">15</span></a>
 <a class="sourceLine" id="cb10-44" data-line-number="44"><span class="dt">THRESHOLD_LOW</span>[<span class="dv">1</span>]=<span class="st">&quot;Low battery&quot;</span></a>
-<a class="sourceLine" id="cb10-45" data-line-number="45"><span class="dt">THRESHOLD_LOW</span>[<span class="dv">2</span>]=<span class="st">&quot;Battery running critically low at $charge_percent%!&quot;</span></a>
+<a class="sourceLine" id="cb10-45" data-line-number="45"><span class="dt">THRESHOLD_LOW</span>[<span class="dv">2</span>]=<span class="st">&quot;Battery running critically low at |CHARGE|%!&quot;</span></a>
 <a class="sourceLine" id="cb10-46" data-line-number="46"><span class="dt">THRESHOLD_LOW</span>[<span class="dv">3</span>]=warning-low.png</a>
 <a class="sourceLine" id="cb10-47" data-line-number="47"><span class="dt">THRESHOLD_LOW</span>[<span class="dv">4</span>]=warning-low.mp3</a>
 <a class="sourceLine" id="cb10-48" data-line-number="48"><span class="dt">THRESHOLD_LOW</span>[<span class="dv">5</span>]=<span class="dv">7000</span></a>

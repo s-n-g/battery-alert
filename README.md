@@ -102,7 +102,7 @@ The following programs are also used:
 1. **bash** - Well, it is a **bash** script, after all
 2. **bc** - An arbitrary precision calculator language
 3. **su** - Run a command with substitute user and group ID (if run as a service; refer to: [Execution](#execution))
-4. **libnotify** - Library for sending desktop notifications (not required if **console** or **console-no-mpg123** make arguments are used; refer to [make options](#make-options))
+4. **libnotify** - Library for sending desktop notifications (not required if **console** or **console-no-mpg123** make arguments are used; refer to [make options](#make-options)). The command used (*notify-send*) will work with any notifiaction daemon (**notification-daemon**, **xfce4-notifyd**, **mate-notification-daemon**, etc.); Canonical's notification daemon (**notify-osd**) will pose a problem: it will not respect the time to display the notification.
 5. **mpg123** - A console based real time MPEG Audio Player for Layer 1, 2 and 3 (optional)
 
 ### Procedure
@@ -297,7 +297,7 @@ USER=spiros
 #    will be displayed and a sound will be played once
 THRESHOLD_HIGH[0]=20
 THRESHOLD_HIGH[1]="Low battery"
-THRESHOLD_HIGH[2]="Battery running critically low at $charge_percent%!"
+THRESHOLD_HIGH[2]="Battery running low at |CHARGE|%!"
 THRESHOLD_HIGH[3]=warning-high.png
 THRESHOLD_HIGH[4]=warning-low.mp3
 THRESHOLD_HIGH[5]=7000
@@ -308,7 +308,7 @@ THRESHOLD_HIGH[6]=30
 #    notification and the sund will be on indefinatelly
 THRESHOLD_LOW[0]=15
 THRESHOLD_LOW[1]="Low battery"
-THRESHOLD_LOW[2]="Battery running critically low at $charge_percent%!"
+THRESHOLD_LOW[2]="Battery running critically low at |CHARGE|%!"
 THRESHOLD_LOW[3]=warning-low.png
 THRESHOLD_LOW[4]=warning-low.mp3
 THRESHOLD_LOW[5]=7000

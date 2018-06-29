@@ -133,7 +133,7 @@ install:
 	fi
 	@if [ -e battery-alert.runit ]; then \
 		echo -n "Installing runit service ... " ; \
-		mkdir /etc/sv/battery-alert ; \
+		if [ ! -d /etc/sv/battery-alert ]; then mkdir /etc/sv/battery-alert;fi; \
 		cp battery-alert.runit /etc/sv/battery-alert/run ; \
 		chmod +x /etc/sv/battery-alert/run ; \
 		echo 'done' ; \
