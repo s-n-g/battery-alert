@@ -123,7 +123,7 @@ install:
 	@ if [ ! -z $(SYSTEMD) ];then \
 	if [ -d $(SYSTEMD_SERVICES_DIRECTORY) ]; then \
 	echo -n "Installing systemd service ... " ; \
-	cp battery-alert.systemd $(SYSTEMD_SERVICES_DIRECTORY); \
+	cp battery-alert.systemd $(SYSTEMD_SERVICES_DIRECTORY)/battery-alert.service; \
 	echo 'done'; \
 	fi; fi
 	@ if [ -e battery-alert.openrc ]; then \
@@ -156,9 +156,9 @@ uninstall:
 	@ echo -n "Removing data files ... "
 	@ rm -rf /usr/share/battery-alert
 	@ echo done
-	@ if [ -e $(SYSTEMD_SERVICES_DIRECTORY)/battery-alert.systemd ]; then \
+	@ if [ -e $(SYSTEMD_SERVICES_DIRECTORY)/battery-alert.service ]; then \
 	echo -n "Removing systemd service ... "; \
-	rm $(SYSTEMD_SERVICES_DIRECTORY)/battery-alert.systemd \
+	rm $(SYSTEMD_SERVICES_DIRECTORY)/battery-alert.service \
 	echo 'done'; fi
 	@ if [ -e /etc/init.d/battery-alert ]; then \
 	echo -n "Removing openrc service ... "; \
