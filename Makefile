@@ -64,7 +64,6 @@ battery-alert.systemd: battery-alert.systemd.template
 		sed $(systemd_substitution) $< > $@ ; \
 		echo done ; \
 		fi
-	@ rm ./checksystemd
 
 battery-alert.openrc: battery-alert.openrc.template
 	@ $(eval $(shell echo OPENRC=`./checkopenrc`))
@@ -75,7 +74,6 @@ battery-alert.openrc: battery-alert.openrc.template
 		echo done ; \
 		fi; \
 	fi
-	@ rm ./checkopenrc
 
 battery-alert.runit:
 	@ $(eval $(shell echo RUNIT=`ps -p 1 -o comm=`))
@@ -120,7 +118,8 @@ install:
 	@ install -m 755 -d /usr/share/battery-alert
 	@ install -m 644 icons/* sounds/*.mp3 man/*.html /usr/share/battery-alert
 	@ echo done
-	@ if [ ! -z $(SYSTEMD) ];then \
+	@ $(eval $(shell echo SYSTEMD=`./checksystemd`))
+	@ if [ ! -z $(SYSTEMD) ]; then \
 	if [ -d $(SYSTEMD_SERVICES_DIRECTORY) ]; then \
 	echo -n "Installing systemd service ... " ; \
 	cp battery-alert.systemd $(SYSTEMD_SERVICES_DIRECTORY)/battery-alert.service; \
@@ -160,6 +159,8 @@ uninstall:
 	echo -n "Removing systemd service ... "; \
 	rm $(SYSTEMD_SERVICES_DIRECTORY)/battery-alert.service \
 	echo 'done'; fi
+	@ if [ -e checksystemd ]; then rm ./checksystemd;fi
+	@ if [ -e checkopenrc ]; then rm ./checkopenrc;fi
 	@ if [ -e /etc/init.d/battery-alert ]; then \
 	echo -n "Removing openrc service ... "; \
 	rm /etc/init.d/battery-alert ;\
@@ -177,23 +178,27 @@ uninstall:
 	@ echo done
 
 clean:
-	@echo -n "Cleaning up ... "
+	@ echo -n "Cleaning up ... "
 	@ sed -i "s/^MY_DISPLAY=.*/unset MY_DISPLAY/" battery-alert
-	@if [ -e battery-alert.systemd ]; then rm *.systemd;fi
-	@if [ -e battery-alert.openrc ]; then rm *.openrc;fi
-	@if [ -e battery-alert.runit ]; then rm *.runit;fi
-	@echo done
+	@ if [ -e battery-alert.systemd ]; then rm *.systemd;fi
+	@ if [ -e battery-alert.openrc ]; then rm *.openrc;fi
+	@ if [ -e battery-alert.runit ]; then rm *.runit;fi
+	@ if [ -e checksystemd ]; then rm ./checksystemd;fi
+	@ if [ -e checkopenrc ]; then rm ./checkopenrc;fi
+	@ echo done
 
 auto_clean:
 	@ sed -i "s/^MY_DISPLAY=.*/unset MY_DISPLAY/" battery-alert
-	@if [ -e battery-alert.systemd ]; then rm *.systemd;fi
-	@if [ -e battery-alert.openrc ]; then rm *.openrc;fi
-	@if [ -e battery-alert.runit ]; then rm *.runit;fi
+	@ if [ -e battery-alert.systemd ]; then rm *.systemd;fi
+	@ if [ -e battery-alert.openrc ]; then rm *.openrc;fi
+	@ if [ -e battery-alert.runit ]; then rm *.runit;fi
+	@ if [ -e checksystemd ]; then rm ./checksystemd;fi
+	@ if [ -e checkopenrc ]; then rm ./checkopenrc;fi
 
 help:
 	@ echo "battery-alert make options:"
 	@ echo ""
-	@ echo "  default"
+	@ echo "  * default"
 	@ echo "    Contains the default options for battery-alert."
 	@ echo "    These are the options used when make is executed without any arguments."
 	@ echo "    Options description:"
@@ -202,14 +207,14 @@ help:
 	@ echo "      3. make sure mpg123 executable is already installed"
 	@ echo "      4. make sure service files are up to date"
 	@ echo ""
-	@ echo "  no-mpg123"
+	@ echo "  * no-mpg123"
 	@ echo "    Do not require mpg123 to be installed."
 	@ echo ""
-	@ echo "  console"
+	@ echo "  * console"
 	@ echo "    This option will disable visual notification. In other words, one would"
 	@ echo "    use this option to have battery-alert running on a non-graphical environment."
 	@ echo ""
-	@ echo "  console-no-mpg123"
+	@ echo "  * console-no-mpg123"
 	@ echo "    Same as above, but mpg123 would not be required."
 	@ echo ""
 	@ echo "Edit Makefile to match your system:"

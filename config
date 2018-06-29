@@ -31,7 +31,7 @@ USER=spiros
 #    will be displayed and a sound will be played once
 THRESHOLD_HIGH[0]=20
 THRESHOLD_HIGH[1]="Low battery"
-THRESHOLD_HIGH[2]="Battery running critically low at $charge_percent%!"
+THRESHOLD_HIGH[2]="Battery running low at |CHARGE|%!"
 THRESHOLD_HIGH[3]=warning-high.png
 THRESHOLD_HIGH[4]=warning-low.mp3
 THRESHOLD_HIGH[5]=7000
@@ -42,7 +42,7 @@ THRESHOLD_HIGH[6]=30
 #    notification and the sund will be on indefinatelly
 THRESHOLD_LOW[0]=15
 THRESHOLD_LOW[1]="Low battery"
-THRESHOLD_LOW[2]="Battery running critically low at $charge_percent%!"
+THRESHOLD_LOW[2]="Battery running critically low at |CHARGE|%!"
 THRESHOLD_LOW[3]=warning-low.png
 THRESHOLD_LOW[4]=warning-low.mp3
 THRESHOLD_LOW[5]=7000

@@ -49,16 +49,20 @@ function send_command {
 }
 
 function alert_threshold_low {
+    local msg
+    msg=$(echo "${THRESHOLD_LOW[2]}" | sed "s/|CHARGE|/$charge_percent/")
     LOOP_TIME_OUT=${THRESHOLD_LOW[6]}
-    [ -z "$CONSOLE_ONLY" ] && $NOTIFY_COMMAND -t ${THRESHOLD_LOW[5]} -i "${THRESHOLD_LOW[3]}" "${THRESHOLD_LOW[1]}" "${THRESHOLD_LOW[2]}"
+    [ -z "$CONSOLE_ONLY" ] && $NOTIFY_COMMAND -t ${THRESHOLD_LOW[5]} -i "${THRESHOLD_LOW[3]}" "${THRESHOLD_LOW[1]}" "$msg"
     if [ ! -z "$PLAYER_COMMAND" ] && [ -e "${THRESHOLD_LOW[4]}" ]; then
         $PLAYER_COMMAND "${THRESHOLD_LOW[4]}"
     fi
 }
 
 function alert_threshold_high {
+    local msg
+    msg=$(echo "${THRESHOLD_HIGH[2]}" | sed "s/|CHARGE|/$charge_percent/")
     LOOP_TIME_OUT=${THRESHOLD_HIGH[6]}
-    [ -z "$CONSOLE_ONLY" ] && $NOTIFY_COMMAND -t ${THRESHOLD_HIGH[5]} -i "${THRESHOLD_HIGH[3]}" "${THRESHOLD_HIGH[1]}" "${THRESHOLD_HIGH[2]}"
+    [ -z "$CONSOLE_ONLY" ] && $NOTIFY_COMMAND -t ${THRESHOLD_HIGH[5]} -i "${THRESHOLD_HIGH[3]}" "${THRESHOLD_HIGH[1]}" "$msg"
     if [ ! -z "$PLAYER_COMMAND" ] && [ -e "${THRESHOLD_HIGH[4]}" ]; then
         $PLAYER_COMMAND "${THRESHOLD_HIGH[4]}"
     fi
