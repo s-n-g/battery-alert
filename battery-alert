@@ -48,21 +48,25 @@ function send_command {
     fi
 }
 
+function get_msg {
+    local msg
+    msg=$(echo "$1" | sed -e "s/|CHARGE|/$charge_percent/")
+    echo "$msg"
+}
+
 function alert_threshold_low {
     local msg
     msg=$(echo "${THRESHOLD_LOW[2]}" | sed "s/|CHARGE|/$charge_percent/")
     LOOP_TIME_OUT=${THRESHOLD_LOW[6]}
-    [ -z "$CONSOLE_ONLY" ] && $NOTIFY_COMMAND -t ${THRESHOLD_LOW[5]} -i "${THRESHOLD_LOW[3]}" "${THRESHOLD_LOW[1]}" "$msg"
+    [ -z "$CONSOLE_ONLY" ] && $NOTIFY_COMMAND -t ${THRESHOLD_LOW[5]} -i "${THRESHOLD_LOW[3]}" "${THRESHOLD_LOW[1]}" "$(get_msg "${THRESHOLD_LOW[2]}")"
     if [ ! -z "$PLAYER_COMMAND" ] && [ -e "${THRESHOLD_LOW[4]}" ]; then
         $PLAYER_COMMAND "${THRESHOLD_LOW[4]}"
     fi
 }
 
 function alert_threshold_high {
-    local msg
-    msg=$(echo "${THRESHOLD_HIGH[2]}" | sed "s/|CHARGE|/$charge_percent/")
     LOOP_TIME_OUT=${THRESHOLD_HIGH[6]}
-    [ -z "$CONSOLE_ONLY" ] && $NOTIFY_COMMAND -t ${THRESHOLD_HIGH[5]} -i "${THRESHOLD_HIGH[3]}" "${THRESHOLD_HIGH[1]}" "$msg"
+    [ -z "$CONSOLE_ONLY" ] && $NOTIFY_COMMAND -t ${THRESHOLD_HIGH[5]} -i "${THRESHOLD_HIGH[3]}" "${THRESHOLD_HIGH[1]}" "$(get_msg "${THRESHOLD_HIGH[2]}")"
     if [ ! -z "$PLAYER_COMMAND" ] && [ -e "${THRESHOLD_HIGH[4]}" ]; then
         $PLAYER_COMMAND "${THRESHOLD_HIGH[4]}"
     fi
@@ -72,7 +76,7 @@ function notify_low {
     [ -z "${THRESHOLD_NOTIFY_LOW[7]}" ] || {
         if [ "${THRESHOLD_NOTIFY_LOW[7]}" = "yes" ]; then
             LOOP_TIME_OUT=${THRESHOLD_NOTIFY_LOW[6]}
-            [ -z "$CONSOLE_ONLY" ] && $NOTIFY_COMMAND -t ${THRESHOLD_NOTIFY_LOW[5]} -i "${THRESHOLD_NOTIFY_LOW[3]}" "${THRESHOLD_NOTIFY_LOW[1]}" "${THRESHOLD_NOTIFY_LOW[2]}"
+            [ -z "$CONSOLE_ONLY" ] && $NOTIFY_COMMAND -t ${THRESHOLD_NOTIFY_LOW[5]} -i "${THRESHOLD_NOTIFY_LOW[3]}" "${THRESHOLD_NOTIFY_LOW[1]}" "$(get_msg "${THRESHOLD_NOTIFY_LOW[2]}")"
             if [ ! -z "$PLAYER_COMMAND" ] && [ -e "${THRESHOLD_NOTIFY_LOW[4]}" ]; then
                 $PLAYER_COMMAND "${THRESHOLD_NOTIFY_LOW[4]}"
             fi
@@ -84,12 +88,23 @@ function notify_high {
     [ -z "${THRESHOLD_NOTIFY_HIGH[7]}" ] || {
         if [ "${THRESHOLD_NOTIFY_HIGH[7]}" = "yes" ]; then
             LOOP_TIME_OUT=${THRESHOLD_NOTIFY_HIGH[6]}
-            [ -z "$CONSOLE_ONLY" ] && $NOTIFY_COMMAND -t ${THRESHOLD_NOTIFY_HIGH[5]} -i "${THRESHOLD_NOTIFY_HIGH[3]}" "${THRESHOLD_NOTIFY_HIGH[1]}" "${THRESHOLD_NOTIFY_HIGH[2]}"
+            [ -z "$CONSOLE_ONLY" ] && $NOTIFY_COMMAND -t ${THRESHOLD_NOTIFY_HIGH[5]} -i "${THRESHOLD_NOTIFY_HIGH[3]}" "${THRESHOLD_NOTIFY_HIGH[1]}" "$(get_msg "${THRESHOLD_NOTIFY_HIGH[2]}")"
             if [ ! -z "$PLAYER_COMMAND" ] && [ -e "${THRESHOLD_NOTIFY_HIGH[4]}" ]; then
                 $PLAYER_COMMAND "${THRESHOLD_NOTIFY_HIGH[4]}"
             fi
         fi
     }
+}
+
+function pop_sound {
+    local i
+    for i in 3 4
+    do
+        [[ "${THRESHOLD_HIGH[$i]}" == /* ]] || THRESHOLD_HIGH[$i]=/usr/share/battery-alert/"${THRESHOLD_HIGH[$i]}"
+        [[ "${THRESHOLD_LOW[$i]}" == /* ]] || THRESHOLD_LOW[$i]=/usr/share/battery-alert/"${THRESHOLD_LOW[$i]}"
+        [[ "${THRESHOLD_NOTIFY_HIGH[$i]}" == /* ]] || THRESHOLD_NOTIFY_HIGH[$i]=/usr/share/battery-alert/"${THRESHOLD_NOTIFY_HIGH[$i]}"
+        [[ "${THRESHOLD_NOTIFY_LOW[$i]}" == /* ]] || THRESHOLD_NOTIFY_LOW[$i]=/usr/share/battery-alert/"${THRESHOLD_NOTIFY_LOW[$i]}"
+    done
 }
 
 function test {
@@ -99,14 +114,7 @@ function test {
     if [ -e ~/.config/battery-alert/config ]; then
         . ~/.config/battery-alert/config
     fi
-    for i in 3 4
-    do
-        [[ "${THRESHOLD_HIGH[$i]}" == /* ]] || THRESHOLD_HIGH[$i]=/usr/share/battery-alert/"${THRESHOLD_HIGH[$i]}"
-        [[ "${THRESHOLD_LOW[$i]}" == /* ]] || THRESHOLD_LOW[$i]=/usr/share/battery-alert/"${THRESHOLD_LOW[$i]}"
-        [[ "${THRESHOLD_NOTIFY_HIGH[$i]}" == /* ]] || THRESHOLD_NOTIFY_HIGH[$i]=/usr/share/battery-alert/"${THRESHOLD_NOTIFY_HIGH[$i]}"
-        [[ "${THRESHOLD_NOTIFY_LOW[$i]}" == /* ]] || THRESHOLD_NOTIFY_LOW[$i]=/usr/share/battery-alert/"${THRESHOLD_NOTIFY_LOW[$i]}"
-    done
-    
+    pop_sound
     charge_percent=20
     read -p 'Press ENTER for low alert'
     charge_percent=15
@@ -120,9 +128,25 @@ function test {
     exit
 }
 
-if [ -e /etc/battery-alert.conf ]; then
-. /etc/battery-alert.conf
-fi
+function read_config {
+    if [ -e /etc/battery-alert.conf ]; then
+    . /etc/battery-alert.conf
+    fi
+    if [ -e ~/.config/battery-alert/config ]; then
+        . ~/.config/battery-alert/config
+    fi
+    pop_sound
+
+
+
+}
+
+
+#set -x
+trap error_occured ERR
+read_config
+LOOP_TIME_OUT=60
+my_fifo=/tmp/battery-alert
 NOTIFY_COMMAND=notify-send
 if [[ $UID -eq 0 ]];then
     if [ ! -z "$USER" ] && [ -z "$CONSOLE_ONLY"  ];then
@@ -130,13 +154,11 @@ if [[ $UID -eq 0 ]];then
     fi
 fi
 
-#set -x
 ##############################################################################
 #                                                                            #
 #                              Commands Section                              #
 #                                                                            #
 ##############################################################################
-my_fifo=/tmp/battery-alert
 
 if [[ "$1" =~ ^status|^vstatus ]];then
     send_command $my_fifo status
@@ -161,6 +183,8 @@ elif [[ "$1" =~ ^resume$|^exit$|^quit$ ]];then
     echo "$REPLY"
     if [ "$REPLY" = "suspended" ];then ret=2;fi
     exit $ret
+elif [ "$1" = "reconfig" ];then
+    read_config
 elif [ "$1" = "test" ];then
     test
 else
@@ -197,7 +221,6 @@ fi
 #define EX_CONFIG       78      /* configuration error */
 trap control_c SIGINT
 trap control_c SIGTERM
-trap error_occured ERR
 [ -p $my_fifo ] && exit 126
 # make sure a battery is present
 if [ -z "$DEBUG" ]; then
@@ -218,22 +241,8 @@ Terminating..." -i /usr/share/battery-alert/notify-high.png
 }
 
 #set -x
-LOOP_TIME_OUT=60
 while true;do
-    if [ -e ~/.config/battery-alert/config ]; then
-        . ~/.config/battery-alert/config
-    fi
-
     if [ -z "$INHIBIT_BY_COMMAND" ];then
-
-        for i in 3 4
-        do
-            [[ "${THRESHOLD_HIGH[$i]}" == /* ]] || THRESHOLD_HIGH[$i]=/usr/share/battery-alert/"${THRESHOLD_HIGH[$i]}"
-            [[ "${THRESHOLD_LOW[$i]}" == /* ]] || THRESHOLD_LOW[$i]=/usr/share/battery-alert/"${THRESHOLD_LOW[$i]}"
-            [[ "${THRESHOLD_NOTIFY_HIGH[$i]}" == /* ]] || THRESHOLD_NOTIFY_HIGH[$i]=/usr/share/battery-alert/"${THRESHOLD_NOTIFY_HIGH[$i]}"
-            [[ "${THRESHOLD_NOTIFY_LOW[$i]}" == /* ]] || THRESHOLD_NOTIFY_LOW[$i]=/usr/share/battery-alert/"${THRESHOLD_NOTIFY_LOW[$i]}"
-        done
-
         if [ -z "$SUSPEND" ]; then
             # keep dispalying notification
             if [ -z "$DEBUG" ]; then
@@ -294,6 +303,11 @@ while true;do
                 else
                     echo suspended>$my_fifo
                 fi
+            elif [ "$line" == "reconfig" ];then
+                read_config && echo 'config read'>$my_fifo || {
+                    echo 'error reading config'>$my_fifo
+                    control_c
+                }
             elif [ "$line" == "exit" ] || [ "$line" == "quit" ];then
                 echo 'not running'>$my_fifo
                 control_c
