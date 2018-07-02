@@ -280,7 +280,7 @@ USER=spiros
 # Items are:
 #  0  battery limit
 #  1  message title to display
-#  2  message to display. The following tokkens can be used
+#  2  message to display. The following tokens can be used
 #       |STATUS|  - charging status
 #       |CHARGE|  - charging percentage
 #       |NOW|     - current charging value
