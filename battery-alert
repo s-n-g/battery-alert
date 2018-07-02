@@ -60,7 +60,11 @@ function alert_threshold_low {
     LOOP_TIME_OUT=${THRESHOLD_LOW[6]}
     [ -z "$CONSOLE_ONLY" ] && $NOTIFY_COMMAND -t ${THRESHOLD_LOW[5]} -i "${THRESHOLD_LOW[3]}" "${THRESHOLD_LOW[1]}" "$(get_msg "${THRESHOLD_LOW[2]}")"
     if [ ! -z "$PLAYER_COMMAND" ] && [ -e "${THRESHOLD_LOW[4]}" ]; then
-        $PLAYER_COMMAND "${THRESHOLD_LOW[4]}"
+        if [[ $UID -eq 0 ]];then
+            runuser -l $USER -c "$PLAYER_COMMAND "${THRESHOLD_LOW[4]}""
+        else
+            $PLAYER_COMMAND "${THRESHOLD_LOW[4]}"
+        fi
     fi
 }
 
@@ -68,7 +72,11 @@ function alert_threshold_high {
     LOOP_TIME_OUT=${THRESHOLD_HIGH[6]}
     [ -z "$CONSOLE_ONLY" ] && $NOTIFY_COMMAND -t ${THRESHOLD_HIGH[5]} -i "${THRESHOLD_HIGH[3]}" "${THRESHOLD_HIGH[1]}" "$(get_msg "${THRESHOLD_HIGH[2]}")"
     if [ ! -z "$PLAYER_COMMAND" ] && [ -e "${THRESHOLD_HIGH[4]}" ]; then
-        $PLAYER_COMMAND "${THRESHOLD_HIGH[4]}"
+        if [[ $UID -eq 0 ]];then
+            runuser -l $USER -c "$PLAYER_COMMAND "${THRESHOLD_HIGH[4]}""
+        else
+            $PLAYER_COMMAND "${THRESHOLD_HIGH[4]}"
+        fi
     fi
 }
 
@@ -78,7 +86,11 @@ function notify_low {
             LOOP_TIME_OUT=${THRESHOLD_NOTIFY_LOW[6]}
             [ -z "$CONSOLE_ONLY" ] && $NOTIFY_COMMAND -t ${THRESHOLD_NOTIFY_LOW[5]} -i "${THRESHOLD_NOTIFY_LOW[3]}" "${THRESHOLD_NOTIFY_LOW[1]}" "$(get_msg "${THRESHOLD_NOTIFY_LOW[2]}")"
             if [ ! -z "$PLAYER_COMMAND" ] && [ -e "${THRESHOLD_NOTIFY_LOW[4]}" ]; then
-                $PLAYER_COMMAND "${THRESHOLD_NOTIFY_LOW[4]}"
+                if [[ $UID -eq 0 ]];then
+                    runuser -l $USER -c "$PLAYER_COMMAND "${THRESHOLD_NOTIFY_LOW[4]}""
+                else
+                    $PLAYER_COMMAND "${THRESHOLD_NOTIFY_LOW[4]}"
+                fi
             fi
         fi
     }
@@ -90,7 +102,11 @@ function notify_high {
             LOOP_TIME_OUT=${THRESHOLD_NOTIFY_HIGH[6]}
             [ -z "$CONSOLE_ONLY" ] && $NOTIFY_COMMAND -t ${THRESHOLD_NOTIFY_HIGH[5]} -i "${THRESHOLD_NOTIFY_HIGH[3]}" "${THRESHOLD_NOTIFY_HIGH[1]}" "$(get_msg "${THRESHOLD_NOTIFY_HIGH[2]}")"
             if [ ! -z "$PLAYER_COMMAND" ] && [ -e "${THRESHOLD_NOTIFY_HIGH[4]}" ]; then
-                $PLAYER_COMMAND "${THRESHOLD_NOTIFY_HIGH[4]}"
+                if [[ $UID -eq 0 ]];then
+                    sud - $USER -c "$PLAYER_COMMAND "${THRESHOLD_NOTIFY_HIGH[4]}""
+                else
+                    $PLAYER_COMMAND "${THRESHOLD_NOTIFY_HIGH[4]}"
+                fi
             fi
         fi
     }
@@ -241,6 +257,7 @@ Terminating..." -i /usr/share/battery-alert/notify-high.png
 }
 
 #set -x
+#set -v -e -o pipefail
 while true;do
     if [ -z "$INHIBIT_BY_COMMAND" ];then
         if [ -z "$SUSPEND" ]; then

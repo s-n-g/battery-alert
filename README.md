@@ -280,7 +280,11 @@ USER=spiros
 # Items are:
 #  0  battery limit
 #  1  message title to display
-#  2  message to display
+#  2  message to display. The following tokkens can be used
+#       |STATUS|  - charging status
+#       |CHARGE|  - charging percentage
+#       |NOW|     - current charging value
+#       |FULL|    - maximum charging value
 #  3  icon to display
 #     either absolute or relative path to file
 #     if relative, it should be in /usr/share/battery-alert
