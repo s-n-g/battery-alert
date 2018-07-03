@@ -61,7 +61,7 @@ function alert_threshold_low {
     [ -z "$CONSOLE_ONLY" ] && $NOTIFY_COMMAND -t ${THRESHOLD_LOW[5]} -i "${THRESHOLD_LOW[3]}" "${THRESHOLD_LOW[1]}" "$(get_msg "${THRESHOLD_LOW[2]}")"
     if [ ! -z "$PLAYER_COMMAND" ] && [ -e "${THRESHOLD_LOW[4]}" ]; then
         if [[ $UID -eq 0 ]];then
-            runuser -l $USER -c "$PLAYER_COMMAND "${THRESHOLD_LOW[4]}""
+            su - $USER -c "$PLAYER_COMMAND "${THRESHOLD_LOW[4]}""
         else
             $PLAYER_COMMAND "${THRESHOLD_LOW[4]}"
         fi
@@ -73,7 +73,7 @@ function alert_threshold_high {
     [ -z "$CONSOLE_ONLY" ] && $NOTIFY_COMMAND -t ${THRESHOLD_HIGH[5]} -i "${THRESHOLD_HIGH[3]}" "${THRESHOLD_HIGH[1]}" "$(get_msg "${THRESHOLD_HIGH[2]}")"
     if [ ! -z "$PLAYER_COMMAND" ] && [ -e "${THRESHOLD_HIGH[4]}" ]; then
         if [[ $UID -eq 0 ]];then
-            runuser -l $USER -c "$PLAYER_COMMAND "${THRESHOLD_HIGH[4]}""
+            su - $USER -c "$PLAYER_COMMAND "${THRESHOLD_HIGH[4]}""
         else
             $PLAYER_COMMAND "${THRESHOLD_HIGH[4]}"
         fi
@@ -87,7 +87,7 @@ function notify_low {
             [ -z "$CONSOLE_ONLY" ] && $NOTIFY_COMMAND -t ${THRESHOLD_NOTIFY_LOW[5]} -i "${THRESHOLD_NOTIFY_LOW[3]}" "${THRESHOLD_NOTIFY_LOW[1]}" "$(get_msg "${THRESHOLD_NOTIFY_LOW[2]}")"
             if [ ! -z "$PLAYER_COMMAND" ] && [ -e "${THRESHOLD_NOTIFY_LOW[4]}" ]; then
                 if [[ $UID -eq 0 ]];then
-                    runuser -l $USER -c "$PLAYER_COMMAND "${THRESHOLD_NOTIFY_LOW[4]}""
+                    su - $USER -c "$PLAYER_COMMAND "${THRESHOLD_NOTIFY_LOW[4]}""
                 else
                     $PLAYER_COMMAND "${THRESHOLD_NOTIFY_LOW[4]}"
                 fi
@@ -103,7 +103,7 @@ function notify_high {
             [ -z "$CONSOLE_ONLY" ] && $NOTIFY_COMMAND -t ${THRESHOLD_NOTIFY_HIGH[5]} -i "${THRESHOLD_NOTIFY_HIGH[3]}" "${THRESHOLD_NOTIFY_HIGH[1]}" "$(get_msg "${THRESHOLD_NOTIFY_HIGH[2]}")"
             if [ ! -z "$PLAYER_COMMAND" ] && [ -e "${THRESHOLD_NOTIFY_HIGH[4]}" ]; then
                 if [[ $UID -eq 0 ]];then
-                    sud - $USER -c "$PLAYER_COMMAND "${THRESHOLD_NOTIFY_HIGH[4]}""
+                    su - $USER -c "$PLAYER_COMMAND "${THRESHOLD_NOTIFY_HIGH[4]}""
                 else
                     $PLAYER_COMMAND "${THRESHOLD_NOTIFY_HIGH[4]}"
                 fi
@@ -238,12 +238,6 @@ fi
 trap control_c SIGINT
 trap control_c SIGTERM
 [ -p $my_fifo ] && exit 126
-# make sure a battery is present
-if [ -z "$DEBUG" ]; then
-    acpi_path=$(find /sys/class/power_supply/ -name 'BAT*' | head -1)
-    [ -z "$acpi_path" ] && exit 
-fi
-
 mkfifo $my_fifo 2>/dev/null || {
     rm -rf $my_fifo 2>/dev/null
     mkfifo $my_fifo 2>/dev/null || {
@@ -255,6 +249,15 @@ Terminating..." -i /usr/share/battery-alert/notify-high.png
     }
     chmod 666 /tmp/battery-alert
 }
+# make sure a battery is present
+if [ -z "$DEBUG" ]; then
+    acpi_path=$(find /sys/class/power_supply/ -name 'BAT*' | head -1)
+    while [ -z "$acpi_path" ]; do
+        sleep 15
+        acpi_path=$(find /sys/class/power_supply/ -name 'BAT*' | head -1)
+    done
+fi
+
 
 #set -x
 #set -v -e -o pipefail

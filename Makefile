@@ -157,7 +157,7 @@ uninstall:
 	@ echo done
 	@ if [ -e $(SYSTEMD_SERVICES_DIRECTORY)/battery-alert.service ]; then \
 	echo -n "Removing systemd service ... "; \
-	rm $(SYSTEMD_SERVICES_DIRECTORY)/battery-alert.service \
+	rm $(SYSTEMD_SERVICES_DIRECTORY)/battery-alert.service ;\
 	echo 'done'; fi
 	@ if [ -e checksystemd ]; then rm ./checksystemd;fi
 	@ if [ -e checkopenrc ]; then rm ./checkopenrc;fi
