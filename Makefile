@@ -1,6 +1,9 @@
 SHELL=/bin/bash
 PREFIX=/usr/local
 SYSTEMD_SERVICES_DIRECTORY=/lib/systemd/system
+RUNIT_SERVICES_DIRECTORY=/etc/sv
+# For artix linux with runit
+#RUNIT_SERVICES_DIRECTORY=/etc/runit/sv
 
 # internal variables
 INSTALL_PREFIX=$(PREFIX)/bin
@@ -133,9 +136,9 @@ install:
 	fi
 	@if [ -e battery-alert.runit ]; then \
 		echo -n "Installing runit service ... " ; \
-		if [ ! -d /etc/sv/battery-alert ]; then mkdir /etc/sv/battery-alert;fi; \
-		cp battery-alert.runit /etc/sv/battery-alert/run ; \
-		chmod +x /etc/sv/battery-alert/run ; \
+		if [ ! -d $(RUNIT_SERVICES_DIRECTORY)/battery-alert ]; then mkdir $(RUNIT_SERVICES_DIRECTORY)/battery-alert;fi; \
+		cp battery-alert.runit $(RUNIT_SERVICES_DIRECTORY)/battery-alert/run ; \
+		chmod +x $(RUNIT_SERVICES_DIRECTORY)/battery-alert/run ; \
 		echo 'done' ; \
 	fi
 	@ echo -n "Installing man page ... "
@@ -165,11 +168,11 @@ uninstall:
 	echo -n "Removing openrc service ... "; \
 	rm /etc/init.d/battery-alert ;\
 	echo 'done'; fi
-	@ if [ -d /etc/sv/battery-alert ]; then \
+	@ if [ -d $(RUNIT_SERVICES_DIRECTORY)/battery-alert ]; then \
 		echo -n "Removing runit service ... "; \
 		sv stop battery-alert ; \
 		[ -e /var/service/battery-alert ] && rm /var/service/battery-alert ; \
-		rm -rf /etc/sv/battery-alert ; \
+		rm -rf $(RUNIT_SERVICES_DIRECTORY)/battery-alert ; \
 		echo ' done' ; \
 	fi
 	@ echo -n "Removing man page ... "
@@ -218,4 +221,4 @@ help:
 	@ echo "    Same as above, but mpg123 would not be required."
 	@ echo ""
 	@ echo "Edit Makefile to match your system:"
-	@ sed -n '1,/^$$/p' Makefile | sed 's/^/  /'
+	@ sed -n '1,/^$$/p' Makefile | sed '/^#/d' | sed 's/^/  /'

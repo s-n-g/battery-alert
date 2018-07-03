@@ -132,6 +132,41 @@ cd battery-alert-master
 Run make (refer to [make options](#make-options) for installation customization)
 
 ```ruby
+make help
+battery-alert make options:
+
+  * default
+    Contains the default options for battery-alert.
+    These are the options used when make is executed without any arguments.
+    Options description:
+      1. make sure essential packages are already installed
+      2. make sure notify-send executable is already installed
+      3. make sure mpg123 executable is already installed
+      4. make sure service files are up to date
+
+  * no-mpg123
+    Do not require mpg123 to be installed.
+
+  * console
+    This option will disable visual notification. In other words, one would
+    use this option to have battery-alert running on a non-graphical environment.
+
+  * console-no-mpg123
+    Same as above, but mpg123 would not be required.
+
+Edit Makefile to match your system:
+  SHELL=/bin/bash
+  PREFIX=/usr/local
+  SYSTEMD_SERVICES_DIRECTORY=/lib/systemd/system
+  RUNIT_SERVICES_DIRECTORY=/etc/sv
+  
+```
+
+At this point one should edit *Makefile* to make it match the system at hand.
+
+Then *make* can finally be executed.
+
+```ruby
 make
 ```
 
